@@ -69,6 +69,21 @@ $header-text: #000;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   transition: left 0.2s ease-in-out;
   will-change: transform;
+  &__button {
+    color: $header-text;
+    height: 32px;
+    border: 1px solid $header-grey;
+    cursor: pointer;
+    padding: 7px 16px;
+    display: inline-block;
+    font-size: 15px;
+    background: transparent;
+    box-shadow: none;
+    line-height: 16px;
+    margin-left: 20px;
+    white-space: nowrap;
+    border-radius: 100px;
+  }
 }
 .header-container {
   height: 80px;
@@ -81,35 +96,20 @@ $header-text: #000;
 .header-logo {
   flex: 0 0 auto;
   padding: 0 20px 0 0;
-}
-.header-logo__img {
-  width: 160px;
+  &__img {
+    width: 160px;
+  }
 }
 .header-menu {
   flex: 1 0 auto;
   text-align: center;
   background: $header-bg;
-}
-.header-menu__link {
-  padding: 0 20px;
-  font-size: 16px;
-}
-.header-menu__link:hover {
-  color: $header-grey;
-}
-.header__button {
-  color: $header-text;
-  height: 32px;
-  border: 1px solid $header-grey;
-  cursor: pointer;
-  padding: 7px 16px;
-  display: inline-block;
-  font-size: 15px;
-  background: transparent;
-  box-shadow: none;
-  line-height: 16px;
-  margin-left: 20px;
-  white-space: nowrap;
-  border-radius: 100px;
+  &__link {
+    padding: 0 20px;
+    font-size: 16px;
+    &:hover {
+      color: $header-grey;
+    }
+  }
 }
 </style>
