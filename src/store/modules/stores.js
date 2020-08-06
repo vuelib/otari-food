@@ -1,5 +1,8 @@
-import Api from '@/services/axios-api.js';
-const api = new Api();
+import {
+  getStoresByFilter,
+  getStoresByUUID,
+  getProducts
+} from '@/services/stores.js';
 
 export default {
   namespaced: true,
@@ -17,7 +20,7 @@ export default {
   },
   actions: {
     async getStoresByFilter({ commit }) {
-      const { records, records_count } = await api.getStoresByFilter({
+      const { records, records_count } = await getStoresByFilter({
         page: 1,
         limit: 10
       });
@@ -27,13 +30,13 @@ export default {
     },
     /*eslint no-unused-vars: */
     async getStoresByUUID({ commit }, { uuid }) {
-      const record = await api.getStoresByUUID({ uuid });
+      const record = await getStoresByUUID({ uuid });
       console.log(record);
       return record;
       // console.log(commit);
     },
     async getProducts({ uuid, limit = 100, page = 1 }) {
-      const products = await api.getProducts({ uuid, limit, page });
+      const products = await getProducts({ uuid, limit, page });
       return products;
     }
   },

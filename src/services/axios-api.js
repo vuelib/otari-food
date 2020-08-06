@@ -1,7 +1,7 @@
 import axios from 'axios';
 const BASE_URL = 'https://crm.apis.stage.faem.pro/api/v2/';
 
-export default class Api {
+class Api {
   constructor(options = {}) {
     // Singleton Pattern
     if (Api._instance) return Api._instance;
@@ -18,27 +18,5 @@ export default class Api {
     this.token = options.token;
     this.refreshToken = options.refreshToken;
   }
-
-  getStoresByFilter({ page, limit = 10 }) {
-    return this.client
-      .post('/stores', {
-        page,
-        limit
-      })
-      .then(({ data }) => data);
-  }
-
-  getStoresByUUID({ uuid }) {
-    return this.client(`/stores/${uuid}`).then(({ data }) => data);
-  }
-
-  getProducts({ uuid, page = 1, limit = 100 }) {
-    return this.client
-      .post('/products', {
-        limit,
-        page,
-        uuid
-      })
-      .then(({ data }) => data);
-  }
 }
+export default new Api();
