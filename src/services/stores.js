@@ -1,6 +1,6 @@
 import api from './axios-api';
 
-export function getStoresByFilter({ page, limit = 10 }) {
+export function getStoresByFilterService({ page, limit = 10 }) {
   return api.client
     .post('/stores', {
       page,
@@ -9,11 +9,11 @@ export function getStoresByFilter({ page, limit = 10 }) {
     .then(({ data }) => data);
 }
 
-export function getStoresByUUID({ uuid }) {
+export function getStoresByUUIDService({ uuid }) {
   return api.client(`/stores/${uuid}`).then(({ data }) => data);
 }
 
-export function getProducts({ uuid, page = 1, limit = 100 }) {
+export function getProductsService({ uuid, page = 1, limit = 100 }) {
   return api.client
     .post('/products', {
       limit,
