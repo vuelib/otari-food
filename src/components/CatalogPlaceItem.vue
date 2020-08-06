@@ -1,9 +1,6 @@
 <template>
-  <div>
-    <router-link
-      class="places-list__item place-item"
-      :to="{ name: 'RestaurantPage', params: { id: store.uuid, store } }"
-    >
+  <article>
+    <a class="places-list__item place-item">
       <div
         class="place-item__image-container"
         role="img"
@@ -23,8 +20,8 @@
           </div>
         </div>
       </div>
-    </router-link>
-  </div>
+    </a>
+  </article>
 </template>
 
 <script>
