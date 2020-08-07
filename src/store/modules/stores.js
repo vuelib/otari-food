@@ -1,7 +1,7 @@
 import {
-  getStoresByFilter,
-  getStoresByUUID,
-  getProducts
+  getStoresByFilterService,
+  getStoresByUUIDService,
+  getProductsService
 } from '@/services/stores.js';
 
 export default {
@@ -20,7 +20,7 @@ export default {
   },
   actions: {
     async getStoresByFilter({ commit }) {
-      const { records, records_count } = await getStoresByFilter({
+      const { records, records_count } = await getStoresByFilterService({
         page: 1,
         limit: 10
       });
@@ -30,19 +30,24 @@ export default {
     },
     /*eslint no-unused-vars: */
     async getStoresByUUID({ commit }, { uuid }) {
-      const record = await getStoresByUUID({ uuid });
+      const record = await getStoresByUUIDService({ uuid });
       console.log(record);
       return record;
       // console.log(commit);
     },
     async getProducts({ uuid, limit = 100, page = 1 }) {
-      const products = await getProducts({ uuid, limit, page });
+      const products = await getProductsService({ uuid, limit, page });
       return products;
     }
   },
   getters: {
     getStores(state) {
       return state.stores;
+    },
+    findStoreByUUID(state) {
+      return findUUID => {
+        return state.stores.find(({ uuid }) => uuid === findUUID);
+      };
     },
     getRecordsCount(state) {
       return state.records_count;
