@@ -3,6 +3,12 @@
   padding: 0;
   box-sizing: border-box;
 }
+:focus {
+  outline: -webkit-focus-ring-color auto 1px;
+}
+a:-webkit-any-link:focus {
+  outline-offset: 1px;
+}
 body{
   min-width: 1024px;
   background: #fff;
@@ -23,17 +29,52 @@ input, textarea, button {
   appearance: none;
   line-height: 1em;
 }
-input {
+input:not([type=checkbox]):not([type=radio]) {
   width: 100%;
-  height: 34px;
-  border: 1px solid #cccccc;
-  font-size: 15px;
-  box-shadow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.2);
-  appearance: none;
-  padding-left: 14px;
-  padding-right: 14px;
-  border-radius: 4px;
   text-overflow: ellipsis;
+}
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 22px;
+  width: 22px;
+  background-color: #eee;
+  border-radius: 4px;
+}
+.checkmark.checkradio {
+  border-radius: 50%;
+}
+.checkmark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+input[type=radio]:checked ~ .checkmark.checkradio, 
+input[type=checkbox]:checked ~ .checkmark.checkbox {
+  background-color: $theme-mainColor;
+}
+input[type=radio]:checked ~ .checkmark.checkradio:after,
+input[type=checkbox]:checked ~ .checkmark.checkbox:after {
+  display: block;
+}
+.checkmark.checkradio:after {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+.checkmark.checkbox:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
 }
 .container {
   width: 100%;
@@ -60,7 +101,12 @@ input {
   color: $theme-textColor;
   background: $theme-mainColor;
   font-weight: bold;
+  &:disabled {
+    color: #ccb04c;
+    cursor: default;
+  }
 }
+
 .button--yellow:active:not(:disabled),
 .button--yellow:focus:not(:disabled) {
   background-color: darken($theme-mainColor, 3%);
