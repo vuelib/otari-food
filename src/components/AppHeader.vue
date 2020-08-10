@@ -1,63 +1,90 @@
 <template>
-  <header class="header">
-    <div class="header-container container">
-      <div class="header-logo">
-        <a href="#">
-          <img
-            class="header-logo__img"
-            src="../assets/svg/logo.svg"
-            alt="logo"
-          />
-        </a>
+  <div>
+    <header class="header">
+      <div class="header-container container">
+        <div class="header-logo">
+          <router-link to="/" aria-label="На главную">
+            <img
+              class="header-logo__img"
+              src="../assets/svg/logo.svg"
+              alt="logo"
+            />
+          </router-link>
+        </div>
+        <div class="header-menu">
+          <a
+            aria-label="Ресторанам"
+            rel="nofollow"
+            href="#"
+            class="header-menu__link"
+          >
+            Ресторанам
+          </a>
+          <a
+            aria-label="Курьерам"
+            rel="nofollow"
+            href="#"
+            class="header-menu__link"
+          >
+            Курьерам
+          </a>
+          <a
+            aria-label="Компаниям"
+            rel="nofollow"
+            href="#"
+            class="header-menu__link"
+          >
+            Компаниям
+          </a>
+        </div>
+        <button class="header__button">{{ city }}</button>
+        <button @click="openLoginModal" class="header__button">
+          <span v-if="!isAuthUser">Войти</span>
+          <span v-else>Выйти</span>
+        </button>
       </div>
-      <div class="header-menu">
-        <a
-          aria-label="Ресторанам"
-          rel="nofollow"
-          href="#"
-          class="header-menu__link"
-        >
-          Ресторанам
-        </a>
-        <a
-          aria-label="Курьерам"
-          rel="nofollow"
-          href="#"
-          class="header-menu__link"
-        >
-          Курьерам
-        </a>
-        <a
-          aria-label="Компаниям"
-          rel="nofollow"
-          href="#"
-          class="header-menu__link"
-        >
-          Компаниям
-        </a>
-      </div>
-      <div class="header__button">{{ city }}</div>
-      <button class="header__button">
-        <span>Войти</span>
-        <!-- <span>Выйти</span> -->
-      </button>
-    </div>
-  </header>
+    </header>
+    <app-popup
+      v-show="isModalVisible && !isAuthUser"
+      @closePopup="closeLoginModal"
+    >
+      <AppLogin />
+    </app-popup>
+    <!-- <AppLogin /> -->
+  </div>
 </template>
 
 <script>
+import AppPopup from './AppPopup';
+import AppLogin from './AppLogin';
+import auth from '@/mixins/auth.js';
+
 export default {
+  methods: {
+    openLoginModal() {
+      if (this.isAuthUser) this.logout();
+      else this.isModalVisible = true;
+    },
+    closeLoginModal() {
+      this.isModalVisible = false;
+    }
+  },
   data: () => ({
+    isModalVisible: false,
     city: 'Владикавказ'
   }),
-  name: 'AppHeader'
+  mixins: [auth],
+  name: 'AppHeader',
+  components: {
+    AppPopup,
+    AppLogin
+  }
 };
 </script>
 
 <style lang="scss">
 $header-grey: #ccc;
 $header-bg: #fff;
-$header-text: #000;
 
 .header {
   top: 0;
@@ -69,8 +96,9 @@ $header-text: #000;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   transition: left 0.2s ease-in-out;
   will-change: transform;
+  font-weight: 100;
   &__button {
-    color: $header-text;
+    color: $theme-textColor;
     height: 32px;
     border: 1px solid $header-grey;
     cursor: pointer;
@@ -107,6 +135,7 @@ $header-text: #000;
   &__link {
     padding: 0 20px;
     font-size: 16px;
+    color: $theme-textColor;
     &:hover {
       color: $header-grey;
     }
