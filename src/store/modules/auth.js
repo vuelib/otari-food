@@ -8,6 +8,9 @@ export default {
   mutations: {
     SET_USER_UUID(store, uuid) {
       store.user_uuid = uuid;
+    },
+    DELETE_USER_UUID(store) {
+      store.user_uuid = null;
     }
   },
   actions: {
@@ -15,8 +18,9 @@ export default {
       const { user_uuid } = await loginService(userData);
       commit('SET_USER_UUID', user_uuid);
     },
-    logout() {
+    logout({ commit }) {
       logoutService();
+      commit('DELETE_USER_UUID');
     }
   },
   getters: {
