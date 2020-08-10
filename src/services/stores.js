@@ -2,7 +2,7 @@ import api from './axios-api';
 
 export function getStoresByFilterService({ page, limit = 10 }) {
   return api.client
-    .post('/stores', {
+    .post('/stores?type=restaurant', {
       page,
       limit
     })
