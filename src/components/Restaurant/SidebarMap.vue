@@ -24,9 +24,6 @@
 
 <script>
 export default {
-  mounted() {
-    console.log(this.destinationPoints);
-  },
   props: {
     destinationPoints: {
       type: Array,
