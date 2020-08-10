@@ -4,11 +4,7 @@
       <div class="header-container container">
         <div class="header-logo">
           <router-link to="/" aria-label="На главную">
-            <img
-              class="header-logo__img"
-              src="../assets/svg/logo.svg"
-              alt="logo"
-            />
+            <img class="header-logo__img" src="../assets/logo.png" alt="logo" />
           </router-link>
         </div>
         <div class="header-menu">

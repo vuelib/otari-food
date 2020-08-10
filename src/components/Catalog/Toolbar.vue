@@ -84,7 +84,7 @@ export default {
     }
   }
   &--active {
-    background-color: #fce000;
+    background-color: $theme-mainColor;
   }
 }
 </style>

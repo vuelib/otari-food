@@ -1,7 +1,7 @@
 <template>
   <div class="auth">
     <div class="auth__logo">
-      <img class="auth__logo-img" src="@/assets/svg/logo.svg" alt="logo" />
+      <img class="auth__logo-img" src="@/assets/logo.png" alt="logo" />
     </div>
     <form @submit.prevent="submitLoginForm" class="auth-form">
       <div class="auth-form__header">
