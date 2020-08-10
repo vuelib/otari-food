@@ -1,5 +1,7 @@
 # otari-food
 
+## Demo: https://otari-food.netlify.app/
+
 ## Project setup
 ```
 npm install
