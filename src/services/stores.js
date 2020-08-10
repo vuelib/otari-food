@@ -13,12 +13,8 @@ export function getStoresByUUIDService({ uuid }) {
   return api.client(`/stores/${uuid}`).then(({ data }) => data);
 }
 
-export function getProductsService({ uuid, page = 1, limit = 100 }) {
+export function getProductsService({ storeuuid, page = 1, limit = 100 }) {
   return api.client
-    .post('/products', {
-      limit,
-      page,
-      uuid
-    })
+    .post(`/products?limit=${limit}&page=${page}&storeuuid=${storeuuid}`)
     .then(({ data }) => data);
 }
