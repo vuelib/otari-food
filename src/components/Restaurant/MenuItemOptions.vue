@@ -2,8 +2,10 @@
   <div class="modal-wrapper">
     <div class="modal modal-menu-item-options">
       <div class="menu-item-options">
-        <div class="menu-item-options__header">Выберите опции</div>
-        <div class="menu-item-options__body">
+        <div class="modal__header menu-item-options__header">
+          Выберите опции
+        </div>
+        <div class="modal__body menu-item-options__body">
           <div class="options-group">
             <!--  -->
             <div class="options-group__top-line-wrapper">
@@ -69,7 +71,7 @@
             <!--  -->
           </div>
         </div>
-        <div class="menu-item-options__footer">
+        <div class="modal__footer menu-item-options__footer">
           <button
             @click="sendOptionOrder"
             :disabled="isDisabled"
@@ -148,11 +150,11 @@ export default {
 
       const mergeOptions = [...this.scopedToppings];
       this.scopedVariant ? mergeOptions.push(this.scopedVariant) : false;
-
-      this.pushProductToCartWithOptions({
-        product: this.optionProduct,
+      this.$emit('pushProductToCart', {
+        ...this.optionProduct,
         options: mergeOptions,
-        quantity: this.scopedQuantity
+        quantity: this.scopedQuantity,
+        priceWithOptions: this.getLocalTotalPrice
       });
       this.$emit('closePopup');
     },
@@ -181,6 +183,35 @@ export default {
 </script>
 
 <style lang="scss">
+.modal {
+  &__header {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: 24px;
+    font-weight: bold;
+    white-space: pre-line;
+    line-height: 36px;
+    margin-right: 66px;
+  }
+  &__body {
+    max-height: 555px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border-top: solid 1px #f5f5f5;
+    padding: 10px 20px;
+    background-color: #fafafa;
+  }
+  &__footer {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    > button {
+      width: auto;
+      margin: 0 8px;
+    }
+  }
+}
+
 .modal-wrapper {
   height: 100%;
   display: flex;
@@ -196,28 +227,6 @@ export default {
   width: 672px;
 }
 .menu-item-options {
-  &__header {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: 24px;
-    font-weight: bold;
-    white-space: pre-line;
-    line-height: 36px;
-    margin-right: 66px;
-  }
-  &__body {
-    max-height: 555px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    border-top: solid 1px #f5f5f5;
-    padding: 0px 20px;
-    background-color: #fafafa;
-  }
-  &__footer {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-  }
   &__counter {
     margin: 0 8px;
     border: solid 1px #e0e0e0;
@@ -271,8 +280,8 @@ export default {
 .options-group {
   &__top-line-wrapper {
     color: #b0b0b0;
-    height: 48px;
-    margin: 8px 0;
+    height: 35px;
+    margin-bottom: 15px;
     position: relative;
     font-size: 14px;
   }

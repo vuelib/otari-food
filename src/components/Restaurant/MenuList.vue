@@ -1,5 +1,5 @@
 <template>
-  <div @click="pushToCart" ref="menu-list" class="menu-list">
+  <div @click="handlerPushToCart" ref="menu-list" class="menu-list">
     <div
       v-for="([name, category], key) of Object.entries(categories)"
       :key="key"
@@ -8,30 +8,49 @@
       <!-- Menu Component -->
       <Menu :category-name="name" :category="category" />
     </div>
-    <AppPopup @closePopup="closePopup" v-show="isShowOptions">
+
+    <!-- Modals -->
+    <app-popup @closePopup="closeOptionsPopup" v-show="isShowOptions">
+      <!-- Menu Item Options Component -->
       <MenuItemOptions
-        @closePopup="closePopup"
         :option-product="optionProduct"
+        @pushProductToCart="checkEqualStore"
+        @closePopup="closeOptionsPopup"
       />
-    </AppPopup>
+    </app-popup>
+
+    <!-- Confirm to change store -->
+    <app-popup @closePopup="closeChangeStorePopup" v-show="isChangingStore">
+      <!-- Confirm component -->
+      <AppConfirm
+        header-title="Оформить заказ из другого ресторана"
+        body-title="Все ранее добавленные блюда будут удалены из корзины"
+        :select-product="selectProduct"
+        @acceptConfirm="pushToCart"
+        @closePopup="closeChangeStorePopup"
+      />
+    </app-popup>
   </div>
 </template>
 
 <script>
 import Menu from '@/components/Restaurant/Menu.vue';
 import MenuItemOptions from '@/components/Restaurant/MenuItemOptions.vue';
+import AppConfirm from '@/components/AppConfirm.vue';
 import AppPopup from '@/components/AppPopup.vue';
 
 import { createNamespacedHelpers } from 'vuex';
 const mapGettersStores = createNamespacedHelpers('stores').mapGetters;
 const mapActionsCart = createNamespacedHelpers('cart').mapActions;
+const mapGettersCart = createNamespacedHelpers('cart').mapGetters;
 
 export default {
   computed: {
-    ...mapGettersStores(['findStoreProductByUUID'])
+    ...mapGettersStores(['findStoreProductByUUID']),
+    ...mapGettersCart(['checkOnEqualActiveStoreUUID'])
   },
   methods: {
-    pushToCart({ target }) {
+    handlerPushToCart({ target }) {
       // Delegating events
       const productContainer = target.closest('article');
       if (
@@ -43,15 +62,30 @@ export default {
       const product = this.findStoreProductByUUID(
         productContainer.dataset.product
       );
+
+      // Product have variants or toppings
       if (product.variants || product.toppings) {
         this.optionProduct = product;
         this.isShowOptions = true;
-      } else this.pushProductToCart(product);
+      } else this.checkEqualStore(product);
     },
-    closePopup() {
+    checkEqualStore(product) {
+      console.log('checkEqualStore', product);
+      if (!this.checkOnEqualActiveStoreUUID(product.store_uuid)) {
+        this.isChangingStore = true;
+        this.selectProduct = product;
+      } else this.pushToCart(product);
+    },
+    pushToCart(product) {
+      this.pushProductToCart(product);
+    },
+    closeOptionsPopup() {
       this.isShowOptions = false;
     },
-    ...mapActionsCart(['pushProductToCart'])
+    closeChangeStorePopup() {
+      this.isChangingStore = false;
+    },
+    ...mapActionsCart(['pushProductToCart', 'clearCartOfProducts'])
   },
   props: {
     categories: {
@@ -61,14 +95,17 @@ export default {
     }
   },
   data: () => ({
+    selectProduct: {},
     optionProduct: {},
-    isShowOptions: false
+    isShowOptions: false,
+    isChangingStore: false
   }),
   name: 'MenuList',
   components: {
     Menu,
     MenuItemOptions,
-    AppPopup
+    AppPopup,
+    AppConfirm
   }
 };
 </script>
