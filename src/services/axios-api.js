@@ -48,9 +48,12 @@ class Api {
         }
 
         if (!this.refreshRequest) {
-          this.refreshRequest = this.client.post('/login/refresh', {
-            refresh: this.refresh_token
-          });
+          this.refreshRequest = this.client.post(
+            'https://client.apis.stage.faem.pro/api/v2/auth/verification',
+            {
+              refresh: this.refresh_token
+            }
+          );
         }
         const data = await this.refreshRequest;
         this.token = data.token;
