@@ -1,15 +1,5 @@
 import api from './axios-api';
 
-export function loginService({ login, password }) {
-  return api.client
-    .post('/login/', {
-      login,
-      password
-    })
-    .then(({ data }) => data)
-    .catch(() => {});
-}
-
 export function getCodeFromPhoneNumberService({ phone, device_id }) {
   return api.client
     .post('https://client.apis.stage.faem.pro/api/v2/auth/new', {
