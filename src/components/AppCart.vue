@@ -6,7 +6,7 @@
           <div class="app-cart__top-line">
             <div class="app-cart__title">Мой заказ</div>
             <div
-              @click="clearCart"
+              @click="confirmClearCart"
               class="trash-icon app-cart_trash-icon"
             ></div>
           </div>
@@ -21,7 +21,7 @@
                 class="app-cart__item"
               >
                 <!-- App Cart Item -->
-                <AppCartItem :key="cartItem.uuid" :cart-item="cartItem" />
+                <AppCartItem :cart-item="cartItem" />
               </div>
             </div>
             <div class="app-cart__divider"></div>
@@ -55,8 +55,20 @@
         </button>
       </div>
     </div>
+    <!-- Auth Modal  -->
     <app-popup v-show="isShowModal && !isAuthUser" @closePopup="closePopup">
       <AppLogin />
+    </app-popup>
+    <!-- Confirm Modal -->
+    <app-popup
+      v-show="isConfirmClearCart"
+      @closePopup="closeConfirmClearCartPopup"
+    >
+      <AppConfirm
+        header-title="Удалить все из корзины?"
+        @acceptConfirm="clearCart"
+        @closePopup="closeConfirmClearCartPopup"
+      />
     </app-popup>
   </div>
 </template>
@@ -64,6 +76,7 @@
 <script>
 import AppCartItem from './AppCartItem.vue';
 import AppLogin from './AppLogin.vue';
+import AppConfirm from './AppConfirm.vue';
 
 import auth from '@/mixins/auth.js';
 
@@ -80,8 +93,14 @@ export default {
       // 4:28 am - want to sleep
       alert('Заказ успешно оформлен');
     },
+    confirmClearCart() {
+      this.isConfirmClearCart = true;
+    },
     clearCart() {
       this.clearCartOfProducts();
+    },
+    closeConfirmClearCartPopup() {
+      this.isConfirmClearCart = false;
     },
     closePopup() {
       this.isShowModal = false;
@@ -89,13 +108,15 @@ export default {
     ...mapActions(['clearCartOfProducts'])
   },
   data: () => ({
-    isShowModal: false
+    isShowModal: false,
+    isConfirmClearCart: false
   }),
   mixins: [auth],
   name: 'AppCart',
   components: {
     AppCartItem,
-    AppLogin
+    AppLogin,
+    AppConfirm
   }
 };
 </script>
