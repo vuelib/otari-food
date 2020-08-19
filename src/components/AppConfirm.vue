@@ -2,10 +2,10 @@
   <div class="modal-wrapper">
     <div class="modal modal-menu-item-options">
       <div class="modal__header">{{ headerTitle }}</div>
-      <div class="modal__body">{{ bodyTitle }}</div>
+      <div v-if="bodyTitle" class="modal__body">{{ bodyTitle }}</div>
       <div class="modal__footer">
         <button @click="acceptConfirm" class="button button--yellow">
-          {{ footerBtnTitle }}
+          Продолжить
         </button>
         <button @click="closePopup" class="button">
           Отмена
@@ -40,17 +40,12 @@ export default {
     bodyTitle: {
       type: String,
       default: '',
-      required: true
-    },
-    footerBtnTitle: {
-      type: String,
-      default: '',
-      required: true
+      required: false
     },
     selectProduct: {
       type: Object,
       default: () => {},
-      required: true
+      required: false
     }
   },
   name: 'AppConfirm'
