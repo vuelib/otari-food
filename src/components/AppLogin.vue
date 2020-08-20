@@ -41,11 +41,15 @@
         <TheMask
           v-model="user.code"
           :mask="['####']"
+          :class="{ 'code-group__error-input': isVerificationCodeWrong }"
           class="code-group__input form-group__input"
           type="tel"
           placeholder="Код из СМС"
         />
-        <div class="form-group__error"></div>
+        <!-- Code Error -->
+        <div v-if="isVerificationCodeWrong" class="code-group__error">
+          Неверный формат
+        </div>
       </div>
       <button
         @click="sendVerificationCode"
@@ -101,10 +105,15 @@ export default {
     // Send Verification Code
     async sendVerificationCode() {
       console.log('SEND VerificationCode', this.user.device_id);
-      await this.checkToEqualVerificationCode({
-        code: +this.user.code,
-        device_id: this.user.device_id
-      });
+      try {
+        await this.checkToEqualVerificationCode({
+          code: +this.user.code,
+          device_id: this.user.device_id
+        });
+        this.isVerificationCodeWrong = false;
+      } catch (e) {
+        this.isVerificationCodeWrong = true;
+      }
     },
     // Generate tmp device id
     tmpDeviceId() {
@@ -127,6 +136,7 @@ export default {
   },
   data: () => ({
     sendingGetCode: false,
+    isVerificationCodeWrong: false,
     user: {
       phone: '',
       code: '',
@@ -241,6 +251,17 @@ export default {
     height: 34px;
     border: 1px solid #cccccc;
     box-shadow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    text-overflow: ellipsis;
+  }
+  &__error-input {
+    color: $danger-color;
+    border-color: $danger-color;
+  }
+  &__error {
+    color: $danger-color;
+    font-size: 13px;
+    font-weight: bold;
   }
 }
 // Icon
