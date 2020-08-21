@@ -3,10 +3,14 @@ import Vue from 'vue';
 export default {
   namespaced: true,
   state: {
+    cart_active_store_uuid: '',
     cart_products: [],
     delivery_price: 100
   },
   mutations: {
+    SET_ACTIVE_STORE_UUID(state, select_uuid) {
+      state.cart_active_store_uuid = select_uuid;
+    },
     ADD_PRODUCT_TO_CART(state, { product, findCartProduct }) {
       const cartProductExist = findCartProduct(product.uuid);
       if (cartProductExist) return cartProductExist.quantity++;
@@ -15,7 +19,14 @@ export default {
       state.cart_products.push(product);
     },
     ADD_PRODUCT_TO_CART_WITH_OPTIONS(state, payload) {
-      const { product, options, quantity, filterCartProduct } = payload;
+      const {
+        product,
+        options,
+        quantity,
+        priceWithOptions,
+        getTotalOptions,
+        filterCartProduct
+      } = payload;
 
       // Searh all products with equal uuid
       const cartsProductExist = filterCartProduct(product.uuid);
@@ -34,9 +45,10 @@ export default {
       });
       // <-- unfinished work ;(
 
+      console.log(product.options);
       // tmp
       product.options = [...options];
-
+      console.log(product.options);
       if (cartsProductExist.length) return product.quantity++;
       state.cart_products.push(product);
       Vue.set(product, 'quantity', quantity);
@@ -62,17 +74,21 @@ export default {
         product,
         findCartProduct: getters.findCartProductByUUID
       });
+      commit('SET_ACTIVE_STORE_UUID', product.store_uuid);
     },
     pushProductToCartWithOptions(
       { commit, getters },
-      { product, options, quantity }
+      { product, options, quantity, priceWithOptions }
     ) {
       commit('ADD_PRODUCT_TO_CART_WITH_OPTIONS', {
         product,
         options,
         quantity,
-        filterCartProduct: getters.filterCartProductByUUID
+        priceWithOptions,
+        filterCartProduct: getters.filterCartProductByUUID,
+        getTotalOptions: getters.getTotalOptions
       });
+      commit('SET_ACTIVE_STORE_UUID', product.store_uuid);
     },
     deleteProductFromCart({ commit }, product) {
       commit('DELETE_PRODUCT_FROM_CART', product);
@@ -111,6 +127,17 @@ export default {
     filterCartProductByUUID(state) {
       return findUUID => {
         return state.cart_products.filter(({ uuid }) => uuid === findUUID);
+      };
+    },
+    getActiveStoreUUID(state) {
+      return state.cart_active_store_uuid;
+    },
+    checkOnEqualActiveStoreUUID(state, getters) {
+      return selectStoreUUID => {
+        return (
+          state.cart_active_store_uuid === selectStoreUUID ||
+          getters.isCartEmpty
+        );
       };
     },
     isCartEmpty(state) {

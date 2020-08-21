@@ -4,7 +4,7 @@
       <ul class="promo-list">
         <li class="promo-list__item">
           <a href="#" class="promo-list__link">
-            <span>Яндекс.Еда</span>
+            <span>Faem.Delivery</span>
           </a>
         </li>
         <li class="promo-list__item">

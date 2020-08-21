@@ -14,7 +14,8 @@ export default {
   },
   methods: {
     scroll() {
-      document.querySelector(this.href).scrollIntoView({ behavior: 'smooth' });
+      // smoot scroll includes in vue-scrollactive package
+      // document.querySelector(this.href).scrollIntoView({ behavior: 'smooth' });
     }
   }
 };

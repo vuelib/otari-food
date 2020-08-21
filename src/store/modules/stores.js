@@ -58,12 +58,6 @@ export default {
         limit,
         page
       });
-      // Check equal to active store uuid
-      // storeuuid === state.active_store_uuid
-      //   ? commit('ADD_STORE_PRODUCTS', records)
-      //   : commit('SET_STORE_PRODUCTS', records);
-      // console.log(records);
-      // commit('SET_ACTIVE_STORE', storeuuid);
       commit('SET_STORE_PRODUCTS', records);
       commit('SET_STORE_PRODUCTS_COUNT', records_count);
     }

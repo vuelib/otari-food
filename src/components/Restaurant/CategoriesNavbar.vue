@@ -31,6 +31,7 @@
         </span>
         <div v-show="isShowMoreCategories" class="list-options">
           <div
+            @click="scroll(category)"
             v-for="(category, key) in getIntervalCategories(getViewInterval)"
             :key="key"
             class="list-option"
@@ -63,6 +64,12 @@ export default {
     }
   },
   methods: {
+    scroll(category) {
+      this.isShowMoreCategories = false;
+      document
+        .querySelector(this.getAnchorLink(category))
+        .scrollIntoView({ behavior: 'smooth' });
+    },
     toggleShowMoreCategories() {
       this.isShowMoreCategories = !this.isShowMoreCategories;
     },
@@ -90,8 +97,8 @@ export default {
           return;
         }
       }
-      this.isShowMoreBtn = false;
-      console.log(sumWidthCategories);
+      // this.isShowMoreBtn = false;
+      // console.log(sumWidthCategories);
     },
     // Event on changed active link
     onItemChanged(event, currentItem, lastActiveItem) {

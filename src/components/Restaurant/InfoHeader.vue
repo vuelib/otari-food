@@ -29,7 +29,7 @@
                 <div class="info-header__delivery-by-us"></div>
                 <div class="info-header__delivery-content">
                   <div class="info-header__delivery-title">
-                    Доставка Яндекс.Еды
+                    Доставка Faem.Delivery
                   </div>
                   <div class="info-header__delivery-description">
                     Доставка 29–99 ₽. Бесплатно при заказе от 1500 ₽

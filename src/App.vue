@@ -5,7 +5,7 @@
     <!-- Router View -->
     <div class="layout">
       <div class="container">
-        <router-view />
+        <router-view :key="$route.fullPath" />
       </div>
     </div>
   </div>
