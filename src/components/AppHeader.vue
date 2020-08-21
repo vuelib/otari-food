@@ -33,6 +33,17 @@
             Компаниям
           </a>
         </div>
+        <template v-if="!isCartEmpty">
+          <button class="header__address-button header__button">
+            <i class="icon-place"></i>
+            Молодёжная улица, 27/4
+          </button>
+          <button @click="goToCart" class="header__cart-button header__button">
+            <i class="icon-cart"></i>
+            {{ getTotalPrice }}
+            ₽
+          </button>
+        </template>
         <button class="header__button">{{ city }}</button>
         <button @click="openLoginModal" class="header__button">
           <span v-if="!isAuthUser">Войти</span>
@@ -55,8 +66,24 @@ import AppPopup from './AppPopup';
 import AppLogin from './AppLogin';
 import auth from '@/mixins/auth.js';
 
+import { createNamespacedHelpers } from 'vuex';
+const { mapGetters } = createNamespacedHelpers('cart');
+
 export default {
   methods: {
+    goToCart() {
+      if (
+        this.$route.name === 'RestaurantPage' &&
+        this.$route.params.id === this.getActiveStoreUUID
+      )
+        return;
+      this.$router.push({
+        name: 'RestaurantPage',
+        params: {
+          id: this.getActiveStoreUUID
+        }
+      });
+    },
     openLoginModal() {
       if (this.isAuthUser) this.logout();
       else this.isModalVisible = true;
@@ -64,6 +91,9 @@ export default {
     closeLoginModal() {
       this.isModalVisible = false;
     }
+  },
+  computed: {
+    ...mapGetters(['getTotalPrice', 'isCartEmpty', 'getActiveStoreUUID'])
   },
   data: () => ({
     isModalVisible: false,
@@ -108,6 +138,21 @@ $header-bg: #fff;
     white-space: nowrap;
     border-radius: 100px;
   }
+  &__cart-button {
+    margin-left: 0;
+    padding-left: 10px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    color: $theme-textColor;
+    background: $theme-mainColor;
+    border-color: $theme-mainColor;
+  }
+  &__address-button {
+    border-right: none;
+    padding-right: 10px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 }
 .header-container {
   height: 80px;
@@ -135,6 +180,44 @@ $header-bg: #fff;
     &:hover {
       color: $header-grey;
     }
+  }
+}
+.icon-cart {
+  &::before {
+    speak: none;
+    width: 1em;
+    display: inline-block;
+    content: '\e817';
+    font-style: normal;
+    text-align: center;
+    font-family: foodfox-icons;
+    font-weight: normal;
+    line-height: 1em;
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+    font-variant: normal;
+    text-transform: none;
+    text-decoration: inherit;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+.icon-place {
+  &::before {
+    speak: none;
+    width: 1em;
+    display: inline-block;
+    content: '\e813';
+    font-style: normal;
+    text-align: center;
+    font-family: foodfox-icons;
+    font-weight: normal;
+    line-height: 1em;
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+    font-variant: normal;
+    text-transform: none;
+    text-decoration: inherit;
+    -webkit-font-smoothing: antialiased;
   }
 }
 </style>
