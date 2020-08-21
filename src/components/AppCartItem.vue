@@ -8,7 +8,7 @@
         </span>
         <span class="app-cart-item__weight">{{ cartItem.weight }} г</span>
       </div>
-      <!--  -->
+      <!-- Quantity Controller -->
       <div class="app-cart-item__quantity-container">
         <div @click="incrementQuantity" class="app-cart-item__increment">+</div>
         <div class="app-cart-item__quantity">{{ cartItem.quantity }}</div>
@@ -23,7 +23,7 @@
       </div>
       <!--  -->
       <div class="app-cart-item__price">
-        <span>{{ cartItem.price }} ₽</span>
+        <span>{{ getPrice }} ₽</span>
       </div>
     </div>
     <div class="app-cart-item__options">
@@ -46,6 +46,13 @@ export default {
   computed: {
     isSingle() {
       return this.cartItem.quantity === 1;
+    },
+    getPrice() {
+      if (!this.cartItem.options) return this.cartItem.price;
+
+      return this.cartItem.options.reduce((sum, option) => {
+        return (sum += option.price);
+      }, this.cartItem.price);
     }
   },
   methods: {
@@ -94,6 +101,7 @@ export default {
     font-size: 14px;
     text-align: center;
     background: #f2f2f2;
+    user-select: none;
   }
   &__increment {
     width: 100%;
