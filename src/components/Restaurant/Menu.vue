@@ -1,6 +1,10 @@
 <template>
   <div class="category-menu">
-    <a :id="getAnchorLink(categoryName)" class="category-anchor-link"></a>
+    <a
+      :id="getAnchorLink(categoryName)"
+      :data-section-selector="getAnchorLink(categoryName)"
+      class="category-anchor-link scrollactive-item"
+    ></a>
     <div class="category-menu__header">
       <h2 class="category-menu__title">{{ categoryName }}</h2>
       <div class="category-menu__count">{{ category.length }}</div>
