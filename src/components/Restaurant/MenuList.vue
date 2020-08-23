@@ -40,14 +40,13 @@ import AppConfirm from '@/components/AppConfirm.vue';
 import AppPopup from '@/components/AppPopup.vue';
 
 import { createNamespacedHelpers } from 'vuex';
-const mapGettersStores = createNamespacedHelpers('stores').mapGetters;
-const mapActionsCart = createNamespacedHelpers('cart').mapActions;
-const mapGettersCart = createNamespacedHelpers('cart').mapGetters;
 
 export default {
   computed: {
-    ...mapGettersStores(['findStoreProductByUUID']),
-    ...mapGettersCart(['checkOnEqualActiveStoreUUID'])
+    ...createNamespacedHelpers('stores').mapGetters(['findStoreProductByUUID']),
+    ...createNamespacedHelpers('cart').mapGetters([
+      'checkOnEqualActiveStoreUUID'
+    ])
   },
   methods: {
     handlerPushToCart({ target }) {
@@ -85,7 +84,10 @@ export default {
     closeChangeStorePopup() {
       this.isChangingStore = false;
     },
-    ...mapActionsCart(['pushProductToCart', 'clearCartOfProducts'])
+    ...createNamespacedHelpers('cart').mapActions([
+      'pushProductToCart',
+      'clearCartOfProducts'
+    ])
   },
   props: {
     categories: {

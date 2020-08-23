@@ -70,12 +70,14 @@ export default {
   },
   actions: {
     pushProductToCart({ commit, getters }, product) {
+      console.log(product);
       commit('ADD_PRODUCT_TO_CART', {
         product,
         findCartProduct: getters.findCartProductByUUID
       });
       commit('SET_ACTIVE_STORE_UUID', product.store_uuid);
     },
+
     pushProductToCartWithOptions(
       { commit, getters },
       { product, options, quantity, priceWithOptions }

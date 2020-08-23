@@ -15,7 +15,7 @@
           {{ category }}
         </scroll-link>
       </scrollactive>
-      <div>
+      <div class="more-category">
         <span
           v-if="isShowMoreBtn"
           ref="more-select"
@@ -28,17 +28,17 @@
             <div class="categories-navbar__more-text">Еще</div>
             <div class="categories-navbar__more-icon"></div>
           </span>
-        </span>
-        <div v-show="isShowMoreCategories" class="list-options">
-          <div
-            @click="scroll(category)"
-            v-for="(category, key) in getIntervalCategories(getViewInterval)"
-            :key="key"
-            class="list-option"
-          >
-            {{ category }}
+          <div class="list-options">
+            <div
+              @click="scroll(category)"
+              v-for="(category, key) in getIntervalCategories(getViewInterval)"
+              :key="key"
+              class="list-option"
+            >
+              {{ category }}
+            </div>
           </div>
-        </div>
+        </span>
       </div>
     </div>
   </nav>
@@ -75,42 +75,42 @@ export default {
     },
     constructCategotiesNavbar() {
       const navEl = this.$refs['categories-navbar'].$el;
-      console.log(navEl);
+      //console.log(navEl);
       const navWidth = navEl.getBoundingClientRect().width;
-      console.log('navWidth', navWidth);
+      //console.log('navWidth', navWidth);
       const categories = [...navEl.children];
       let sumWidthCategories = 0;
       for (let i = 0; i < categories.length; i++) {
         sumWidthCategories += categories[i].getBoundingClientRect().width;
         if (sumWidthCategories > navWidth) {
-          console.log(sumWidthCategories, navWidth);
+          //console.log(sumWidthCategories, navWidth);
           this.isShowMoreBtn = true;
-          this.viewInterval = i;
-          console.log(
-            'View Categories',
-            this.getIntervalCategories(0, this.viewInterval)
-          );
-          console.log(
-            'View Categories',
-            this.getIntervalCategories(this.viewInterval)
-          );
+          this.viewInterval = i - 1;
+          //console.log(
+          //   'View Categories',
+          //   this.getIntervalCategories(0, this.viewInterval)
+          // );
+          //console.log(
+          //   'View Categories',
+          //   this.getIntervalCategories(this.viewInterval)
+          // );
           return;
         }
       }
       // this.isShowMoreBtn = false;
-      // console.log(sumWidthCategories);
+      // //console.log(sumWidthCategories);
     },
     // Event on changed active link
-    onItemChanged(event, currentItem, lastActiveItem) {
-      console.log(event, currentItem, lastActiveItem);
-    },
+    // onItemChanged(event, currentItem, lastActiveItem) {
+    // console.log(event, currentItem, lastActiveItem);
+    // },
     getAnchorLink(category) {
       return `#${category.trim().replace(/\s/g, '-')}`;
     }
   },
   watch: {
     categories(value) {
-      console.log('Watch', value);
+      //console.log('Watch', value);
       if (value.length > 0) {
         setTimeout(this.constructCategotiesNavbar, 0);
       }
@@ -178,6 +178,13 @@ export default {
     display: flex;
     margin-left: 32px;
     justify-content: flex-end;
+    position: relative;
+    &:hover {
+      > .list-options {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
   }
   &__more {
     cursor: pointer;
@@ -207,29 +214,49 @@ export default {
   }
 }
 .list-options {
-  width: 340px;
+  width: 320px;
   padding: 7px 0;
   max-height: 368px;
   overflow-y: auto;
   // box-sizing: content-box;
-
   position: absolute;
-  right: 0;
+  // right: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 75px;
   line-height: 20px;
 
-  overflow: auto;
   font-size: 10px;
   background: #fff;
   box-sizing: border-box;
   box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.15);
   border-radius: 4px;
+
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.3s;
+
+  &::before {
+    content: '';
+    width: 12px;
+    height: 12px;
+    display: block;
+    position: absolute;
+    background: #fff;
+    box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.15);
+    left: 50%;
+    top: -10px;
+    transform: translateX(-50%) rotate(45deg);
+    z-index: 99;
+  }
 }
 .list-option {
   cursor: pointer;
-  padding: 13px 15px 14px 15px;
+  padding: 13px 0 14px 36px;
   position: relative;
   font-size: 16px;
   margin-bottom: -1px;
+  font-weight: 100;
   &::first-letter {
     text-transform: uppercase;
   }
@@ -238,10 +265,12 @@ export default {
   }
 }
 .list-option:not(:first-child)::before {
-  cursor: pointer;
-  padding: 13px 0 14px 36px;
-  position: relative;
-  font-size: 16px;
-  margin-bottom: -1px;
+  content: '';
+  top: 0;
+  left: 36px;
+  right: 0;
+  display: block;
+  position: absolute;
+  border-top: 1px solid #f4f4f4;
 }
 </style>

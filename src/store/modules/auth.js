@@ -5,10 +5,11 @@ import {
 } from '@/services/auth.js';
 
 /* eslint no-unused-vars: */
+const user_data = JSON.parse(localStorage.getItem('userData'));
 export default {
   namespaced: true,
   state: {
-    user_uuid: null
+    user_uuid: user_data ? user_data.client_uuid : null
   },
   mutations: {
     SET_USER_UUID(store, uuid) {

@@ -4,7 +4,8 @@
   box-sizing: border-box;
 }
 :focus {
-  outline: -webkit-focus-ring-color auto 1px;
+  // outline: -webkit-focus-ring-color auto 1px;
+  outline: none;
 }
 a:-webkit-any-link:focus {
   outline-offset: 1px;

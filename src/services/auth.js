@@ -21,6 +21,7 @@ export function checkToEqualVerificationCodeService({ code, device_id }) {
     })
     .then(({ data }) => {
       console.log(data);
+      localStorage.setItem('userData', JSON.stringify(data));
       return data;
     });
 }
@@ -28,4 +29,5 @@ export function checkToEqualVerificationCodeService({ code, device_id }) {
 export function logoutService() {
   api.token = null;
   api.refresh_token = null;
+  localStorage.removeItem('userData');
 }

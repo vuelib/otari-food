@@ -3,6 +3,7 @@ const BASE_URL = 'https://crm.apis.stage.faem.pro/api/v2/';
 
 class Api {
   constructor(options = {}) {
+    console.log(options);
     // Singleton Pattern
     if (Api._instance) return Api._instance;
     Api._instance = this;
@@ -58,6 +59,7 @@ class Api {
         const data = await this.refreshRequest;
         this.token = data.token;
         this.refresh_token = data.refresh_token;
+        localStorage.setItem('userData', JSON.stringify(data));
         const newRequest = {
           ...error.config,
           retry: true
@@ -67,4 +69,4 @@ class Api {
     );
   }
 }
-export default new Api();
+export default new Api(JSON.parse(localStorage.getItem('userData')) || {});
