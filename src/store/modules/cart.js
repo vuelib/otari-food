@@ -4,7 +4,7 @@ export default {
   namespaced: true,
   state: {
     cart_active_store_uuid: '',
-    cart_products: [],
+    cart_products: {},
     delivery_price: 100
   },
   mutations: {
@@ -66,16 +66,42 @@ export default {
         Vue.delete(product, 'quantity');
       });
       state.cart_products = [];
+    },
+    // =======
+    ADD_PRODUCT_TO_CART_tmp(state, { product, findCartProduct }) {
+      // console.log('one', state.cart_products);
+      // Find equal product
+      const cartProductExistKey = findCartProduct(product.menuItem.uuid);
+      // Add new product to cart
+      if (!cartProductExistKey) {
+        // const cartItem = {
+        //   menuItem: product.menuItem,
+        //   extra: product.extra
+        // };
+        // Vue.set(cartItem, 'quantity', product.quantity);
+        // state.cart_products['sd'] = product;
+        Vue.set(state.cart_products, 'sd', product);
+        Vue.set(product.menuItem, 'quantity', product.quantity);
+      } else {
+        // Check product extra to equal
+        state.cart_products[cartProductExistKey].quantity += product.quantity;
+        product.menuItem.quantity += product.quantity;
+      }
+      // console.log('cartProductExist', cartProductExist);
+      // state.cart_products.set('sd', product);
+      console.log(state.cart_products);
     }
   },
   actions: {
     pushProductToCart({ commit, getters }, product) {
+      commit('SET_ACTIVE_STORE_UUID', product.menuItem.store_uuid);
       console.log(product);
-      commit('ADD_PRODUCT_TO_CART', {
+
+      commit('ADD_PRODUCT_TO_CART_tmp', {
         product,
         findCartProduct: getters.findCartProductByUUID
       });
-      commit('SET_ACTIVE_STORE_UUID', product.store_uuid);
+      // commit('SET_ACTIVE_STORE_UUID', product.store_uuid);
     },
 
     pushProductToCartWithOptions(
@@ -105,15 +131,15 @@ export default {
     },
     getTotalPrice(state, getters) {
       if (getters.isCartEmpty) return 0;
-
-      return state.cart_products.reduce(
-        (total, { price, quantity, options }) => {
-          const totalOptions = getters.getTotalOptions(options);
-          total += (price + totalOptions) * quantity;
-          return total;
-        },
-        state.delivery_price
-      );
+      return 500;
+      // return state.cart_products.reduce(
+      //   (total, { price, quantity, options }) => {
+      //     const totalOptions = getters.getTotalOptions(options);
+      //     total += (price + totalOptions) * quantity;
+      //     return total;
+      //   },
+      //   state.delivery_price
+      // );
     },
     getTotalOptions(state) {
       return options => {
@@ -123,7 +149,12 @@ export default {
     },
     findCartProductByUUID(state) {
       return findUUID => {
-        return state.cart_products.find(({ uuid }) => uuid === findUUID);
+        for (const [key, { menuItem }] of Object.entries(state.cart_products)) {
+          if (findUUID === menuItem.uuid) {
+            return key;
+          }
+        }
+        // return state.cart_products.find(({ uuid }) => uuid === findUUID);
       };
     },
     filterCartProductByUUID(state) {
@@ -138,12 +169,14 @@ export default {
       return selectStoreUUID => {
         return (
           state.cart_active_store_uuid === selectStoreUUID ||
-          getters.isCartEmpty
+          // getters.isCartEmpty
+          state.cart_active_store_uuid === ''
         );
       };
     },
     isCartEmpty(state) {
-      return state.cart_products.length === 0;
+      // return state.getActiveStoreUUID === '';
+      // return state.cart_products.size === 0;
     }
   }
 };

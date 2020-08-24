@@ -69,11 +69,18 @@ export default {
       } else this.checkEqualStore(product);
     },
     checkEqualStore(product) {
-      console.log('checkEqualStore', product);
-      if (!this.checkOnEqualActiveStoreUUID(product.store_uuid)) {
+      const cartItem = !product.extra
+        ? {
+            menuItem: product,
+            extra: [],
+            quantity: 1
+          }
+        : product;
+      const { menuItem } = cartItem;
+      if (!this.checkOnEqualActiveStoreUUID(menuItem.store_uuid)) {
         this.isChangingStore = true;
-        this.selectProduct = product;
-      } else this.pushToCart(product);
+        this.selectProduct = cartItem;
+      } else this.pushToCart(cartItem);
     },
     pushToCart(product) {
       this.pushProductToCart(product);

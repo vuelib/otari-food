@@ -14,7 +14,7 @@
     </div>
     <div class="restaurant-page__sidebar-wrapper">
       <!-- SidebarMap Component -->
-      <AppCart v-if="!isCartEmpty" />
+      <AppCart v-if="getActiveStoreUUID !== ''" />
       <SidebarMap v-else :destination-points="store.destination_points" />
     </div>
   </div>
@@ -43,7 +43,7 @@ export default {
       return this.store;
     },
     ...mapGetters(['getStoreProductsCategory', 'findStoreProductByUUID']),
-    ...mapGettersCart(['isCartEmpty'])
+    ...mapGettersCart(['isCartEmpty', 'getActiveStoreUUID'])
   },
   methods: {
     async initStore() {
