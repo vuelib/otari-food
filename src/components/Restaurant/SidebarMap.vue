@@ -2,19 +2,20 @@
   <aside class="sidebar-map">
     <div class="sidebar-map-location">
       <div class="sidebar-map-location__map-wrapper">
-        <div id="map" class="sidebar-map-location__map"></div>
+        <!-- <div id="map" class="sidebar-map-location__map"></div> -->
         <!-- <div
           v-for="point in destinationPoints"
           :key="point.uuid"
           class="sidebar-map-location__map"
           :style="{
-            backgroundImage: `url(https://static-maps.yandex.ru/1.x/?l=map&amp;ll=${point.lon},${point.lat}&amp;size=620,1042&amp;scale=2&amp;z=16&amp;key=AP5KxFsBAAAAr4rWXAIApROgjMkXM-bOIOmMi2amb4pKEysAAAAAAAAAAADynFDWdJDGB1mMpov177fEMLqcCA==)`
+            backgroundImage: `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-122.337798,37.810550,9.67,0.00,0.00/1000x600@2x?access_token=access_token=pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg`
           }"
-        ></div>
-        <div class="sidebar-map-location__pin"></div> -->
+        ></div> -->
+        <img class="sidebar-map-location__map" :src="getSrcMap" />
+        <div class="sidebar-map-location__pin"></div>
       </div>
       <div class="sidebar-map-location__button">
-        <button class="button button--yellow">
+        <button @click="showEnterAddressModal" class="button button--yellow">
           <span class="arrow-icon"></span>
           <span>Указать свой адрес</span>
         </button>
@@ -28,24 +29,34 @@ import mapboxgl from 'mapbox-gl';
 mapboxgl.accessToken =
   'pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg';
 export default {
-  mounted() {
-    // setTimeout(() => {
-    //   console.log(this.destinationPoints);
-    //   this.map = new mapboxgl.Map({
-    //     container: 'map',
-    //     style: 'mapbox://styles/faemtaxi/ck0fcruqn1p9o1cnzazi3pli9',
-    //     center: [this.getLocation.lon, this.getLocation.lat],
-    //     zoom: 14,
-    //     interactive: false
-    //   });
-    //   new mapboxgl.Marker()
-    //     .setLngLat([this.getLocation.lon, this.getLocation.lat])
-    //     .addTo(this.map);
-    // }, 0);
+  created() {
+    console.log(this.getLocation);
   },
+  // mounted() {
+  //   this.map = new mapboxgl.Map({
+  //     container: 'map',
+  //     style: 'mapbox://styles/faemtaxi/ck0fcruqn1p9o1cnzazi3pli9',
+  //     center: [this.getLocation.lon, this.getLocation.lat],
+  //     zoom: 16,
+  //     interactive: false
+  //   });
+  //   new mapboxgl.Marker()
+  //     .setLngLat([this.getLocation.lon, this.getLocation.lat])
+  //     .addTo(this.map);
+  // },
   computed: {
+    getSrcMap() {
+      return `https://api.mapbox.com/styles/v1/mapbox/light-v10/static/${this.getLocation.lon},${this.getLocation.lat},16,0.00,0.00/1000x600@2x?access_token=pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg`;
+      // return 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/44.6547,43.0355,16,0.00,0.00/1000x600@2x?access_token=pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg';
+    },
     getLocation() {
       return this.destinationPoints[0];
+    }
+  },
+  methods: {
+    showEnterAddressModal() {
+      console.log('asdasd');
+      this.$parent.$emit('showEnterAddressModal');
     }
   },
   data: () => ({
@@ -112,6 +123,7 @@ export default {
     position: absolute;
     background-size: cover;
     background-position: center;
+    object-fit: cover;
   }
   &__pin {
     top: 50%;
@@ -140,7 +152,8 @@ export default {
   background-repeat: no-repeat;
   background-position: center;
 }
-.mapboxgl-control-container {
+.mapboxgl-ctrl-bottom-left,
+.mapboxgl-ctrl-bottom-right {
   display: none;
 }
 </style>

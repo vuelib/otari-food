@@ -5,12 +5,15 @@
     <!-- Router View -->
     <div class="layout">
       <div class="container">
-        <router-view :key="$route.fullPath" />
+        <router-view
+          @showEnterAddressModal="showEnterAddressModal"
+          :key="$route.fullPath"
+        />
       </div>
     </div>
     <!-- Enter Address Modal -->
-    <app-popup v-if="isShowEnterAddress">
-      <AppEnterAddress />
+    <app-popup @closePopup="closeEnterAddressModal" v-if="isShowEnterAddress">
+      <AppEnterAddress @closePopup="closeEnterAddressModal" />
     </app-popup>
   </div>
 </template>
@@ -20,7 +23,10 @@ import AppHeader from './components/AppHeader';
 import AppEnterAddress from './components/AppEnterAddress';
 export default {
   methods: {
-    closeEnterAddressModa() {
+    showEnterAddressModal() {
+      this.isShowEnterAddress = true;
+    },
+    closeEnterAddressModal() {
       this.isShowEnterAddress = false;
     }
   },

@@ -38,7 +38,10 @@
                   class="react-autosuggest__suggestions-container"
                 ></div>
               </div>
-              <div class="address-input__image-locate"></div>
+              <div
+                @click="showEnterAddressModal"
+                class="address-input__image-locate"
+              ></div>
             </div>
           </div>
           <div class="address-block__button-wrapper">
@@ -54,6 +57,11 @@
 
 <script>
 export default {
+  methods: {
+    showEnterAddressModal() {
+      this.$parent.$emit('showEnterAddressModal');
+    }
+  },
   computed: {
     bg() {
       return `url(${require('@/assets/default.png')})`;
