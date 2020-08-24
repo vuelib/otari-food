@@ -27,11 +27,11 @@
           :disabled="isDisabledGetCode"
           class="phone-button button button--yellow"
         >
-          <span v-if="sendingGetCode">
+          <span v-if="isTimerNotNull">
             <i class="icon-agree"></i>
-            00:40
+            {{ getTimerTime }}
           </span>
-          <span>
+          <span v-else>
             Получить код
           </span>
         </button>
@@ -84,7 +84,13 @@ export default {
       return phone.trim() === '' || code.trim() === '';
     },
     isDisabledGetCode() {
-      return this.user.phone.length !== 10;
+      return this.user.phone.length !== 10 || this.isTimerNotNull;
+    },
+    getTimerTime() {
+      return `${this.min}:${this.sec < 10 ? `0${this.sec}` : this.sec}`;
+    },
+    isTimerNotNull() {
+      return this.timer !== null;
     }
   },
   methods: {
@@ -97,7 +103,8 @@ export default {
           phone: `+7${this.user.phone}`,
           device_id: this.user.device_id
         });
-        console.log(next_request_time);
+        this.createTimer(next_request_time - Math.floor(Date.now() / 1000));
+        console.log(next_request_time - Math.floor(Date.now() / 1000));
       } finally {
         this.sendingGetCode = false;
       }
@@ -114,6 +121,24 @@ export default {
       } catch (e) {
         this.isVerificationCodeWrong = true;
       }
+    },
+    // Timer
+    createTimer(seconds) {
+      this.min = (seconds / 60) | 0;
+      this.sec = seconds % 60;
+      this.timer = setInterval(() => {
+        this.sec--;
+        if (this.sec < 0) {
+          this.min--;
+          if (this.min < 0) this.clearTimer();
+          else this.sec = 59;
+        }
+      }, 1000);
+    },
+    // Clear Timer
+    clearTimer() {
+      clearInterval(this.timer);
+      this.timer = null;
     },
     // Generate tmp device id
     tmpDeviceId() {
@@ -137,6 +162,9 @@ export default {
   data: () => ({
     sendingGetCode: false,
     isVerificationCodeWrong: false,
+    min: 0,
+    sec: 0,
+    timer: null,
     user: {
       phone: '',
       code: '',
