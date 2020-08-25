@@ -11,7 +11,7 @@
       <!-- Quantity Controller -->
       <div class="app-cart-item__quantity-container">
         <div @click="incrementQuantity" class="app-cart-item__increment">+</div>
-        <div class="app-cart-item__quantity">{{ cartItem.quantity }}</div>
+        <div class="app-cart-item__quantity">{{ quantity }}</div>
         <div
           @click="decrementQuantity"
           class="app-cart-item__decrement"
@@ -28,7 +28,7 @@
     </div>
     <div class="app-cart-item__options">
       <div
-        v-for="option in cartItem.options"
+        v-for="option in extra"
         :key="option.uuid"
         class="app-cart-item__option"
       >
@@ -43,12 +43,20 @@ import { createNamespacedHelpers } from 'vuex';
 const { mapActions } = createNamespacedHelpers('cart');
 
 export default {
+  watch: {
+    quantity(value) {
+      console.log(value);
+    }
+  },
+  created() {
+    console.log(this.cartItem);
+  },
   computed: {
     isSingle() {
       return this.cartItem.quantity === 1;
     },
     getPrice() {
-      if (!this.cartItem.options) return this.cartItem.price;
+      if (!this.extra.length) return this.cartItem.price;
 
       return this.cartItem.options.reduce((sum, option) => {
         return (sum += option.price);
@@ -68,6 +76,16 @@ export default {
     cartItem: {
       type: Object,
       default: () => {},
+      required: true
+    },
+    extra: {
+      type: Array,
+      default: () => [],
+      required: true
+    },
+    quantity: {
+      type: Number,
+      default: 1,
       required: true
     }
   },
