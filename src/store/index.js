@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 import stores from './modules/stores.js';
 import auth from './modules/auth.js';
 import cart from './modules/cart.js';
+import location from './modules/location.js';
 
 Vue.use(Vuex);
 
@@ -16,7 +17,8 @@ export default new Vuex.Store({
   modules: {
     stores,
     auth,
-    cart
+    cart,
+    location
   },
   strict: process.env.NODE_ENV !== 'production'
 });
