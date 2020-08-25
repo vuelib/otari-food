@@ -22,7 +22,6 @@
                 :key="key"
                 class="app-cart__item"
               >
-                {{ quantity }}
                 <!-- App Cart Item -->
                 <AppCartItem
                   :cart-item="menuItem"

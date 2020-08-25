@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import shortid from 'shortid';
 /* eslint no-unused-vars: */
 export default {
   namespaced: true,
@@ -10,13 +11,6 @@ export default {
   mutations: {
     SET_ACTIVE_STORE_UUID(state, select_uuid) {
       state.cart_active_store_uuid = select_uuid;
-    },
-    ADD_PRODUCT_TO_CART(state, { product, findCartProduct }) {
-      const cartProductExist = findCartProduct(product.uuid);
-      if (cartProductExist) return cartProductExist.quantity++;
-
-      Vue.set(product, 'quantity', 1);
-      state.cart_products.push(product);
     },
     ADD_PRODUCT_TO_CART_WITH_OPTIONS(state, payload) {
       const {
@@ -62,61 +56,65 @@ export default {
       Vue.delete(product, 'quantity');
     },
     CLEAR_CART_OF_PRODUCTS(state) {
-      state.cart_products.map(product => {
-        Vue.delete(product, 'quantity');
-      });
-      state.cart_products = [];
+      // for (const [key, product] of Object.entries(state.cart_products)) {
+      // }
+      console.log('CLEAR_CART_OF_PRODUCTS');
     },
     // =======
     ADD_PRODUCT_TO_CART_tmp(state, { product, findCartProduct }) {
-      // console.log('one', state.cart_products);
       // Find equal product
-      const cartProductExistKey = findCartProduct(product.menuItem.uuid);
+      const { cartProductExistKey, cartProductExist } = findCartProduct(
+        product.menuItem.uuid
+      );
+      // console.log(cartProductExistKey, cartProductExist);
+      // console.log('findCartProduct', cartProductExistKey, cartProductExist);
       // Add new product to cart
       if (!cartProductExistKey) {
-        // const cartItem = {
-        //   menuItem: product.menuItem,
-        //   extra: product.extra
-        // };
-        // Vue.set(cartItem, 'quantity', product.quantity);
-        // state.cart_products['sd'] = product;
-        Vue.set(state.cart_products, 'sd', product);
+        Vue.set(state.cart_products, shortid.generate(), product);
         Vue.set(product.menuItem, 'quantity', product.quantity);
       } else {
         // Check product extra to equal
-        state.cart_products[cartProductExistKey].quantity += product.quantity;
+        if (product.extra.length > 0) {
+          // Create hash map from produt extra
+          const hashMap = product.extra.reduce((map, { uuid }) => {
+            map.set(uuid, uuid);
+            return map;
+          }, new Map());
+          console.log(hashMap, cartProductExist.extra);
+          // Search cart product with equal options
+          const extraExist = cartProductExist.extra.every(({ uuid }) => {
+            // console.log(uuid);
+            return (
+              hashMap.has(uuid) &&
+              cartProductExist.extra.length === hashMap.size
+            );
+          });
+          console.log('extraExist', extraExist);
+          // If founded equal extra
+          if (extraExist) {
+            state.cart_products[cartProductExistKey].quantity +=
+              product.quantity;
+          } else {
+            Vue.set(state.cart_products, shortid.generate(), product);
+            Vue.set(product.menuItem, 'quantity', product.quantity);
+          }
+        } else {
+          state.cart_products[cartProductExistKey].quantity += product.quantity;
+        }
         product.menuItem.quantity += product.quantity;
       }
-      // console.log('cartProductExist', cartProductExist);
-      // state.cart_products.set('sd', product);
       console.log(state.cart_products);
     }
   },
   actions: {
     pushProductToCart({ commit, getters }, product) {
       commit('SET_ACTIVE_STORE_UUID', product.menuItem.store_uuid);
-      console.log(product);
-
+      // console.log(product);
       commit('ADD_PRODUCT_TO_CART_tmp', {
         product,
         findCartProduct: getters.findCartProductByUUID
       });
       // commit('SET_ACTIVE_STORE_UUID', product.store_uuid);
-    },
-
-    pushProductToCartWithOptions(
-      { commit, getters },
-      { product, options, quantity, priceWithOptions }
-    ) {
-      commit('ADD_PRODUCT_TO_CART_WITH_OPTIONS', {
-        product,
-        options,
-        quantity,
-        priceWithOptions,
-        filterCartProduct: getters.filterCartProductByUUID,
-        getTotalOptions: getters.getTotalOptions
-      });
-      commit('SET_ACTIVE_STORE_UUID', product.store_uuid);
     },
     deleteProductFromCart({ commit }, product) {
       commit('DELETE_PRODUCT_FROM_CART', product);
@@ -131,30 +129,26 @@ export default {
     },
     getTotalPrice(state, getters) {
       if (getters.isCartEmpty) return 0;
-      return 500;
-      // return state.cart_products.reduce(
-      //   (total, { price, quantity, options }) => {
-      //     const totalOptions = getters.getTotalOptions(options);
-      //     total += (price + totalOptions) * quantity;
-      //     return total;
-      //   },
-      //   state.delivery_price
-      // );
-    },
-    getTotalOptions(state) {
-      return options => {
-        if (!options) return 0;
-        return options.reduce((total, { price }) => total + price, 0);
-      };
+
+      return Object.values(state.cart_products).reduce(
+        (total, { menuItem, extra, quantity }) => {
+          total +=
+            extra.reduce((sum, { price }) => sum + price, menuItem.price) *
+            quantity;
+          return total;
+        },
+        state.delivery_price
+      );
     },
     findCartProductByUUID(state) {
       return findUUID => {
-        for (const [key, { menuItem }] of Object.entries(state.cart_products)) {
-          if (findUUID === menuItem.uuid) {
-            return key;
+        for (const [key, product] of Object.entries(state.cart_products)) {
+          // console.log(findUUID, product.menuItem.uuid);
+          if (findUUID === product.menuItem.uuid) {
+            return { cartProductExistKey: key, cartProductExist: product };
           }
         }
-        // return state.cart_products.find(({ uuid }) => uuid === findUUID);
+        return {};
       };
     },
     filterCartProductByUUID(state) {

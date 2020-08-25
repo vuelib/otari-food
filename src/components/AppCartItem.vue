@@ -43,24 +43,15 @@ import { createNamespacedHelpers } from 'vuex';
 const { mapActions } = createNamespacedHelpers('cart');
 
 export default {
-  watch: {
-    quantity(value) {
-      console.log(value);
-    }
-  },
-  created() {
-    console.log(this.cartItem);
-  },
   computed: {
     isSingle() {
-      return this.cartItem.quantity === 1;
+      return this.quantity === 1;
     },
     getPrice() {
-      if (!this.extra.length) return this.cartItem.price;
-
-      return this.cartItem.options.reduce((sum, option) => {
-        return (sum += option.price);
-      }, this.cartItem.price);
+      return this.extra.reduce(
+        (sum, option) => (sum += option.price),
+        this.cartItem.price
+      );
     }
   },
   methods: {
