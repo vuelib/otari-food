@@ -44,10 +44,22 @@
             ₽
           </button>
         </template>
-        <button class="header__button">{{ city }}</button>
-        <button @click="openLoginModal" class="header__button">
-          <span v-if="!isAuthUser">Войти</span>
-          <span v-else>Выйти</span>
+        <button class="header__city header__button">
+          {{ city }}
+        </button>
+        <button v-if="!isAuthUser" class="header__button">
+          <span @click="openLoginModal" class="header__login">Войти</span>
+        </button>
+        <button v-else class="header__button header__profile">
+          <span>Профиль</span>
+          <ul class="cabinet-menu">
+            <li class="cabinet-item"><i class="icon-user"></i>Мои данные</li>
+            <li class="cabinet-item"><i class="icon-user"></i>Мои адреса</li>
+            <li class="cabinet-item"><i class="icon-user"></i>Мои заказы</li>
+            <li @click="openLoginModal" class="cabinet-item">
+              <i class="icon-user"></i>Выйти
+            </li>
+          </ul>
         </button>
       </div>
     </header>
@@ -86,6 +98,7 @@ export default {
     },
     openLoginModal() {
       if (this.isAuthUser) this.logout();
+      // if (this.isAuthUser) console.log('logout');
       else this.isModalVisible = true;
     },
     closeLoginModal() {
@@ -123,6 +136,13 @@ $header-bg: #fff;
   transition: left 0.2s ease-in-out;
   will-change: transform;
   font-weight: 100;
+  &__city {
+    position: relative;
+    &:hover > .list-options {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
   &__button {
     color: $theme-textColor;
     height: 32px;
@@ -153,6 +173,33 @@ $header-bg: #fff;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
+  &__profile {
+    position: relative;
+    &:hover .cabinet-menu {
+      visibility: visible;
+      opacity: 1;
+      top: 35px;
+    }
+  }
+}
+.cabinet-menu {
+  position: absolute;
+  top: 45px;
+  right: 0px;
+  color: #a0a0a0;
+  z-index: 201;
+  padding: 10px 15px 5px;
+  font-size: 18px;
+  background: white;
+  text-align: left;
+  box-shadow: 0 -1px 1px rgba(0, 0, 0, 0.1);
+  transition: 0.15s;
+  visibility: hidden;
+  opacity: 0;
+}
+.cabinet-item {
+  cursor: pointer;
+  padding-bottom: 10px;
 }
 .header-container {
   height: 80px;
