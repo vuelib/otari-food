@@ -27,6 +27,7 @@
                   :cart-item="menuItem"
                   :extra="extra"
                   :quantity="quantity"
+                  :key-index="key"
                 />
               </div>
             </div>

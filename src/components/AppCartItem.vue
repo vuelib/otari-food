@@ -56,12 +56,16 @@ export default {
   },
   methods: {
     incrementQuantity() {
-      this.pushProductToCart(this.cartItem);
+      this.incrementProductFromCart(this.keyIndex);
     },
     decrementQuantity() {
-      this.deleteProductFromCart(this.cartItem);
+      this.deleteProductFromCart(this.keyIndex);
     },
-    ...mapActions(['pushProductToCart', 'deleteProductFromCart'])
+    ...mapActions([
+      'pushProductToCart',
+      'deleteProductFromCart',
+      'incrementProductFromCart'
+    ])
   },
   props: {
     cartItem: {
@@ -77,6 +81,10 @@ export default {
     quantity: {
       type: Number,
       default: 1,
+      required: true
+    },
+    keyIndex: {
+      type: String,
       required: true
     }
   },
