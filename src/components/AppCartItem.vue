@@ -11,7 +11,7 @@
       <!-- Quantity Controller -->
       <div class="app-cart-item__quantity-container">
         <div @click="incrementQuantity" class="app-cart-item__increment">+</div>
-        <div class="app-cart-item__quantity">{{ cartItem.quantity }}</div>
+        <div class="app-cart-item__quantity">{{ quantity }}</div>
         <div
           @click="decrementQuantity"
           class="app-cart-item__decrement"
@@ -28,7 +28,7 @@
     </div>
     <div class="app-cart-item__options">
       <div
-        v-for="option in cartItem.options"
+        v-for="option in extra"
         :key="option.uuid"
         class="app-cart-item__option"
       >
@@ -45,29 +45,46 @@ const { mapActions } = createNamespacedHelpers('cart');
 export default {
   computed: {
     isSingle() {
-      return this.cartItem.quantity === 1;
+      return this.quantity === 1;
     },
     getPrice() {
-      if (!this.cartItem.options) return this.cartItem.price;
-
-      return this.cartItem.options.reduce((sum, option) => {
-        return (sum += option.price);
-      }, this.cartItem.price);
+      return this.extra.reduce(
+        (sum, option) => (sum += option.price),
+        this.cartItem.price
+      );
     }
   },
   methods: {
     incrementQuantity() {
-      this.pushProductToCart(this.cartItem);
+      this.incrementProductFromCart(this.keyIndex);
     },
     decrementQuantity() {
-      this.deleteProductFromCart(this.cartItem);
+      this.deleteProductFromCart(this.keyIndex);
     },
-    ...mapActions(['pushProductToCart', 'deleteProductFromCart'])
+    ...mapActions([
+      'pushProductToCart',
+      'deleteProductFromCart',
+      'incrementProductFromCart'
+    ])
   },
   props: {
     cartItem: {
       type: Object,
       default: () => {},
+      required: true
+    },
+    extra: {
+      type: Array,
+      default: () => [],
+      required: true
+    },
+    quantity: {
+      type: Number,
+      default: 1,
+      required: true
+    },
+    keyIndex: {
+      type: String,
       required: true
     }
   },

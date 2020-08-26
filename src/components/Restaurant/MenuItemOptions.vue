@@ -148,14 +148,16 @@ export default {
     sendOptionOrder() {
       if (this.isDisabled) return;
 
+      // construct options
       const mergeOptions = [...this.scopedToppings];
       this.scopedVariant ? mergeOptions.push(this.scopedVariant) : false;
-      this.$emit('pushProductToCart', {
-        ...this.optionProduct,
-        options: mergeOptions,
-        quantity: this.scopedQuantity,
-        priceWithOptions: this.getLocalTotalPrice
-      });
+
+      const cartItem = {
+        menuItem: this.optionProduct,
+        extra: mergeOptions,
+        quantity: this.scopedQuantity
+      };
+      this.$emit('pushProductToCart', cartItem);
       this.$emit('closePopup');
     },
     incrementLocalQuantity() {

@@ -16,12 +16,19 @@
           <template v-if="!isCartEmpty">
             <div class="app-cart__order-info">
               <div
-                v-for="(cartItem, index) in getCartProducts"
-                :key="index"
+                v-for="[key, { menuItem, extra, quantity }] in Object.entries(
+                  getCartProducts
+                )"
+                :key="key"
                 class="app-cart__item"
               >
                 <!-- App Cart Item -->
-                <AppCartItem :cart-item="cartItem" />
+                <AppCartItem
+                  :cart-item="menuItem"
+                  :extra="extra"
+                  :quantity="quantity"
+                  :key-index="key"
+                />
               </div>
             </div>
             <div class="app-cart__divider"></div>
@@ -84,6 +91,14 @@ import { createNamespacedHelpers } from 'vuex';
 const { mapGetters, mapActions } = createNamespacedHelpers('cart');
 
 export default {
+  watch: {
+    getCartProducts(val) {
+      console.log(val);
+    }
+  },
+  created() {
+    console.log(this.getCartProducts);
+  },
   computed: {
     ...mapGetters(['isCartEmpty', 'getCartProducts', 'getTotalPrice'])
   },
