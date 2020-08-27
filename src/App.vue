@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <!-- App Header -->
-    <AppHeader />
+    <AppHeader @showEnterAddressModal="showEnterAddressModal" />
     <!-- Router View -->
     <div class="layout">
       <div class="container">

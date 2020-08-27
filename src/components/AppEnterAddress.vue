@@ -51,6 +51,7 @@
             />
           </div>
           <button
+            @click="setAddress"
             :disabled="!isSelectAddressNotNull"
             class="enter-address__ok button button--yellow"
           >
@@ -80,7 +81,7 @@ export default {
       container: 'enter-address-map',
       style: 'mapbox://styles/faemtaxi/ck0fcruqn1p9o1cnzazi3pli9',
       center: [44.66778, 43.03667],
-      zoom: 18
+      zoom: 11
     });
     this.marker = new mapboxgl.Marker()
       .setLngLat([44.665976, 43.025234])
@@ -88,20 +89,20 @@ export default {
     this.map.addControl(new mapboxgl.NavigationControl());
   },
   methods: {
+    setAddress() {
+      this.setCurrentLocation(this.selectedAddress);
+      this.$emit('closePopup');
+    },
     // Select address
     selectAddress(address) {
       console.log(address.lon, address.lat, address.value);
       this.selectedAddress = address;
       console.log(this.selectedAddress);
       this.map.flyTo({
-        center: [address.lon, address.lat]
-        // essential: true
+        center: [address.lon, address.lat],
+        zoom: 18
       });
       this.marker.setLngLat([address.lon, address.lat]);
-      // new mapboxgl.Marker()
-      //   .setLngLat([address.lon, address.lat])
-      //   .addTo(this.map);
-      this.map.zoomTo(18);
     },
     // Debounce enter address
     debounceInput: debounce(async function({ target }) {
@@ -114,6 +115,7 @@ export default {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           position => {
+            console.log(this.map);
             this.map.flyTo({
               center: [position.coords.longitude, position.coords.latitude]
             });
@@ -132,7 +134,7 @@ export default {
     clearEnterAddress() {
       (this.selectedAddress = null), (this.enterAddress = '');
     },
-    ...mapActions(['getAutocompleteAddresses'])
+    ...mapActions(['getAutocompleteAddresses', 'setCurrentLocation'])
   },
   computed: {
     isEnterAddressNotNull() {

@@ -33,17 +33,24 @@
             Компаниям
           </a>
         </div>
-        <template v-if="!isCartEmpty">
-          <button class="header__address-button header__button">
-            <i class="icon-place"></i>
-            Молодёжная улица, 27/4
-          </button>
-          <button @click="goToCart" class="header__cart-button header__button">
-            <i class="icon-cart"></i>
-            {{ getTotalPrice }}
-            ₽
-          </button>
-        </template>
+        <button
+          v-if="!isCurrentLocationNull"
+          @click="enterAddress"
+          :class="{ 'header__address-button': !isCartEmpty }"
+          class=" header__button"
+        >
+          <i class="icon-place"></i>
+          {{ getCurrentLocation.value }}
+        </button>
+        <button
+          @click="goToCart"
+          v-if="!isCartEmpty"
+          class="header__cart-button header__button"
+        >
+          <i class="icon-cart"></i>
+          {{ getTotalPrice }}
+          ₽
+        </button>
         <button class="header__city header__button">
           {{ city }}
         </button>
@@ -79,7 +86,6 @@ import AppLogin from './AppLogin';
 import auth from '@/mixins/auth.js';
 
 import { createNamespacedHelpers } from 'vuex';
-const { mapGetters } = createNamespacedHelpers('cart');
 
 export default {
   methods: {
@@ -96,6 +102,9 @@ export default {
         }
       });
     },
+    enterAddress() {
+      this.$emit('showEnterAddressModal');
+    },
     openLoginModal() {
       if (this.isAuthUser) this.logout();
       // if (this.isAuthUser) console.log('logout');
@@ -106,7 +115,15 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getTotalPrice', 'isCartEmpty', 'getActiveStoreUUID'])
+    ...createNamespacedHelpers('location').mapGetters([
+      'isCurrentLocationNull',
+      'getCurrentLocation'
+    ]),
+    ...createNamespacedHelpers('cart').mapGetters([
+      'getTotalPrice',
+      'isCartEmpty',
+      'getActiveStoreUUID'
+    ])
   },
   data: () => ({
     isModalVisible: false,
