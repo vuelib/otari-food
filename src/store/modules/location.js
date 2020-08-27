@@ -13,11 +13,18 @@ export default {
       state.current_location = location;
       console.log(state.current_location);
       localStorage.setItem('location', JSON.stringify(location));
+    },
+    CLEAR_CURRENT_LOCATION(state) {
+      state.current_location = null;
+      localStorage.removeItem('location');
     }
   },
   actions: {
     setCurrentLocation({ commit }, location) {
       commit('SET_CURRENT_LOCATION', location);
+    },
+    clearCurrentlocation({ commit }) {
+      commit('CLEAR_CURRENT_LOCATION');
     },
     async getAutocompleteAddresses({ commit }, name) {
       return await getAutocompleteAddressesService({ name });
