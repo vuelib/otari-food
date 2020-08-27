@@ -44,6 +44,9 @@ import { createNamespacedHelpers } from 'vuex';
 export default {
   computed: {
     ...createNamespacedHelpers('stores').mapGetters(['findStoreProductByUUID']),
+    ...createNamespacedHelpers('location').mapGetters([
+      'isCurrentLocationNull'
+    ]),
     ...createNamespacedHelpers('cart').mapGetters([
       'checkOnEqualActiveStoreUUID'
     ])
@@ -61,7 +64,12 @@ export default {
       const product = this.findStoreProductByUUID(
         productContainer.dataset.product
       );
-
+      // Check current location
+      console.log(this.isCurrentLocationNull);
+      if (this.isCurrentLocationNull) {
+        this.$parent.$emit('showEnterAddressModal');
+        return;
+      }
       // Product have variants or toppings
       if (product.variants || product.toppings) {
         this.optionProduct = product;
