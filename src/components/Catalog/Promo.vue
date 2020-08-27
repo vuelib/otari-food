@@ -23,20 +23,38 @@
             <div class="address-input">
               <div class="address-input__container">
                 <input
+                  v-model="enterAddress"
+                  @input="debounceInput"
                   type="text"
-                  value
                   autocomplete="off"
-                  aria-autocomplete="list"
-                  aria-controls="react-autowhatever-1"
                   class="address-input__input"
                   placeholder="Укажите адрес доставки..."
                   autofocus
                 />
-                <div
-                  id="react-autowhatever-1"
-                  role="listbox"
-                  class="react-autosuggest__suggestions-container"
-                ></div>
+                <img
+                  v-if="enterAddress.length"
+                  @click="clearEnterAddress"
+                  src="../../assets/svg/clear-icon.svg"
+                  class="enter-address__content-remove"
+                />
+                <ul
+                  v-if="enterAddress.length && !isSelectAddressNotNull"
+                  class="suggestions-list"
+                >
+                  <li
+                    v-for="suggestion in suggestionsAddresses"
+                    @click="selectAddress(suggestion)"
+                    :key="suggestion.uuid"
+                    class="suggestion"
+                  >
+                    <span class="suggestion__item">
+                      {{ suggestion.unrestricted_value }}
+                      <div class="suggestion__item-label">
+                        Россия, Владикавказ
+                      </div>
+                    </span>
+                  </li>
+                </ul>
               </div>
               <div
                 @click="showEnterAddressModal"
@@ -56,17 +74,54 @@
 </template>
 
 <script>
+import debounce from 'debounce';
+import { createNamespacedHelpers } from 'vuex';
+
 export default {
+  created() {
+    if (this.getCurrentLocation)
+      this.enterAddress = this.getCurrentLocation.unrestricted_value;
+  },
   methods: {
+    // Debounce enter address
+    debounceInput: debounce(async function({ target }) {
+      const data = await this.getAutocompleteAddresses(target.value);
+      this.suggestionsAddresses = data;
+      console.log(data);
+    }, 350),
+    // Select address
+    selectAddress(address) {
+      this.selectedAddress = address;
+      this.setCurrentLocation(address);
+      this.enterAddress = address.unrestricted_value;
+    },
+    clearEnterAddress() {
+      this.enterAddress = '';
+      this.clearCurrentlocation();
+    },
     showEnterAddressModal() {
       this.$parent.$emit('showEnterAddressModal');
-    }
+    },
+    ...createNamespacedHelpers('location').mapActions([
+      'clearCurrentlocation',
+      'getAutocompleteAddresses',
+      'setCurrentLocation'
+    ])
   },
   computed: {
     bg() {
       return `url(${require('@/assets/default.png')})`;
-    }
+    },
+    isSelectAddressNotNull() {
+      return this.selectedAddress !== null;
+    },
+    ...createNamespacedHelpers('location').mapGetters(['getCurrentLocation'])
   },
+  data: () => ({
+    enterAddress: '',
+    suggestionsAddresses: [],
+    selectedAddress: null
+  }),
   name: 'Promo'
 };
 </script>
@@ -154,8 +209,10 @@ export default {
   height: 100%;
   &__container {
     height: 100%;
+    position: relative;
   }
   &__input {
+    position: relative;
     border: none;
     font-size: 18px;
     box-shadow: none;
