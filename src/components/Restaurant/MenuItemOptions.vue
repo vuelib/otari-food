@@ -159,6 +159,12 @@ export default {
       };
       this.$emit('pushProductToCart', cartItem);
       this.$emit('closePopup');
+      this.resetOptions();
+    },
+    resetOptions() {
+      this.scopedVariant = null;
+      this.scopedToppings = [];
+      this.scopedQuantity = 1;
     },
     incrementLocalQuantity() {
       this.scopedQuantity++;
