@@ -14,8 +14,11 @@
     </div>
     <div class="restaurant-page__sidebar-wrapper">
       <!-- SidebarMap Component -->
-      <AppCart v-if="getActiveStoreUUID !== ''" />
-      <SidebarMap v-else :destination-points="store.destination_points" />
+      <SidebarMap
+        v-if="isCurrentLocationNull"
+        :destination-points="store.destination_points"
+      />
+      <AppCart v-else />
     </div>
   </div>
 </template>
@@ -30,8 +33,6 @@ import AppCart from '@/components/AppCart.vue';
 import auth from '@/mixins/auth.js';
 
 import { createNamespacedHelpers } from 'vuex';
-const { mapGetters, mapActions } = createNamespacedHelpers('stores');
-const mapGettersCart = createNamespacedHelpers('cart').mapGetters;
 
 export default {
   async created() {
@@ -42,8 +43,15 @@ export default {
     getStore() {
       return this.store;
     },
-    ...mapGetters(['getStoreProductsCategory', 'findStoreProductByUUID']),
-    ...mapGettersCart(['isCartEmpty', 'getActiveStoreUUID'])
+    ...createNamespacedHelpers('stores').mapGetters([
+      'getStoreProductsCategory',
+      'findStoreProductByUUID'
+    ]),
+    ...createNamespacedHelpers('cart').mapGetters([
+      'isCartEmpty',
+      'getActiveStoreUUID'
+    ]),
+    ...createNamespacedHelpers('location').mapGetters(['isCurrentLocationNull'])
   },
   methods: {
     async initStore() {
@@ -56,7 +64,10 @@ export default {
       const { uuid } = this.store;
       await this.getStoreProductsByFilter({ storeuuid: uuid });
     },
-    ...mapActions(['getStoresByUUID', 'getStoreProductsByFilter'])
+    ...createNamespacedHelpers('stores').mapActions([
+      'getStoresByUUID',
+      'getStoreProductsByFilter'
+    ])
   },
   data: () => ({
     store: {},
