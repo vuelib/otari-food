@@ -43,12 +43,16 @@
           </template>
         </div>
         <div class="app-cart__meta">
+          <!-- AppTimePane -->
+          <AppTimePane v-show="isShowTimeList" @selectTime="selectTime" />
+
           <div class="app-cart__delivery-time">
             <div class="app-cart__delivery-time-title">Время доставки</div>
-            <div class="app-cart__delivery-time-value">
-              <span>12:30</span>
+            <span @click="showTimeList" class="app-cart__delivery-time-value">
+              <span v-if="timeToDelivery.day === 'tomorrow'">завтра </span>
+              <span>{{ timeToDelivery.time }}</span>
               <span class="pencil-icon app-cart__pencil-icon"></span>
-            </div>
+            </span>
           </div>
           <div class="app-cart__total-price">
             <div class="app-cart__total-price-title">Итого</div>
@@ -84,6 +88,7 @@
 import AppCartItem from './AppCartItem.vue';
 import AppLogin from './AppLogin.vue';
 import AppConfirm from './AppConfirm.vue';
+import AppTimePane from './AppTimePane.vue';
 
 import auth from '@/mixins/auth.js';
 
@@ -103,6 +108,20 @@ export default {
     ...mapGetters(['isCartEmpty', 'getCartProducts', 'getTotalPrice'])
   },
   methods: {
+    showTimeList() {
+      this.isShowTimeList = !this.isShowTimeList;
+    },
+    selectTime(time) {
+      this.isShowTimeList = false;
+      if (time.time === 'Сейчас') {
+        this.timeToDelivery = {
+          day: 'today',
+          time: '~ 30 мин'
+        };
+        return;
+      }
+      this.timeToDelivery = time;
+    },
     sendOrder() {
       if (!this.isAuthUser) return (this.isShowModal = true);
       // 4:28 am - want to sleep
@@ -124,14 +143,20 @@ export default {
   },
   data: () => ({
     isShowModal: false,
-    isConfirmClearCart: false
+    isShowTimeList: false,
+    isConfirmClearCart: false,
+    timeToDelivery: {
+      day: 'today',
+      time: '~ 30 мин'
+    }
   }),
   mixins: [auth],
   name: 'AppCart',
   components: {
     AppCartItem,
     AppLogin,
-    AppConfirm
+    AppConfirm,
+    AppTimePane
   }
 };
 </script>
@@ -191,6 +216,7 @@ export default {
     padding: 10px 20px;
   }
   &__meta {
+    position: relative;
     flex: 0 0 auto;
     display: flex;
     padding: 14px 20px 16px 20px;
