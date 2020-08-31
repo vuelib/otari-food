@@ -2,16 +2,7 @@
   <aside class="sidebar-map">
     <div class="sidebar-map-location">
       <div class="sidebar-map-location__map-wrapper">
-        <!-- <div id="map" class="sidebar-map-location__map"></div> -->
-        <!-- <div
-          v-for="point in destinationPoints"
-          :key="point.uuid"
-          class="sidebar-map-location__map"
-          :style="{
-            backgroundImage: `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/-122.337798,37.810550,9.67,0.00,0.00/1000x600@2x?access_token=access_token=pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg`
-          }"
-        ></div> -->
-        <img class="sidebar-map-location__map" :src="getSrcMap" />
+        <img class="sidebar-map-location__map" :src="srcMap" />
         <div class="sidebar-map-location__pin"></div>
       </div>
       <div class="sidebar-map-location__button">
@@ -29,38 +20,23 @@ import mapboxgl from 'mapbox-gl';
 mapboxgl.accessToken =
   'pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg';
 export default {
-  created() {
-    console.log(this.getLocation);
+  watch: {
+    destinationPoints() {
+      this.srcMap = `https://api.mapbox.com/styles/v1/mapbox/light-v10/static/${this.getLocation.lon},${this.getLocation.lat},16,0.00,0.00/1000x600@2x?access_token=pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg`;
+    }
   },
-  // mounted() {
-  //   this.map = new mapboxgl.Map({
-  //     container: 'map',
-  //     style: 'mapbox://styles/faemtaxi/ck0fcruqn1p9o1cnzazi3pli9',
-  //     center: [this.getLocation.lon, this.getLocation.lat],
-  //     zoom: 16,
-  //     interactive: false
-  //   });
-  //   new mapboxgl.Marker()
-  //     .setLngLat([this.getLocation.lon, this.getLocation.lat])
-  //     .addTo(this.map);
-  // },
   computed: {
-    getSrcMap() {
-      return `https://api.mapbox.com/styles/v1/mapbox/light-v10/static/${this.getLocation.lon},${this.getLocation.lat},16,0.00,0.00/1000x600@2x?access_token=pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg`;
-      // return 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/44.6547,43.0355,16,0.00,0.00/1000x600@2x?access_token=pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg';
-    },
     getLocation() {
       return this.destinationPoints[0];
     }
   },
   methods: {
     showEnterAddressModal() {
-      console.log('asdasd');
       this.$parent.$emit('showEnterAddressModal');
     }
   },
   data: () => ({
-    map: {}
+    srcMap: ''
   }),
   props: {
     destinationPoints: {
