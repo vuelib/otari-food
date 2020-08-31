@@ -10,6 +10,9 @@
         v-for="store in getStores"
         :key="store.uuid"
         class="places-list__place"
+        :class="{
+          'places-list__closed': checkStoreOnClosed(store.work_schedule)
+        }"
       >
         <PlaceItem :store="store" :data-store="store.uuid" />
       </li>
@@ -40,6 +43,14 @@ export default {
     isShowMore() {
       return this.getStoresCount - this.getStores.length > 0;
     },
+    checkStoreOnClosed() {
+      const currentWeekDay = new Date().getDay();
+      return workSchedule => {
+        for (const { week_day, day_off } of workSchedule) {
+          if (week_day === currentWeekDay) return day_off;
+        }
+      };
+    },
     ...mapGetters(['getStores', 'getStoresCount', 'findStoreByUUID']),
     ...mapGetters(['isAuthUser'])
   },
@@ -55,6 +66,8 @@ export default {
       }
       // Push to store
       const store = this.findStoreByUUID(storeContainer.dataset.store);
+      // check on closed
+      if (this.checkStoreOnClosed(store.work_schedule)) return;
       this.$router.push({
         name: 'RestaurantPage',
         params: {
@@ -114,6 +127,9 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  &__closed {
+    filter: grayscale(100%);
   }
 }
 </style>
