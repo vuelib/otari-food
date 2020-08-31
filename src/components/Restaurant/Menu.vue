@@ -6,7 +6,10 @@
       class="category-anchor-link scrollactive-item"
     ></a>
     <div class="category-menu__header">
-      <h2 class="category-menu__title">{{ categoryName }}</h2>
+      <h2 class="category-menu__title">
+        <!-- // tmp solution -->
+        {{ categoryName.replace(/.*(>|\|)\.*/g, '').trim() }}
+      </h2>
       <div class="category-menu__count">{{ category.length }}</div>
     </div>
     <div class="category-menu__items">
@@ -40,8 +43,12 @@ export default {
     }
   },
   methods: {
+    // tmp solution
     getAnchorLink(string) {
-      return string.trim().replace(/\s/g, '-');
+      return string
+        .replace(/.*(>|\|)\.*/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
     }
   },
   name: 'CategoryMenu',

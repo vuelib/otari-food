@@ -53,11 +53,15 @@ export default {
     getIntervalCategories() {
       return (fromIndex, toIndex) => {
         if (!toIndex) toIndex = this.categories.length;
-        return this.categories.slice(fromIndex, toIndex);
+        return this.categories.slice(fromIndex, toIndex).map(el => {
+          return el.replace(/.*(>|\|)\.*/g, '').trim();
+        });
       };
     },
     getCategories() {
-      return this.categories;
+      return this.categories.map(el => {
+        return el.replace(/.*(>|\|)\.*/g, '').trim();
+      });
     },
     getViewInterval() {
       return this.viewInterval;
@@ -75,42 +79,28 @@ export default {
     },
     constructCategotiesNavbar() {
       const navEl = this.$refs['categories-navbar'].$el;
-      //console.log(navEl);
       const navWidth = navEl.getBoundingClientRect().width;
-      //console.log('navWidth', navWidth);
       const categories = [...navEl.children];
       let sumWidthCategories = 0;
       for (let i = 0; i < categories.length; i++) {
         sumWidthCategories += categories[i].getBoundingClientRect().width;
         if (sumWidthCategories > navWidth) {
-          //console.log(sumWidthCategories, navWidth);
           this.isShowMoreBtn = true;
           this.viewInterval = i - 1;
-          //console.log(
-          //   'View Categories',
-          //   this.getIntervalCategories(0, this.viewInterval)
-          // );
-          //console.log(
-          //   'View Categories',
-          //   this.getIntervalCategories(this.viewInterval)
-          // );
           return;
         }
       }
-      // this.isShowMoreBtn = false;
-      // //console.log(sumWidthCategories);
     },
-    // Event on changed active link
-    // onItemChanged(event, currentItem, lastActiveItem) {
-    // console.log(event, currentItem, lastActiveItem);
-    // },
     getAnchorLink(category) {
-      return `#${category.trim().replace(/\s/g, '-')}`;
+      // tmp solution
+      return `#${category
+        .replace(/.*(>|\|)\.*/g, '')
+        .trim()
+        .replace(/\s+/g, '-')}`;
     }
   },
   watch: {
     categories(value) {
-      //console.log('Watch', value);
       if (value.length > 0) {
         setTimeout(this.constructCategotiesNavbar, 0);
       }
@@ -207,10 +197,6 @@ export default {
     border-right: solid 1px #000000;
     transition: transform 0.2s linear;
     transform-origin: 70% 30%;
-  }
-  &__more-select {
-  }
-  &__more-option {
   }
 }
 .list-options {
