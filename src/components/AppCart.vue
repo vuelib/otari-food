@@ -6,14 +6,20 @@
           <div class="app-cart__top-line">
             <div class="app-cart__title">Мой заказ</div>
             <div
+              v-if="checkOnEqualActiveStoreUUID(uuidStore)"
               @click="confirmClearCart"
               class="trash-icon app-cart_trash-icon"
             ></div>
           </div>
-          <div v-if="isCartEmpty" class="app-cart__empty-cart">
+          <div
+            v-if="isCartEmpty || !checkOnEqualActiveStoreUUID(uuidStore)"
+            class="app-cart__empty-cart"
+          >
             Выберите блюда и добавьте их к заказу
           </div>
-          <template v-if="!isCartEmpty">
+          <template
+            v-if="!isCartEmpty && checkOnEqualActiveStoreUUID(uuidStore)"
+          >
             <div class="app-cart__order-info">
               <div
                 v-for="[key, { menuItem, extra, quantity }] in Object.entries(
@@ -58,7 +64,12 @@
           </div>
           <div class="app-cart__total-price">
             <div class="app-cart__total-price-title">Итого</div>
-            <div class="app-cart__total-price-value">{{ getTotalPrice }} ₽</div>
+            <div class="app-cart__total-price-value">
+              <template v-if="checkOnEqualActiveStoreUUID(uuidStore)">
+                {{ getTotalPrice }} ₽
+              </template>
+              <template v-else> 0 ₽ </template>
+            </div>
           </div>
         </div>
       </div>
@@ -107,7 +118,8 @@ export default {
       'isCartEmpty',
       'getCartProducts',
       'getTotalPrice',
-      'getDeliveryPrice'
+      'getDeliveryPrice',
+      'checkOnEqualActiveStoreUUID'
     ])
   },
   watch: {
@@ -161,6 +173,11 @@ export default {
     destinationPoints: {
       type: Array,
       default: () => [],
+      required: true
+    },
+    uuidStore: {
+      type: String,
+      default: '',
       required: true
     }
   },

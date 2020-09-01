@@ -151,10 +151,7 @@ export default {
     },
     checkOnEqualActiveStoreUUID(state, getters) {
       return selectStoreUUID => {
-        return (
-          state.cart_active_store_uuid === selectStoreUUID ||
-          getters.isCartEmpty
-        );
+        return state.cart_active_store_uuid === selectStoreUUID;
       };
     },
     isCartEmpty(state) {

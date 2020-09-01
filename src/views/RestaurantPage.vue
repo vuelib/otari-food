@@ -18,7 +18,11 @@
         v-if="isCurrentLocationNull"
         :destination-points="store.destination_points"
       />
-      <AppCart v-else :destination-points="store.destination_points" />
+      <AppCart
+        v-else
+        :destination-points="store.destination_points"
+        :uuid-store="store.uuid"
+      />
     </div>
   </div>
 </template>
