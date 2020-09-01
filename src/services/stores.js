@@ -18,3 +18,23 @@ export function getProductsService({ storeuuid, page = 1, limit = 100 }) {
     .post(`/products?limit=${limit}&page=${page}&storeuuid=${storeuuid}`)
     .then(({ data }) => data);
 }
+
+export function createOrderService({
+  routeFrom,
+  routeTo,
+  productsInput,
+  serviceUUID
+}) {
+  return api.client
+    .post(`/orders`, {
+      routes: [routeFrom, routeTo],
+      products_input: productsInput,
+      service_uuid: serviceUUID,
+      headers: {
+        Authorization: `Bearer ${
+          JSON.parse(localStorage.getItem('userData')).token
+        }`
+      }
+    })
+    .then(({ data }) => data);
+}
