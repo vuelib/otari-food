@@ -48,6 +48,7 @@ export default {
       'isCurrentLocationNull'
     ]),
     ...createNamespacedHelpers('cart').mapGetters([
+      'isCartEmpty',
       'checkOnEqualActiveStoreUUID'
     ])
   },
@@ -85,7 +86,10 @@ export default {
           }
         : product;
       const { menuItem } = cartItem;
-      if (!this.checkOnEqualActiveStoreUUID(menuItem.store_uuid)) {
+      if (
+        !this.checkOnEqualActiveStoreUUID(menuItem.store_uuid) &&
+        !this.isCartEmpty
+      ) {
         this.isChangingStore = true;
         this.selectProduct = cartItem;
       } else this.pushToCart(cartItem);
