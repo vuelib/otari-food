@@ -50,13 +50,13 @@ class Api {
 
         if (!this.refreshRequest) {
           this.refreshRequest = this.client.post(
-            'https://client.apis.stage.faem.pro/api/v2/auth/verification',
+            'https://client.apis.stage.faem.pro/api/v2/auth/refresh',
             {
               refresh: this.refresh_token
             }
           );
         }
-        const data = await this.refreshRequest;
+        const { data } = await this.refreshRequest;
         this.token = data.token;
         this.refresh_token = data.refresh_token;
         localStorage.setItem('userData', JSON.stringify(data));
