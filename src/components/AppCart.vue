@@ -74,7 +74,11 @@
         </div>
       </div>
       <div class="app-cart-with-button__button">
-        <button @click="sendOrder" class="button button--yellow">
+        <button
+          @click="sendOrder"
+          :disabled="isSendOrderDisabled"
+          class="button button--yellow"
+        >
           Оформить заказ
         </button>
       </div>
@@ -114,6 +118,11 @@ export default {
     this.fetchTariffToDelivery();
   },
   computed: {
+    isSendOrderDisabled() {
+      return (
+        this.isCartEmpty || !this.checkOnEqualActiveStoreUUID(this.uuidStore)
+      );
+    },
     ...mapGetters([
       'isCartEmpty',
       'getCartProducts',
@@ -150,10 +159,14 @@ export default {
       }
       this.timeToDelivery = time;
     },
-    sendOrder() {
+    async sendOrder() {
+      if (this.isSendOrderDisabled || !this.destinationPoints.length) return;
       if (!this.isAuthUser) return (this.isShowModal = true);
-      // 4:28 am - want to sleep
-      alert('Заказ успешно оформлен');
+      // Create Order Action
+      await this.createOrder({
+        routeFrom: JSON.parse(localStorage.getItem('location')),
+        routeTo: this.destinationPoints[0]
+      });
     },
     confirmClearCart() {
       this.isConfirmClearCart = true;
@@ -167,7 +180,7 @@ export default {
     closePopup() {
       this.isShowModal = false;
     },
-    ...mapActions(['clearCartOfProducts', 'getTariffToDelivery'])
+    ...mapActions(['clearCartOfProducts', 'getTariffToDelivery', 'createOrder'])
   },
   props: {
     destinationPoints: {

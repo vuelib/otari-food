@@ -1,17 +1,20 @@
 import Vue from 'vue';
 import shortid from 'shortid';
-import { getTariffService } from '@/services/tariff';
+import { getTariffsService } from '@/services/tariff.js';
+import { createOrderService } from '@/services/stores.js';
 /* eslint no-unused-vars: */
 export default {
   namespaced: true,
   state: {
     cart_active_store_uuid: '',
     cart_products: {},
-    delivery_price: 100
+    delivery_price: 100,
+    delivery_service_uuid: ''
   },
   mutations: {
-    SET_DELIVERY_PRICE(state, delivery_price) {
-      state.delivery_price = delivery_price;
+    SET_DELIVERY_PRICE(state, { total_price, service_uuid }) {
+      state.delivery_price = total_price;
+      state.delivery_service_uuid = service_uuid;
     },
     SET_ACTIVE_STORE_UUID(state, select_uuid) {
       state.cart_active_store_uuid = select_uuid;
@@ -96,17 +99,56 @@ export default {
       commit('CLEAR_CART_OF_PRODUCTS');
       commit('SET_ACTIVE_STORE_UUID', '');
     },
-    async getTariffToDelivery(
-      { commit },
-      { clientUUID, routeFrom, routeTo, serviceUUID }
-    ) {
-      const { total_price } = await getTariffService({
-        clientUUID,
+    async getTariffToDelivery({ commit }, { routeFrom, routeTo, serviceUUID }) {
+      const tariffs = await getTariffsService({
         routeFrom,
         routeTo,
         serviceUUID
       });
-      commit('SET_DELIVERY_PRICE', total_price);
+      const { total_price, service_uuid } = tariffs.find(
+        ({ product_delivery }) => product_delivery
+      );
+      commit('SET_DELIVERY_PRICE', { total_price, service_uuid });
+    },
+    async createOrder({ commit, state }, { routeFrom, routeTo }) {
+      console.log({ routeFrom, routeTo });
+      let productsInput = [];
+      for (const [key, { extra, menuItem, quantity }] of Object.entries(
+        state.cart_products
+      )) {
+        // console.log(extra);
+        const options = extra.reduce((acc, option) => {
+          console.log('standard' in option);
+          console.log(option);
+          // Set variant
+          if ('standard' in option) {
+            acc.variant_uuid = option.uuid;
+            return acc;
+          }
+          // Set toppings
+          acc.toppings_uuid
+            ? acc.toppings_uuid.push(option.uuid)
+            : (acc.toppings_uuid = [option.uuid]);
+          return acc;
+        }, {});
+        const product = {
+          uuid: menuItem.uuid,
+          number: quantity,
+          ...options
+        };
+        productsInput.push(product);
+      }
+      try {
+        await createOrderService({
+          routeFrom,
+          routeTo,
+          productsInput,
+          serviceUUID: state.delivery_service_uuid
+        });
+      } catch (e) {
+        console.log(e);
+      }
+      // console.log(productsInput);
     }
   },
   getters: {
