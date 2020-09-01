@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import shortid from 'shortid';
+import { getTariffService } from '@/services/tariff';
 /* eslint no-unused-vars: */
 export default {
   namespaced: true,
@@ -9,6 +10,9 @@ export default {
     delivery_price: 100
   },
   mutations: {
+    SET_DELIVERY_PRICE(state, delivery_price) {
+      state.delivery_price = delivery_price;
+    },
     SET_ACTIVE_STORE_UUID(state, select_uuid) {
       state.cart_active_store_uuid = select_uuid;
     },
@@ -91,9 +95,24 @@ export default {
     clearCartOfProducts({ commit }) {
       commit('CLEAR_CART_OF_PRODUCTS');
       commit('SET_ACTIVE_STORE_UUID', '');
+    },
+    async getTariffToDelivery(
+      { commit },
+      { clientUUID, routeFrom, routeTo, serviceUUID }
+    ) {
+      const { total_price } = await getTariffService({
+        clientUUID,
+        routeFrom,
+        routeTo,
+        serviceUUID
+      });
+      commit('SET_DELIVERY_PRICE', total_price);
     }
   },
   getters: {
+    getDeliveryPrice(state) {
+      return state.delivery_price;
+    },
     getCartProducts(state) {
       return state.cart_products;
     },

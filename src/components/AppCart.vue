@@ -36,7 +36,9 @@
               <div class="app-cart__delivery-fee-wrapper">
                 <div class="app-cart__delivery-fee-name">Доставка</div>
                 <div class="app-cart__delivery-fee-value">
-                  <span class="app-cart__delivery-fee-cost">100 ₽</span>
+                  <span class="app-cart__delivery-fee-cost">
+                    {{ getDeliveryPrice }} ₽
+                  </span>
                 </div>
               </div>
             </div>
@@ -96,18 +98,32 @@ import { createNamespacedHelpers } from 'vuex';
 const { mapGetters, mapActions } = createNamespacedHelpers('cart');
 
 export default {
-  watch: {
-    getCartProducts(val) {
-      console.log(val);
-    }
-  },
   created() {
-    console.log(this.getCartProducts);
+    if (!this.destinationPoints.length) return;
+    this.fetchTariffToDelivery();
   },
   computed: {
-    ...mapGetters(['isCartEmpty', 'getCartProducts', 'getTotalPrice'])
+    ...mapGetters([
+      'isCartEmpty',
+      'getCartProducts',
+      'getTotalPrice',
+      'getDeliveryPrice'
+    ])
+  },
+  watch: {
+    destinationPoints() {
+      this.fetchTariffToDelivery();
+    }
   },
   methods: {
+    async fetchTariffToDelivery() {
+      await this.getTariffToDelivery({
+        routeFrom: JSON.parse(localStorage.getItem('location')),
+        routeTo: this.destinationPoints[0],
+        serviceUUID: '6b73e9e3-927b-453c-81c4-dfae818291f4'
+      });
+      console.log('fetchTariffToDelivery');
+    },
     showTimeList() {
       this.isShowTimeList = !this.isShowTimeList;
     },
@@ -139,7 +155,14 @@ export default {
     closePopup() {
       this.isShowModal = false;
     },
-    ...mapActions(['clearCartOfProducts'])
+    ...mapActions(['clearCartOfProducts', 'getTariffToDelivery'])
+  },
+  props: {
+    destinationPoints: {
+      type: Array,
+      default: () => [],
+      required: true
+    }
   },
   data: () => ({
     isShowModal: false,
