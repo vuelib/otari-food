@@ -20,6 +20,9 @@ import mapboxgl from 'mapbox-gl';
 mapboxgl.accessToken =
   'pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg';
 export default {
+  created() {
+    this.srcMap = `https://api.mapbox.com/styles/v1/mapbox/light-v10/static/${this.getLocation.lon},${this.getLocation.lat},16,0.00,0.00/1000x600@2x?access_token=pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg`;
+  },
   watch: {
     destinationPoints() {
       this.srcMap = `https://api.mapbox.com/styles/v1/mapbox/light-v10/static/${this.getLocation.lon},${this.getLocation.lat},16,0.00,0.00/1000x600@2x?access_token=pk.eyJ1IjoiZmFlbXRheGkiLCJhIjoiY2pyYXNqZ3RhMHQxNTQ5bjBxMWlvcWF6eSJ9.ISSgNBMdG7idL3ljb2ILTg`;
