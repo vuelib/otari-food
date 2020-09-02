@@ -44,10 +44,26 @@ export default {
       return this.getStoresCount - this.getStores.length > 0;
     },
     checkStoreOnClosed() {
+      return workSchedule => {
+        return this.detectWeekDay(workSchedule).day_off;
+      };
+    },
+    getHoursWork() {
+      return workSchedule => {
+        const { work_beginning, work_ending } = this.detectWeekDay(
+          workSchedule
+        );
+        return {
+          work_beginning: this.constructTime(work_beginning),
+          work_ending: this.constructTime(work_ending)
+        };
+      };
+    },
+    detectWeekDay() {
       const currentWeekDay = new Date().getDay();
       return workSchedule => {
-        for (const { week_day, day_off } of workSchedule) {
-          if (week_day === currentWeekDay) return day_off;
+        for (const day of workSchedule) {
+          if (day.week_day === currentWeekDay) return day;
         }
       };
     },
@@ -75,6 +91,11 @@ export default {
           store
         }
       });
+    },
+    constructTime(min) {
+      const h = Math.floor(min / 60);
+      const m = Math.floor(min % 60);
+      return `${h < 10 ? `0${h}` : h}:${m < 10 ? `0${m}` : m}`;
     },
     async showMore() {
       await this.getStoresByFilter();
