@@ -14,12 +14,15 @@
           {{ store.name }}
         </h3>
         <div class="place-item__details place-details">
-          <div class="place-details__icon yandex-delivery-icon"></div>
+          <div
+            v-if="!store.own_delivery"
+            class="place-details__icon yandex-delivery-icon"
+          ></div>
           <div class="place-details__icon rating-badge">5.0</div>
-          <div class="place-details__icon price-category">
+          <!-- <div class="place-details__icon price-category">
             <span class="price-category__main-category">₽₽</span>
             <span class="price-category__category">₽</span>
-          </div>
+          </div> -->
         </div>
       </div>
     </a>
@@ -28,6 +31,9 @@
 
 <script>
 export default {
+  created() {
+    console.log(this.store);
+  },
   props: {
     store: {
       type: Object,
@@ -46,6 +52,7 @@ export default {
   box-shadow: 0px 4px 40px rgb(230, 230, 230);
   transition: transform 0.1s linear;
   border-radius: 8px;
+  color: #000;
 
   &__image-container {
     width: 100%;
@@ -108,8 +115,9 @@ export default {
 }
 .rating-badge {
   height: 22px;
-  padding: 2px 10px 2px 22px;
+  padding: 3px 10px 3px 22px;
   background: $theme-mainColor;
+  color: $theme-textColor;
   margin-right: 10px;
   border-radius: 100px;
   background-image: url('~@/assets/svg/rating-badge.svg');
