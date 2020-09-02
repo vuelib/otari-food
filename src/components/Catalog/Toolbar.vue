@@ -3,16 +3,16 @@
     <nav class="catalog-page-filters">
       <ul class="catalog-page-filters__list">
         <li
-          v-for="(item, key) in list"
+          v-for="(category, key) in storesCategory"
           :key="key"
           class="catalog-page-filters__item"
         >
           <a
-            @click="handlerFilter(item)"
-            :class="{ 'catalog-page-filters--active': isActive(item.id) }"
+            @click="handlerFilter(category)"
+            :class="{ 'catalog-page-filters--active': isActive(category) }"
             class="catalog-page-filters__link"
           >
-            {{ item.title }}
+            {{ category }}
           </a>
         </li>
       </ul>
@@ -21,31 +21,40 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex';
+const { mapGetters } = createNamespacedHelpers('stores');
+
 export default {
-  methods: {
-    isActive(id) {
-      return id === this.selected;
-    },
-    handlerFilter({ id }) {
-      this.selected = id;
+  watch: {
+    getStores(value) {
+      this.constructStoresCategory(value);
     }
   },
-  data: () => ({
-    selected: 1,
-    list: [
-      {
-        title: 'Все',
-        id: 1
-      },
-      {
-        title: 'Бургеры',
-        id: 2
-      },
-      {
-        title: 'Суши',
-        id: 3
+  methods: {
+    constructStoresCategory(stores) {
+      const category = new Set(['Все']);
+      for (const { product_category } of stores) {
+        if (!product_category) continue;
+        product_category.map(el => {
+          category.add(el.replace(/.*(>|\|)\.*/g, '').trim());
+        });
       }
-    ]
+      this.storesCategory = [...category];
+      console.log(this.storesCategory);
+    },
+    isActive(category) {
+      return category === this.selected;
+    },
+    handlerFilter(category) {
+      this.selected = category;
+    }
+  },
+  computed: {
+    ...mapGetters(['getStores'])
+  },
+  data: () => ({
+    storesCategory: [],
+    selected: 'Все'
   }),
   name: 'Toolbar'
 };
@@ -72,6 +81,9 @@ export default {
   &__item {
     white-space: nowrap;
     padding-right: 4px;
+    &::first-letter {
+      text-transform: uppercase;
+    }
   }
   &__link {
     height: 46px;
