@@ -26,15 +26,21 @@ export function createOrderService({
   serviceUUID
 }) {
   return api.client
-    .post(`/orders`, {
-      routes: [routeFrom, routeTo],
-      products_input: productsInput,
-      service_uuid: serviceUUID,
-      headers: {
-        Authorization: `Bearer ${
-          JSON.parse(localStorage.getItem('userData')).token
-        }`
+    .post(
+      `https://client.apis.stage.faem.pro/api/v2/orders`,
+      {
+        routes: [routeFrom, routeTo],
+        products_input: productsInput,
+        service_uuid: serviceUUID
+      },
+      {
+        headers: {
+          Source: 'ios_client_app_1',
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem('userData')).token
+          }`
+        }
       }
-    })
+    )
     .then(({ data }) => data);
 }
