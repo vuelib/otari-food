@@ -74,12 +74,19 @@
                       </span>
                       <span class="info-popup__divider"></span>
                       <span class="info-popup__open-time">
-                        Доставка до 23:00
+                        Доставка до
+                        {{ getHoursWork(store.work_schedule).work_ending }}
                       </span>
                     </p>
                     <p class="info-popup__legal">
                       <span class="info-popup__phone">
                         Тел. {{ store.phone }}
+                      </span>
+                      <br />
+                      <span>
+                        Режим работы: с
+                        {{ getHoursWork(store.work_schedule).work_beginning }}
+                        до {{ getHoursWork(store.work_schedule).work_ending }}
                       </span>
                     </p>
                   </div>
@@ -99,11 +106,33 @@ export default {
     console.log(this.store);
   },
   computed: {
+    getHoursWork() {
+      return workSchedule => {
+        const { work_beginning, work_ending } = this.detectWeekDay(
+          workSchedule
+        );
+        return {
+          work_beginning: this.constructTime(work_beginning),
+          work_ending: this.constructTime(work_ending)
+        };
+      };
+    },
     fullStreetStore() {
       return this.store.destination_points[0].unrestricted_value;
     }
   },
   methods: {
+    detectWeekDay(workSchedule) {
+      const currentWeekDay = new Date().getDay();
+      for (const day of workSchedule) {
+        if (day.week_day === currentWeekDay) return day;
+      }
+    },
+    constructTime(min) {
+      const h = Math.floor(min / 60);
+      const m = Math.floor(min % 60);
+      return `${h < 10 ? `0${h}` : h}:${m < 10 ? `0${m}` : m}`;
+    },
     toggleShowInfo() {
       this.isShowInfo = !this.isShowInfo;
     }
