@@ -115,6 +115,10 @@ export default {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           position => {
+            this.findAddress({
+              lat: position.coords.latitude,
+              long: position.coords.longitude
+            }).then(data => (this.selectedAddress = data));
             console.log(this.map);
             this.map.flyTo({
               center: [position.coords.longitude, position.coords.latitude]
@@ -134,7 +138,11 @@ export default {
     clearEnterAddress() {
       (this.selectedAddress = null), (this.enterAddress = '');
     },
-    ...mapActions(['getAutocompleteAddresses', 'setCurrentLocation'])
+    ...mapActions([
+      'getAutocompleteAddresses',
+      'setCurrentLocation',
+      'findAddress'
+    ])
   },
   computed: {
     isEnterAddressNotNull() {
@@ -159,12 +167,6 @@ export default {
 <style lang="scss">
 .modal {
   &__header {
-    // flex: 0 0 auto;
-    // width: 100%;
-    // height: 45px;
-    // position: relative;
-    // font-size: 29px;
-    // font-weight: 100;
     margin: 5px;
     padding: 10px 20px;
     font-size: 24px;
@@ -313,7 +315,7 @@ export default {
     background-color: #eeeeee;
   }
   &__item {
-    color: $theme-textColor;
+    color: #000;
     font-weight: 100;
   }
   &__item-label {

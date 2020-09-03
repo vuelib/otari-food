@@ -1,4 +1,7 @@
-import { getAutocompleteAddressesService } from '@/services/autocomplete.js';
+import {
+  getAutocompleteAddressesService,
+  findAddressService
+} from '@/services/autocomplete.js';
 
 /* eslint no-unused-vars: */
 const location = JSON.parse(localStorage.getItem('location'));
@@ -28,6 +31,9 @@ export default {
     },
     async getAutocompleteAddresses({ commit }, name) {
       return await getAutocompleteAddressesService({ name });
+    },
+    async findAddress({ commit }, { lat, long }) {
+      return await findAddressService({ lat, long });
     }
   },
   getters: {
