@@ -161,7 +161,6 @@ $header-bg: #fff;
     }
   }
   &__button {
-    color: $theme-textColor;
     height: 32px;
     border: 1px solid $header-grey;
     cursor: pointer;
@@ -240,7 +239,6 @@ $header-bg: #fff;
   &__link {
     padding: 0 20px;
     font-size: 16px;
-    color: $theme-textColor;
     &:hover {
       color: $header-grey;
     }

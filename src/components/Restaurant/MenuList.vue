@@ -13,6 +13,7 @@
     <app-popup @closePopup="closeOptionsPopup" v-show="isShowOptions">
       <!-- Menu Item Options Component -->
       <MenuItemOptions
+        ref="menu-item-options"
         :option-product="optionProduct"
         @pushProductToCart="checkEqualStore"
         @closePopup="closeOptionsPopup"
@@ -75,6 +76,7 @@ export default {
       if (product.variants || product.toppings) {
         this.optionProduct = product;
         this.isShowOptions = true;
+        this.$refs['menu-item-options'].resetOptions();
       } else this.checkEqualStore(product);
     },
     checkEqualStore(product) {

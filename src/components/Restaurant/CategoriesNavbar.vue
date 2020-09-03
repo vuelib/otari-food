@@ -129,7 +129,7 @@ export default {
 .categories-navbar {
   position: sticky;
   top: 80px;
-  z-index: 99;
+  z-index: 9;
   border: solid #eee;
   font-size: 16px;
   box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.05);

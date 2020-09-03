@@ -3,7 +3,7 @@
     <div class="auth__logo">
       <img class="auth__logo-img" src="@/assets/logo.png" alt="logo" />
     </div>
-    <form @submit.prevent="submitLoginForm" class="auth-form">
+    <form @submit.prevent="sendVerificationCode" class="auth-form">
       <div class="auth-form__header">
         Пожалуйста, укажите <br />
         свой телефон
@@ -149,13 +149,6 @@ export default {
       ]
         .map(el => String.fromCharCode(65 + +el))
         .join('');
-    },
-    submitLoginForm() {
-      console.log(this.user);
-      // 4:39 am - want to sleep so much
-      // this.loginUser(this.user).catch(() => {
-      //   this.error = 'Неверный логин или пароль';
-      // });
     },
     ...mapActions(['getCodeFromPhoneNumber', 'checkToEqualVerificationCode'])
   },

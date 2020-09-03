@@ -70,6 +70,7 @@ export default {
     font-size: 32px;
     line-height: 20px;
     font-weight: normal;
+    z-index: 3;
   }
   &__body {
     padding: 20px 0px;

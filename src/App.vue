@@ -49,4 +49,35 @@ export default {
   margin: 90px 40px 10px 40px;
   z-index: 1;
 }
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #646464;
+  border: 0px none #fff;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #696969;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #e6e6e6;
+}
+::-webkit-scrollbar-track {
+  background: #ededed;
+  border: 9px none #fff;
+}
+::-webkit-scrollbar-track:hover {
+  background: #e0e0e0;
+}
+::-webkit-scrollbar-track:active {
+  background: #707070;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
 </style>
