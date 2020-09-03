@@ -17,7 +17,7 @@
       </div>
       <h3 class="category-menu-item__title">{{ menuItem.name }}</h3>
       <span class="category-menu-item__weight">
-        {{ menuItem.weight }}&nbsp;г
+        {{ menuItem.weight }}&nbsp;{{ menuItem.weight_measure }}
       </span>
     </div>
     <div class="category-menu-item__description">{{ menuItem.comment }}</div>

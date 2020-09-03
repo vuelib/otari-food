@@ -6,7 +6,9 @@
         <span class="app-cart-item__name">
           {{ cartItem.name }}
         </span>
-        <span class="app-cart-item__weight">{{ cartItem.weight }} г</span>
+        <span class="app-cart-item__weight">
+          {{ cartItem.weight }} {{ cartItem.weight_measure }}
+        </span>
       </div>
       <!-- Quantity Controller -->
       <div class="app-cart-item__quantity-container">

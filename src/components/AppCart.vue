@@ -58,7 +58,8 @@
             <div class="app-cart__delivery-time-title">Время доставки</div>
             <span @click="showTimeList" class="app-cart__delivery-time-value">
               <span v-if="timeToDelivery.day === 'tomorrow'">завтра </span>
-              <span>{{ timeToDelivery.time }}</span>
+              <!-- <span>{{ timeToDelivery.time }}</span> -->
+              <span>{{ Math.floor(preparationTime / 60) }} мин</span>
               <span class="pencil-icon app-cart__pencil-icon"></span>
             </span>
           </div>
@@ -110,7 +111,6 @@ import AppTimePane from './AppTimePane.vue';
 import auth from '@/mixins/auth.js';
 
 import { createNamespacedHelpers } from 'vuex';
-const { mapGetters, mapActions } = createNamespacedHelpers('cart');
 
 export default {
   created() {
@@ -123,7 +123,7 @@ export default {
         this.isCartEmpty || !this.checkOnEqualActiveStoreUUID(this.uuidStore)
       );
     },
-    ...mapGetters([
+    ...createNamespacedHelpers('cart').mapGetters([
       'isCartEmpty',
       'getCartProducts',
       'getTotalPrice',
@@ -162,6 +162,10 @@ export default {
     async sendOrder() {
       if (this.isSendOrderDisabled || !this.destinationPoints.length) return;
       if (!this.isAuthUser) return (this.isShowModal = true);
+      // Refresh Token
+      await this.refreshToken({
+        refresh: JSON.parse(localStorage.getItem('userData')).refresh_token
+      });
       // Create Order Action
       await this.createOrder({
         routeFrom: JSON.parse(localStorage.getItem('location')),
@@ -180,7 +184,12 @@ export default {
     closePopup() {
       this.isShowModal = false;
     },
-    ...mapActions(['clearCartOfProducts', 'getTariffToDelivery', 'createOrder'])
+    ...createNamespacedHelpers('cart').mapActions([
+      'clearCartOfProducts',
+      'getTariffToDelivery',
+      'createOrder'
+    ]),
+    ...createNamespacedHelpers('auth').mapActions(['refreshToken'])
   },
   props: {
     destinationPoints: {
@@ -191,6 +200,11 @@ export default {
     uuidStore: {
       type: String,
       default: '',
+      required: true
+    },
+    preparationTime: {
+      type: Number,
+      default: 0,
       required: true
     }
   },

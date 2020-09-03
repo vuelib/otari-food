@@ -16,12 +16,13 @@
       <!-- SidebarMap Component -->
       <SidebarMap
         v-if="isCurrentLocationNull"
-        :destination-points="store.destination_points"
+        :destination-points="getStore.destination_points"
       />
       <AppCart
         v-else
-        :destination-points="store.destination_points"
-        :uuid-store="store.uuid"
+        :destination-points="getStore.destination_points"
+        :preparation-time="getStore.order_preparation_time_second"
+        :uuid-store="getStore.uuid"
       />
     </div>
   </div>
