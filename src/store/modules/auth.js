@@ -1,6 +1,7 @@
 import {
   getCodeFromPhoneNumberService,
   checkToEqualVerificationCodeService,
+  refreshTokenService,
   logoutService
 } from '@/services/auth.js';
 
@@ -33,6 +34,9 @@ export default {
         device_id
       });
       commit('SET_USER_UUID', client_uuid);
+    },
+    async refreshToken({ commit }, { refresh }) {
+      return await refreshTokenService({ refresh });
     },
     logout({ commit }) {
       logoutService();

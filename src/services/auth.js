@@ -26,6 +26,18 @@ export function checkToEqualVerificationCodeService({ code, device_id }) {
     });
 }
 
+export function refreshTokenService({ refresh }) {
+  return api.client
+    .post('https://client.apis.stage.faem.pro/api/v2/auth/refresh', {
+      refresh
+    })
+    .then(({ data }) => {
+      console.log(data);
+      localStorage.setItem('userData', JSON.stringify(data));
+      return data;
+    });
+}
+
 export function logoutService() {
   api.token = null;
   api.refresh_token = null;
