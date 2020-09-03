@@ -31,9 +31,6 @@
 
 <script>
 export default {
-  created() {
-    console.log(this.store);
-  },
   props: {
     store: {
       type: Object,

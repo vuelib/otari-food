@@ -1,13 +1,13 @@
 <template>
   <div class="places-list">
-    <h2 class="places-list__title">Рестораны</h2>
+    <h2 id="restourants" class="places-list__title">Рестораны</h2>
     <ul
       @click="pushToStore"
       ref="places-list-container"
       class="places-list__container"
     >
       <li
-        v-for="store in getStores"
+        v-for="store in filteredStories"
         :key="store.uuid"
         class="places-list__place"
         :class="{
@@ -40,6 +40,17 @@ export default {
     if (!this.getStores.length) this.showMore();
   },
   computed: {
+    filteredStories() {
+      if (!this.filteredCategory || this.filteredCategory === 'все') {
+        return this.getStores;
+      }
+      return this.getStores.filter(({ product_category }) => {
+        if (!product_category) return;
+        return product_category
+          .map(el => el.replace(/.*(>|\|)\.*/g, '').trim())
+          .includes(this.filteredCategory);
+      });
+    },
     isShowMore() {
       return this.getStoresCount - this.getStores.length > 0;
     },
@@ -107,6 +118,13 @@ export default {
       this.isModalVisible = false;
     },
     ...mapActions(['getStoresByFilter'])
+  },
+  props: {
+    filteredCategory: {
+      type: String,
+      default: '',
+      require: false
+    }
   },
   data: () => ({
     isModalVisible: false

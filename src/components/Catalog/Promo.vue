@@ -46,6 +46,7 @@
                     @click="selectAddress(suggestion)"
                     :key="suggestion.uuid"
                     class="suggestion"
+                    role="option"
                   >
                     <span class="suggestion__item">
                       {{ suggestion.unrestricted_value }}
@@ -63,7 +64,10 @@
             </div>
           </div>
           <div class="address-block__button-wrapper">
-            <button class="address-block__button button button--yellow">
+            <button
+              @click="goToRestourants"
+              class="address-block__button button button--yellow"
+            >
               Показать рестораны
             </button>
           </div>
@@ -89,6 +93,11 @@ export default {
       this.suggestionsAddresses = data;
       console.log(data);
     }, 350),
+    goToRestourants() {
+      document
+        .querySelector('#restourants')
+        .scrollIntoView({ behavior: 'smooth' });
+    },
     // Select address
     selectAddress(address) {
       this.selectedAddress = address;
