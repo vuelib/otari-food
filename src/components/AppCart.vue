@@ -76,7 +76,7 @@
       </div>
       <div class="app-cart-with-button__button">
         <button
-          @click="sendOrder"
+          @click="confirmCreateOrder"
           :disabled="isSendOrderDisabled"
           class="button button--yellow"
         >
@@ -88,24 +88,13 @@
     <app-popup v-show="isShowModal && !isAuthUser" @closePopup="closePopup">
       <AppLogin />
     </app-popup>
-    <!-- Confirm Modal -->
-    <app-popup
-      v-show="isConfirmClearCart"
-      @closePopup="closeConfirmClearCartPopup"
-    >
-      <AppConfirm
-        header-title="Удалить все из корзины?"
-        @acceptConfirm="clearCart"
-        @closePopup="closeConfirmClearCartPopup"
-      />
-    </app-popup>
   </div>
 </template>
 
 <script>
+import Swal from 'sweetalert2';
 import AppCartItem from './AppCartItem.vue';
 import AppLogin from './AppLogin.vue';
-import AppConfirm from './AppConfirm.vue';
 import AppTimePane from './AppTimePane.vue';
 
 import auth from '@/mixins/auth.js';
@@ -160,26 +149,63 @@ export default {
       this.timeToDelivery = time;
     },
     async sendOrder() {
+      console.log('sendOrder');
       if (this.isSendOrderDisabled || !this.destinationPoints.length) return;
       if (!this.isAuthUser) return (this.isShowModal = true);
-      // Refresh Token
-      await this.refreshToken({
-        refresh: JSON.parse(localStorage.getItem('userData')).refresh_token
-      });
-      // Create Order Action
-      await this.createOrder({
-        routeFrom: JSON.parse(localStorage.getItem('location')),
-        routeTo: this.destinationPoints[0]
+      try {
+        // Refresh Token
+        await this.refreshToken({
+          refresh: JSON.parse(localStorage.getItem('userData')).refresh_token
+        });
+        // Create Order Action
+        const data = await this.createOrder({
+          routeFrom: JSON.parse(localStorage.getItem('location')),
+          routeTo: this.destinationPoints[0]
+        });
+        Swal.fire({
+          title: 'Заказ успешно оформлен',
+          text: 'Ожидайте звонка оператора',
+          icon: 'success',
+          confirmButtonColor: '#fc5b58'
+        });
+        console.log('createOrderData', data);
+      } catch (e) {
+        console.log('createOrderDataERROR', e);
+      }
+    },
+    confirmCreateOrder() {
+      Swal.fire({
+        title: 'Подтверждение заказа',
+        text: 'Вы уверены, что хотите подтвердить заказ?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#fc5b58',
+        confirmButtonText: 'Подтвердить',
+        cancelButtonText: 'Отмена'
+      }).then(result => {
+        if (result.value) {
+          console.log(result);
+          this.sendOrder();
+        }
       });
     },
     confirmClearCart() {
-      this.isConfirmClearCart = true;
+      Swal.fire({
+        title: 'Удаление корзины',
+        text: 'Все ранее добавленные Вами товары будут удалены',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#fc5b58',
+        confirmButtonText: 'Подтвердить',
+        cancelButtonText: 'Отмена'
+      }).then(result => {
+        if (result.value) {
+          this.clearCart();
+        }
+      });
     },
     clearCart() {
       this.clearCartOfProducts();
-    },
-    closeConfirmClearCartPopup() {
-      this.isConfirmClearCart = false;
     },
     closePopup() {
       this.isShowModal = false;
@@ -211,7 +237,6 @@ export default {
   data: () => ({
     isShowModal: false,
     isShowTimeList: false,
-    isConfirmClearCart: false,
     timeToDelivery: {
       day: 'today',
       time: '~ 30 мин'
@@ -222,7 +247,6 @@ export default {
   components: {
     AppCartItem,
     AppLogin,
-    AppConfirm,
     AppTimePane
   }
 };
