@@ -62,7 +62,9 @@
           <ul class="cabinet-menu">
             <li class="cabinet-item"><i class="icon-user"></i>Мои данные</li>
             <li class="cabinet-item"><i class="icon-user"></i>Мои адреса</li>
-            <li class="cabinet-item"><i class="icon-user"></i>Мои заказы</li>
+            <li @click="showMyOrders" class="cabinet-item">
+              <i class="icon-user"></i>Мои заказы
+            </li>
             <li @click="openLoginModal" class="cabinet-item">
               <i class="icon-user"></i>Выйти
             </li>
@@ -77,12 +79,16 @@
       <AppLogin />
     </app-popup>
     <!-- <AppLogin /> -->
+    <app-popup v-show="isShowMyOrders" @closePopup="closeMyOrdersModal">
+      <AppMyOrders ref="my-orders" @closePopup="closeMyOrdersModal" />
+    </app-popup>
   </div>
 </template>
 
 <script>
 import AppPopup from './AppPopup';
 import AppLogin from './AppLogin';
+import AppMyOrders from './AppMyOrders';
 import auth from '@/mixins/auth.js';
 
 import { createNamespacedHelpers } from 'vuex';
@@ -110,6 +116,13 @@ export default {
       // if (this.isAuthUser) console.log('logout');
       else this.isModalVisible = true;
     },
+    showMyOrders() {
+      this.$refs['my-orders'].loadMyOrders();
+      this.isShowMyOrders = true;
+    },
+    closeMyOrdersModal() {
+      this.isShowMyOrders = false;
+    },
     closeLoginModal() {
       this.isModalVisible = false;
     }
@@ -127,13 +140,15 @@ export default {
   },
   data: () => ({
     isModalVisible: false,
+    isShowMyOrders: false,
     city: 'Владикавказ'
   }),
   mixins: [auth],
   name: 'AppHeader',
   components: {
     AppPopup,
-    AppLogin
+    AppLogin,
+    AppMyOrders
   }
 };
 </script>
