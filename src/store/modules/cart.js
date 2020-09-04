@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import shortid from 'shortid';
 import { getTariffsService } from '@/services/tariff.js';
-import { createOrderService } from '@/services/stores.js';
+import { createOrderService, getMyOrdersService } from '@/services/stores.js';
 /* eslint no-unused-vars: */
 export default {
   namespaced: true,
@@ -139,7 +139,7 @@ export default {
         productsInput.push(product);
       }
       try {
-        await createOrderService({
+        return await createOrderService({
           routeFrom,
           routeTo,
           productsInput,
@@ -149,6 +149,9 @@ export default {
         console.log(e);
       }
       // console.log(productsInput);
+    },
+    async getMyOrders() {
+      return await getMyOrdersService();
     }
   },
   getters: {

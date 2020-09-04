@@ -44,3 +44,16 @@ export function createOrderService({
     )
     .then(({ data }) => data);
 }
+
+export function getMyOrdersService() {
+  return api
+    .client(`https://client.apis.stage.faem.pro/api/v2/myorders`, {
+      headers: {
+        Source: 'ios_client_app_1',
+        Authorization: `Bearer ${
+          JSON.parse(localStorage.getItem('userData')).token
+        }`
+      }
+    })
+    .then(({ data }) => data);
+}
