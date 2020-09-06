@@ -1,7 +1,11 @@
 import Vue from 'vue';
 import shortid from 'shortid';
 import { getTariffsService } from '@/services/tariff.js';
-import { createOrderService, getMyOrdersService } from '@/services/stores.js';
+import {
+  createOrderService,
+  cancelOrderService,
+  getMyOrdersService
+} from '@/services/stores.js';
 /* eslint no-unused-vars: */
 export default {
   namespaced: true,
@@ -19,26 +23,40 @@ export default {
     SET_ACTIVE_STORE_UUID(state, select_uuid) {
       state.cart_active_store_uuid = select_uuid;
     },
-    INCREMENT_PRODUCT_FROM_CART(state, keyIndex) {
+    INCREMENT_PRODUCT_FROM_CART(state, { keyIndex, getStoreProducts }) {
       state.cart_products[keyIndex].quantity++;
       state.cart_products[keyIndex].menuItem.quantity++;
+      console.log(state.cart_products[keyIndex].menuItem.uuid);
+      console.log(getStoreProducts);
+      const product = getStoreProducts.find(
+        ({ uuid }) => uuid === state.cart_products[keyIndex].menuItem.uuid
+      );
+      product.quantity++;
     },
-    DELETE_PRODUCT_FROM_CART(state, keyIndex) {
+    DELETE_PRODUCT_FROM_CART(state, { keyIndex, getStoreProducts }) {
+      const product = getStoreProducts.find(
+        ({ uuid }) => uuid === state.cart_products[keyIndex].menuItem.uuid
+      );
       if (state.cart_products[keyIndex].menuItem.quantity > 1) {
         state.cart_products[keyIndex].menuItem.quantity--;
+        product.quantity--;
       } else {
         Vue.delete(state.cart_products[keyIndex].menuItem, 'quantity');
+        Vue.delete(product, 'quantity');
       }
       if (state.cart_products[keyIndex].quantity > 1) {
         state.cart_products[keyIndex].quantity--;
+        product.quantity--;
       } else {
         Vue.delete(state.cart_products, keyIndex);
+        Vue.delete(product, 'quantity');
       }
     },
-    CLEAR_CART_OF_PRODUCTS(state) {
+    CLEAR_CART_OF_PRODUCTS(state, { getStoreProducts }) {
       for (const [key, product] of Object.entries(state.cart_products)) {
         Vue.delete(product.menuItem, 'quantity');
         Vue.delete(state.cart_products, key);
+        getStoreProducts.map(product => Vue.delete(product, 'quantity'));
       }
     },
     ADD_PRODUCT_TO_CART(state, { product, filterCartProduct }) {
@@ -89,14 +107,22 @@ export default {
         filterCartProduct: getters.filterCartProductByUUID
       });
     },
-    incrementProductFromCart({ commit }, keyIndex) {
-      commit('INCREMENT_PRODUCT_FROM_CART', keyIndex);
+    incrementProductFromCart({ commit, getters }, keyIndex) {
+      commit('INCREMENT_PRODUCT_FROM_CART', {
+        keyIndex,
+        getStoreProducts: getters.getStoreProducts
+      });
     },
-    deleteProductFromCart({ commit }, keyIndex) {
-      commit('DELETE_PRODUCT_FROM_CART', keyIndex);
+    deleteProductFromCart({ commit, getters }, keyIndex) {
+      commit('DELETE_PRODUCT_FROM_CART', {
+        keyIndex,
+        getStoreProducts: getters.getStoreProducts
+      });
     },
-    clearCartOfProducts({ commit }) {
-      commit('CLEAR_CART_OF_PRODUCTS');
+    clearCartOfProducts({ commit, getters }) {
+      commit('CLEAR_CART_OF_PRODUCTS', {
+        getStoreProducts: getters.getStoreProducts
+      });
       commit('SET_ACTIVE_STORE_UUID', '');
     },
     async getTariffToDelivery({ commit }, { routeFrom, routeTo, serviceUUID }) {
@@ -147,8 +173,11 @@ export default {
         });
       } catch (e) {
         console.log(e);
+        return e;
       }
-      // console.log(productsInput);
+    },
+    async cancelOrder({ commit }, { order_uuid }) {
+      return await cancelOrderService({ order_uuid });
     },
     async getMyOrders() {
       return await getMyOrdersService();
@@ -201,6 +230,10 @@ export default {
     },
     isCartEmpty(state) {
       return Object.values(state.cart_products).length === 0;
+    },
+    getStoreProducts(state, getters, rootState) {
+      console.log(rootState);
+      return rootState.stores.store_products;
     }
   }
 };
