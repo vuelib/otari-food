@@ -119,14 +119,14 @@ export default {
   justify-content: space-between;
 }
 .catalog-page-filters {
-  flex: 1;
+  // flex: 1;
   margin: 21px 10px 21px 80px;
   display: flex;
   width: 100%;
   // overflow-x: hidden;
   &__list {
-    max-width: 100%;
-    flex: 1;
+    width: 100%;
+    // flex: 1;
     height: 46px;
     display: flex;
     position: relative;
@@ -134,9 +134,6 @@ export default {
   &__item {
     white-space: nowrap;
     padding-right: 4px;
-    &::first-letter {
-      text-transform: uppercase;
-    }
   }
   &__link {
     height: 46px;
@@ -144,8 +141,12 @@ export default {
     display: block;
     line-height: 46px;
     border-radius: 22px;
+    text-align: center;
     &:hover {
       background: #f5f5f5;
+    }
+    &::first-letter {
+      text-transform: uppercase;
     }
   }
   &--active {
@@ -185,7 +186,6 @@ export default {
   visibility: hidden;
   opacity: 0;
   transition: 0.3s;
-
   &::before {
     content: '';
     width: 12px;
@@ -207,11 +207,11 @@ export default {
   font-size: 16px;
   margin-bottom: -1px;
   font-weight: 100;
-  &::first-letter {
-    text-transform: uppercase;
-  }
   &:hover {
     background: #e6e6e6;
+  }
+  &::first-letter {
+    text-transform: uppercase;
   }
 }
 .list-option:not(:first-child)::before {

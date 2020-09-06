@@ -239,6 +239,7 @@ export default {
     position: absolute;
     margin-top: -8px;
     background-image: url('~@/assets/svg/locate-icon.svg');
+    filter: invert(1);
     &:hover {
       opacity: 1;
     }

@@ -272,6 +272,7 @@ export default {
     align-items: center;
     font-weight: bold;
     border-radius: 4px;
+    color: $theme-textColor;
   }
   &__content-address {
     flex: 1 1 auto;
