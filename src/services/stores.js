@@ -45,6 +45,25 @@ export function createOrderService({
     .then(({ data }) => data);
 }
 
+export function cancelOrderService({ order_uuid }) {
+  console.log(order_uuid);
+  return api.client
+    .put(
+      `/orders/cancel/${order_uuid}`,
+      {
+        reason: 'can_not_reach'
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${
+            JSON.parse(localStorage.getItem('userData')).token
+          }`
+        }
+      }
+    )
+    .then(({ data }) => data);
+}
+
 export function getMyOrdersService() {
   return api
     .client(`https://client.apis.stage.faem.pro/api/v2/myorders`, {
