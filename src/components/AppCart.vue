@@ -154,24 +154,28 @@ export default {
       if (!this.isAuthUser) return (this.isShowModal = true);
       try {
         // Refresh Token
-        await this.refreshToken({
-          refresh: JSON.parse(localStorage.getItem('userData')).refresh_token
-        });
+        await this.refreshToken();
         // Create Order Action
         const data = await this.createOrder({
           routeFrom: JSON.parse(localStorage.getItem('location')),
           routeTo: this.destinationPoints[0]
         });
+        console.log('data', data);
         Swal.fire({
           title: 'Заказ успешно оформлен',
           text: 'Ожидайте звонка оператора',
           icon: 'success',
           confirmButtonColor: '#fc5b58'
         });
-        console.log('createOrderData', data);
       } catch (e) {
-        console.log('createOrderDataERROR', e);
+        console.log(e);
+        Swal.fire({
+          title: 'Заведение не работает',
+          icon: 'error',
+          confirmButtonColor: '#fc5b58'
+        });
       }
+      // console.log('createOrderData', data);
     },
     confirmCreateOrder() {
       Swal.fire({

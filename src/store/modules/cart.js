@@ -164,17 +164,13 @@ export default {
         };
         productsInput.push(product);
       }
-      try {
-        return await createOrderService({
-          routeFrom,
-          routeTo,
-          productsInput,
-          serviceUUID: state.delivery_service_uuid
-        });
-      } catch (e) {
-        console.log(e);
-        return e;
-      }
+
+      return await createOrderService({
+        routeFrom,
+        routeTo,
+        productsInput,
+        serviceUUID: state.delivery_service_uuid
+      });
     },
     async cancelOrder({ commit }, { order_uuid }) {
       return await cancelOrderService({ order_uuid });
