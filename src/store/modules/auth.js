@@ -10,7 +10,8 @@ const user_data = JSON.parse(localStorage.getItem('userData'));
 export default {
   namespaced: true,
   state: {
-    user_uuid: user_data ? user_data.client_uuid : null
+    user_uuid: user_data ? user_data.client_uuid : null,
+    refresh_token: user_data ? user_data.refresh_token : null
   },
   mutations: {
     SET_USER_UUID(store, uuid) {
@@ -18,6 +19,9 @@ export default {
     },
     DELETE_USER_UUID(store) {
       store.user_uuid = null;
+    },
+    SET_REFRESH_TOKEN(state, refresh_token) {
+      state.refresh_token = refresh_token;
     }
   },
   actions: {
@@ -29,14 +33,20 @@ export default {
       });
     },
     async checkToEqualVerificationCode({ commit }, { code, device_id }) {
-      const { client_uuid } = await checkToEqualVerificationCodeService({
+      const data = await checkToEqualVerificationCodeService({
         code,
         device_id
       });
-      commit('SET_USER_UUID', client_uuid);
+      localStorage.setItem('userData', await JSON.stringify(data));
+      commit('SET_USER_UUID', data.client_uuid);
+      commit('SET_REFRESH_TOKEN', data.refresh_token);
     },
-    async refreshToken({ commit }, { refresh }) {
-      return await refreshTokenService({ refresh });
+    async refreshToken({ commit, state }) {
+      const data = await refreshTokenService({ refresh: state.refresh_token });
+      localStorage.setItem('userData', await JSON.stringify(data));
+      commit('SET_REFRESH_TOKEN', data.refresh_token);
+      console.log('refreshToken', data);
+      return data;
     },
     logout({ commit }) {
       logoutService();
