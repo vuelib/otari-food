@@ -80,7 +80,7 @@
     </app-popup>
     <!-- <AppLogin /> -->
     <app-popup v-show="isShowMyOrders" @closePopup="closeMyOrdersModal">
-      <AppMyOrders ref="my-orders" @closePopup="closeMyOrdersModal" />
+      <AppOrderHistory ref="my-orders" @closePopup="closeMyOrdersModal" />
     </app-popup>
   </div>
 </template>
@@ -88,7 +88,7 @@
 <script>
 import AppPopup from './AppPopup';
 import AppLogin from './AppLogin';
-import AppMyOrders from './AppMyOrders';
+import AppOrderHistory from './AppOrderHistory';
 import auth from '@/mixins/auth.js';
 
 import { createNamespacedHelpers } from 'vuex';
@@ -148,7 +148,7 @@ export default {
   components: {
     AppPopup,
     AppLogin,
-    AppMyOrders
+    AppOrderHistory
   }
 };
 </script>
