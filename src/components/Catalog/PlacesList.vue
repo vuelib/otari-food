@@ -11,9 +11,15 @@
         :key="store.uuid"
         class="places-list__place"
         :class="{
-          'places-list__closed': checkStoreOnClosed(store.work_schedule)
+          'places-list__closed': !checkStoreOnOpened(store.work_schedule)
         }"
       >
+        <pre>
+        {{ new Date().getHours() * 60 + new Date().getMinutes() }}
+        {{ detectWeekDay(store.work_schedule).work_beginning }}
+        {{ detectWeekDay(store.work_schedule).work_ending }}
+      </pre
+        >
         <PlaceItem :store="store" :data-store="store.uuid" />
       </li>
     </ul>
@@ -54,9 +60,13 @@ export default {
     isShowMore() {
       return this.getStoresCount - this.getStores.length > 0;
     },
-    checkStoreOnClosed() {
+    checkStoreOnOpened() {
       return workSchedule => {
-        return this.detectWeekDay(workSchedule).day_off;
+        const { day_off, work_beginning, work_ending } = this.detectWeekDay(
+          workSchedule
+        );
+        const curTime = new Date().getHours() * 60 + new Date().getMinutes();
+        return !day_off && work_beginning < curTime && curTime < work_ending;
       };
     },
     getHoursWork() {
@@ -68,14 +78,6 @@ export default {
           work_beginning: this.constructTime(work_beginning),
           work_ending: this.constructTime(work_ending)
         };
-      };
-    },
-    detectWeekDay() {
-      const currentWeekDay = new Date().getDay();
-      return workSchedule => {
-        for (const day of workSchedule) {
-          if (day.week_day === currentWeekDay) return day;
-        }
       };
     },
     ...mapGetters(['getStores', 'getStoresCount', 'findStoreByUUID']),
@@ -94,7 +96,7 @@ export default {
       // Push to store
       const store = this.findStoreByUUID(storeContainer.dataset.store);
       // check on closed
-      if (this.checkStoreOnClosed(store.work_schedule)) return;
+      if (!this.checkStoreOnOpened(store.work_schedule)) return;
       this.$router.push({
         name: 'RestaurantPage',
         params: {
@@ -102,6 +104,13 @@ export default {
           store
         }
       });
+    },
+    detectWeekDay(workSchedule) {
+      const currentWeekDay = new Date().getDay();
+      for (const day of workSchedule) {
+        if (currentWeekDay === 0 && day.week_day === 7) return day;
+        if (day.week_day === currentWeekDay) return day;
+      }
     },
     constructTime(min) {
       const h = Math.floor(min / 60);
