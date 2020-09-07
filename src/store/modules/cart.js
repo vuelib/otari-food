@@ -166,8 +166,17 @@ export default {
       }
 
       return await createOrderService({
-        routeFrom,
-        routeTo,
+        routes: [routeFrom, routeTo],
+        productsInput,
+        serviceUUID: state.delivery_service_uuid
+      });
+    },
+    async repeatOrder(
+      { commit, state },
+      { routes, productsInput, serviceUUID }
+    ) {
+      return await createOrderService({
+        routes,
         productsInput,
         serviceUUID: state.delivery_service_uuid
       });

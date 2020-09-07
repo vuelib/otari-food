@@ -19,17 +19,12 @@ export function getProductsService({ storeuuid, page = 1, limit = 100 }) {
     .then(({ data }) => data);
 }
 
-export function createOrderService({
-  routeFrom,
-  routeTo,
-  productsInput,
-  serviceUUID
-}) {
+export function createOrderService({ routes, productsInput, serviceUUID }) {
   return api.client
     .post(
       `https://client.apis.stage.faem.pro/api/v2/orders`,
       {
-        routes: [routeFrom, routeTo],
+        routes,
         products_input: productsInput,
         service_uuid: serviceUUID
       },

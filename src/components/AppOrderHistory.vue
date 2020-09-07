@@ -68,7 +68,7 @@
               <div class="order-history__buttons-wrap">
                 <div class="order-history__button-wrap">
                   <button
-                    @click="repeatOrder"
+                    @click="confirmRepeatOrder(order)"
                     class="order-history__button button button--yellow"
                   >
                     Повторить
@@ -115,6 +115,7 @@ export default {
   },
   beforeUpdate() {
     console.log('aasdasd');
+    console.log(this.orderHistory);
   },
   methods: {
     getTotalPrice(products, delivery_price) {
@@ -135,8 +136,56 @@ export default {
     async loadMyOrders() {
       this.orderHistory = await this.getMyOrders();
     },
-    repeatOrder() {
-      console.log('repeatOrder');
+    confirmRepeatOrder(order) {
+      Swal.fire({
+        title: 'Подтверждение заказа',
+        text: 'Вы уверены, что хотите подтвердить заказ?',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#fc5b58',
+        confirmButtonText: 'Подтвердить',
+        cancelButtonText: 'Отмена'
+      }).then(result => {
+        if (result.value) {
+          this.sendOrder(order);
+        }
+      });
+    },
+    async sendOrder(order) {
+      let productsInput = [];
+      const orderData = {
+        routes: order.routes,
+        service_uuid: order.service.uuid
+      };
+      order.products_data.products.map(product => {
+        const productData = {
+          uuid: product.uuid,
+          number: product.number,
+          variant_uuid: product.selected_variant.uuid
+        };
+        if (product.toppings) {
+          const toppings_uuid = product.toppings.reduce((acc, { uuid }) => {
+            acc.push(uuid);
+            return acc;
+          }, []);
+          productData.toppings_uuid = toppings_uuid;
+        }
+        productsInput.push(productData);
+      });
+      orderData.productsInput = productsInput;
+      console.log(orderData);
+      try {
+        const data = await this.repeatOrder(orderData);
+        console.log(data);
+        Swal.fire({
+          title: 'Заказ успешно оформлен',
+          text: 'Ожидайте звонка оператора',
+          icon: 'success',
+          confirmButtonColor: '#fc5b58'
+        });
+      } catch (e) {
+        console.log('Err', e);
+      }
     },
     confirmCancelOrder(order_uuid) {
       Swal.fire({
@@ -169,7 +218,9 @@ export default {
     },
     ...createNamespacedHelpers('cart').mapActions([
       'getMyOrders',
-      'cancelOrder'
+      'cancelOrder',
+      'createOrder',
+      'repeatOrder'
     ])
   },
   data: () => ({
