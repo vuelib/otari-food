@@ -60,8 +60,8 @@
         <button v-else class="header__button header__profile">
           <span>Профиль</span>
           <ul class="cabinet-menu">
-            <li class="cabinet-item"><i class="icon-user"></i>Мои данные</li>
-            <li class="cabinet-item"><i class="icon-user"></i>Мои адреса</li>
+            <!-- <li class="cabinet-item"><i class="icon-user"></i>Мои данные</li>
+            <li class="cabinet-item"><i class="icon-user"></i>Мои адреса</li> -->
             <li @click="showMyOrders" class="cabinet-item">
               <i class="icon-user"></i>Мои заказы
             </li>

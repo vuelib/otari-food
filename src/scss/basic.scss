@@ -7,9 +7,6 @@
   // outline: -webkit-focus-ring-color auto 1px;
   outline: none;
 }
-a:-webkit-any-link:focus {
-  outline-offset: 1px;
-}
 body{
   min-width: 1024px;
   background: #fff;
@@ -112,4 +109,8 @@ input[type=checkbox]:checked ~ .checkmark.checkbox:after {
 .button--yellow:active:not(:disabled),
 .button--yellow:focus:not(:disabled) {
   background-color: darken($theme-mainColor, 3%);
+}
+.swal2-styled:focus {
+  outline: 0;
+  box-shadow: none !important;
 }

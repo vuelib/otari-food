@@ -154,7 +154,7 @@ export default {
       if (!this.isAuthUser) return (this.isShowModal = true);
       try {
         // Refresh Token
-        await this.refreshToken();
+        // await this.refreshToken();
         // Create Order Action
         const data = await this.createOrder({
           routeFrom: JSON.parse(localStorage.getItem('location')),
@@ -170,7 +170,7 @@ export default {
       } catch (e) {
         console.log(e);
         Swal.fire({
-          title: 'Заведение не работает',
+          title: 'Упс... Что-то пошло не так',
           icon: 'error',
           confirmButtonColor: '#fc5b58'
         });

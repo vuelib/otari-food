@@ -136,7 +136,8 @@ export default {
       }
     },
     clearEnterAddress() {
-      (this.selectedAddress = null), (this.enterAddress = '');
+      this.enterAddress = this.selectedAddress.unrestricted_value;
+      this.selectedAddress = null;
     },
     ...mapActions([
       'getAutocompleteAddresses',
