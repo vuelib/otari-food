@@ -167,6 +167,7 @@ export default {
           icon: 'success',
           confirmButtonColor: '#fc5b58'
         });
+        this.clearCart();
       } catch (e) {
         console.log(e);
         Swal.fire({
