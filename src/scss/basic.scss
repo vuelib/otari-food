@@ -1,0 +1,116 @@
+*, *::after, *::before{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+:focus {
+  // outline: -webkit-focus-ring-color auto 1px;
+  outline: none;
+}
+body{
+  min-width: 1024px;
+  background: #fff;
+  font-family: YSText, helvetica, arial, sans-serif;
+}
+ol, ul {
+  list-style: none;
+}
+a {
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+input, textarea, button {
+  font-family: inherit;
+  outline: none;
+  font-size: inherit;
+  appearance: none;
+  line-height: 1em;
+}
+input:not([type=checkbox]):not([type=radio]) {
+  width: 100%;
+  text-overflow: ellipsis;
+}
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 22px;
+  width: 22px;
+  background-color: #d0d0d0;
+  border-radius: 4px;
+}
+.checkmark.checkradio {
+  border-radius: 50%;
+}
+.checkmark:after {
+  content: '';
+  position: absolute;
+  display: none;
+}
+input[type=radio]:checked ~ .checkmark.checkradio, 
+input[type=checkbox]:checked ~ .checkmark.checkbox {
+  background-color: $theme-mainColor;
+}
+input[type=radio]:checked ~ .checkmark.checkradio:after,
+input[type=checkbox]:checked ~ .checkmark.checkbox:after {
+  display: block;
+}
+.checkmark.checkradio:after {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
+.checkmark.checkbox:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+.container {
+  width: 100%;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+.button {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  color: inherit;
+  border: none;
+  padding: 0 24px;
+  display: inline-block;
+  overflow: hidden;
+  font-size: 16px;
+  min-height: 41px;
+  font-weight: normal;
+  user-select: none;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  transition: background-color 0.2s, color 0.2s;
+}
+.button--yellow{
+  color: $theme-textColor;
+  background: $theme-mainColor;
+  font-weight: bold;
+  &:disabled {
+    color: lighten($theme-mainColor, 15);
+    cursor: default;
+  }
+}
+
+.button--yellow:active:not(:disabled),
+.button--yellow:focus:not(:disabled) {
+  background-color: darken($theme-mainColor, 3%);
+}
+.swal2-styled:focus {
+  outline: 0;
+  box-shadow: none !important;
+}
