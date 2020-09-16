@@ -2,7 +2,7 @@ import api from './axios-api';
 
 export function getCodeFromPhoneNumberService({ phone, device_id }) {
   return api.client
-    .post('https://client.apis.stage.faem.pro/api/v2/auth/new', {
+    .post(`${process.env.VUE_APP_API_CLIENT}/auth/new`, {
       device_id,
       phone
     })
@@ -13,7 +13,7 @@ export function getCodeFromPhoneNumberService({ phone, device_id }) {
 
 export function checkToEqualVerificationCodeService({ code, device_id }) {
   return api.client
-    .post('https://client.apis.stage.faem.pro/api/v2/auth/verification', {
+    .post(`${process.env.VUE_APP_API_CLIENT}/auth/verification`, {
       device_id,
       code
     })
@@ -24,7 +24,7 @@ export function checkToEqualVerificationCodeService({ code, device_id }) {
 
 export function refreshTokenService({ refresh }) {
   return api.client
-    .post('https://client.apis.stage.faem.pro/api/v2/auth/refresh', {
+    .post(`${process.env.VUE_APP_API_CLIENT}/auth/refresh`, {
       refresh
     })
     .then(({ data }) => {
