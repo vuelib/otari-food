@@ -3,11 +3,10 @@ FROM node:lts-alpine as build-stage
 
 # ENV NODE_ENV=production
 ARG NODE_ENV
-
-RUN mkdir -p /app
-COPY . /app
 WORKDIR /app
-
+COPY package*.json ./
+RUN npm install
+COPY . .
 RUN npm install
 
 RUN if [ "$NODE_ENV" == "production" ]; \
