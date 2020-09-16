@@ -47,7 +47,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
 # Mount log dir.
 VOLUME /var/log/nginx
 
-COPY --from=build-stage /app/ /usr/share/nginx/html
+COPY --from=build-stage /app/dist /usr/share/nginx/html
 RUN mkdir -p /usr/share/nginx/html/.well-known/acme-challenge
 EXPOSE 80
 EXPOSE 443
