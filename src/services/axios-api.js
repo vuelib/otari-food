@@ -1,5 +1,4 @@
 import axios from 'axios';
-const BASE_URL = 'https://crm.apis.stage.faem.pro/api/v2/';
 
 class Api {
   constructor(options = {}) {
@@ -10,7 +9,7 @@ class Api {
     this.client =
       options.client ||
       axios.create({
-        baseURL: BASE_URL,
+        baseURL: process.env.VUE_APP_API_CRM,
         headers: {
           'Content-Type': 'application/json'
         }
@@ -49,7 +48,7 @@ class Api {
 
         if (!this.refreshRequest) {
           this.refreshRequest = this.client.post(
-            'https://client.apis.stage.faem.pro/api/v2/auth/refresh',
+            `${process.env.VUE_APP_API_CLIENT}/auth/refresh`,
             {
               refresh: this.refresh_token
             }

@@ -1,0 +1,78 @@
+stages:
+  - build
+  - deploy
+
+.docker-build:
+  stage: build
+  image: docker:latest
+  variables:
+    IMAGE_NAME: faem-market
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker image build --build-arg NODE_ENV=${NODE_ENV} -f ./Dockerfile -t ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest .
+    - docker push ${CI_REGISTRY_IMAGE}/${IMAGE_NAME}:latest
+
+docker-build:stage:
+  extends: .docker-build
+  variables:
+    IMAGE_NAME: stage
+    NODE_ENV: staging
+
+docker-build:prod:
+  extends: .docker-build
+  variables:
+    IMAGE_NAME: prod
+    NODE_ENV: production
+  only:
+    - master
+
+.deploy:
+  stage: deploy
+  before_script:
+    - apt-get update -qq
+    - apt-get install -qq git
+    # Setup SSH deploy keys
+    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "${SSH_PRIVATE_KEY}")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+  when: manual
+
+deploy:stage:
+  extends: .deploy
+  variables:
+    URL: delivery-stage.faem.ru
+    IMAGE_TAG: build.${CI_PIPELINE_ID}
+    IMAGE_NAME: stage
+  script:
+    - ssh root@${URL} "cd /root/dockercompose &&
+      docker ps &&
+      docker stop dockercompose_app_1 &&
+      docker pull registry.gitlab.com/faemproject/frontend/faem-market/stage:latest &&
+      docker-compose up -d"
+  when: manual
+  environment:
+    name: stage
+
+deploy:prod:
+  extends: .deploy
+  variables:
+    URL: delivery.faem.ru
+    IMAGE_TAG: build.${CI_PIPELINE_ID}
+    IMAGE_NAME: prod
+  script:
+    - ssh root@${URL} "cd /root/dockercompose &&
+      docker ps &&
+      docker stop dockercompose_app_1 &&
+      docker pull registry.gitlab.com/faemproject/frontend/faem-market/prod:latest &&
+      docker-compose up -d"
+  when: manual
+  only:
+    - master
+  environment:
+    name: stage
+
