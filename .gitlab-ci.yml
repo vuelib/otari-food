@@ -26,8 +26,6 @@ docker-build:prod:
   variables:
     IMAGE_NAME: prod
     NODE_ENV: production
-  only:
-    - master
 
 .deploy:
   stage: deploy
@@ -74,5 +72,5 @@ deploy:prod:
   only:
     - master
   environment:
-    name: stage
+    name: prod
 
