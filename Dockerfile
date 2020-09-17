@@ -1,5 +1,5 @@
 # FROM mhart/alpine-node:10.8.0 as build-stage
-FROM node:12-alpine as build-stage
+FROM node:10-alpine as build-stage
 
 # ENV NODE_ENV=production
 ARG NODE_ENV
