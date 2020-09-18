@@ -116,8 +116,12 @@ export default {
       };
     },
     getStoreBG() {
-      const parseImg = JSON.parse(this.store.image);
-      return parseImg.full || parseImg.full_format;
+      try {
+        const parseImg = JSON.parse(this.store.image);
+        return parseImg.full || parseImg.full_format;
+      } catch {
+        return this.store.image;
+      }
     },
     fullStreetStore() {
       return this.store.destination_points[0].unrestricted_value;

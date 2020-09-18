@@ -54,8 +54,12 @@
         <button class="header__city header__button">
           {{ city }}
         </button>
-        <button v-if="!isAuthUser" class="header__button">
-          <span @click="openLoginModal" class="header__login">Войти</span>
+        <button
+          @click="openLoginModal"
+          v-if="!isAuthUser"
+          class="header__button"
+        >
+          <span class="header__login">Войти</span>
         </button>
         <button v-else class="header__button header__profile">
           <span>Профиль</span>

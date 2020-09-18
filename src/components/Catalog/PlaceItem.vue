@@ -33,8 +33,12 @@
 export default {
   computed: {
     getStoreBG() {
-      const parseImg = JSON.parse(this.store.image);
-      return parseImg.full || parseImg.full_format;
+      try {
+        const parseImg = JSON.parse(this.store.image);
+        return parseImg.full || parseImg.full_format;
+      } catch {
+        return this.store.image;
+      }
     }
   },
   props: {
