@@ -2,12 +2,13 @@
 FROM node:10-alpine as build-stage
 
 # ENV NODE_ENV=production
-ARG NODE_ENV
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm install
+
+ARG NODE_ENV
 
 RUN if [ "$NODE_ENV" == "production" ]; \
     then \
