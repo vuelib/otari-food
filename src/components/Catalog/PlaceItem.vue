@@ -16,7 +16,7 @@
         <div class="place-item__details place-details">
           <div
             v-if="!store.own_delivery"
-            class="place-details__icon yandex-delivery-icon"
+            class="place-details__icon faem-delivery-icon"
           ></div>
           <div class="place-details__icon rating-badge">5.0</div>
           <!-- <div class="place-details__icon price-category">
@@ -112,7 +112,7 @@ export default {
   margin-right: 7px;
   margin-bottom: 7px;
 }
-.yandex-delivery-icon {
+.faem-delivery-icon {
   width: 32px;
   height: 22px;
   display: inline-block;
