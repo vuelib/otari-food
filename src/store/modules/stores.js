@@ -36,10 +36,10 @@ export default {
   },
   actions: {
     // Stores
-    async getStoresByFilter({ commit }) {
+    async getStoresByFilter({ commit }, { page, limit }) {
       const { records, records_count } = await getStoresByFilterService({
-        page: 1,
-        limit: 10
+        page,
+        limit
       });
       commit('ADD_STORES', records);
       commit('SET_STORES_COUNT', records_count);

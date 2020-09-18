@@ -18,7 +18,10 @@
       </li>
     </ul>
     <div v-if="isShowMore" class="places-list__more">
-      <button class="places-list__more-button button button--yellow">
+      <button
+        @click="showMore"
+        class="places-list__more-button button button--yellow"
+      >
         Показать ещё
       </button>
     </div>
@@ -112,7 +115,8 @@ export default {
       return `${h < 10 ? `0${h}` : h}:${m < 10 ? `0${m}` : m}`;
     },
     async showMore() {
-      await this.getStoresByFilter();
+      await this.getStoresByFilter({ page: this.page, limit: this.limit });
+      this.page++;
     },
     openLoginModal() {
       this.isModalVisible = true;
@@ -130,7 +134,9 @@ export default {
     }
   },
   data: () => ({
-    isModalVisible: false
+    isModalVisible: false,
+    page: 1,
+    limit: 30
   }),
   name: 'PlacesList',
   components: {
