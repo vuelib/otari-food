@@ -4,7 +4,7 @@
       class="info-header__image"
       role="img"
       aria-label="Пицца итальяно"
-      :style="{ backgroundImage: `url('${store.image}')` }"
+      :style="{ backgroundImage: `url('${getStoreBG}')` }"
     >
       <div class="info-header__image-backdrop">
         <div class="info-header__wrapper">
@@ -114,6 +114,10 @@ export default {
           work_ending: this.constructTime(work_ending)
         };
       };
+    },
+    getStoreBG() {
+      const parseImg = JSON.parse(this.store.image);
+      return parseImg.full || parseImg.full_format;
     },
     fullStreetStore() {
       return this.store.destination_points[0].unrestricted_value;

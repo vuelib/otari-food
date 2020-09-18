@@ -6,7 +6,7 @@
         role="img"
         :aria-label="store.name"
         :style="{
-          backgroundImage: `url('${store.image}')`
+          backgroundImage: `url('${getStoreBG}')`
         }"
       ></div>
       <div class="place-item__place-info place-info">
@@ -31,6 +31,12 @@
 
 <script>
 export default {
+  computed: {
+    getStoreBG() {
+      const parseImg = JSON.parse(this.store.image);
+      return parseImg.full || parseImg.full_format;
+    }
+  },
   props: {
     store: {
       type: Object,

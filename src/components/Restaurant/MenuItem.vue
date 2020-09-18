@@ -26,7 +26,7 @@
         class="category-menu-item__image"
         role="img"
         :aria-label="menuItem.name"
-        :style="{ backgroundImage: `url('${menuItem.image}')` }"
+        :style="{ backgroundImage: `url('${getMenuItemBG}')` }"
       ></div>
     </div>
   </article>
@@ -43,6 +43,14 @@ export default {
     this.checkInCart();
   },
   computed: {
+    getMenuItemBG() {
+      try {
+        const parseImg = JSON.parse(this.menuItem.image);
+        return parseImg.full || parseImg.full_format;
+      } catch {
+        return this.menuItem.image;
+      }
+    },
     isInCart() {
       return this.menuItem.quantity > 0;
     },
