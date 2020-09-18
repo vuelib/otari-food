@@ -22,7 +22,7 @@ export function getProductsService({ storeuuid, page = 1, limit = 100 }) {
 export function createOrderService({ routes, productsInput, serviceUUID }) {
   return api.client
     .post(
-      `https://client.apis.stage.faem.pro/api/v2/orders`,
+      `${process.env.VUE_APP_API_CLIENT}/v2/orders`,
       {
         routes,
         products_input: productsInput,
@@ -60,7 +60,7 @@ export function cancelOrderService({ order_uuid }) {
 
 export function getMyOrdersService() {
   return api
-    .client(`https://client.apis.stage.faem.pro/api/v2/myorders`, {
+    .client(`${process.env.VUE_APP_API_CLIENT}/myorders`, {
       headers: {
         Source: 'ios_client_app_1',
         Authorization: `Bearer ${
