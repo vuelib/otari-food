@@ -22,7 +22,7 @@ export function getProductsService({ storeuuid, page = 1, limit = 100 }) {
 export function createOrderService({ routes, productsInput, serviceUUID }) {
   return api.client
     .post(
-      `${process.env.VUE_APP_API_CLIENT}/v2/orders`,
+      `${process.env.VUE_APP_API_CLIENT}/orders`,
       {
         routes,
         products_input: productsInput,
