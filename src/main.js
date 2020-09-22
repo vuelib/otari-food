@@ -17,5 +17,12 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  async created() {
+    try {
+      await this.$store.dispatch('auth/refreshToken');
+    } catch {
+      this.$store.dispatch('auth/logout');
+    }
+  }
 }).$mount('#app');

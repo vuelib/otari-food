@@ -171,6 +171,8 @@ export default {
       });
       orderData.productsInput = productsInput;
       try {
+        // Refresh Token
+        await this.refreshToken();
         await this.repeatOrder(orderData);
         Swal.fire({
           title: 'Заказ успешно оформлен',
@@ -197,6 +199,8 @@ export default {
       });
     },
     async cancelSendOrder(order_uuid) {
+      // Refresh Token
+      await this.refreshToken();
       const data = await this.cancelOrder({ order_uuid });
       if (data.code === 200) {
         this.orderHistory = this.orderHistory.filter(
@@ -213,7 +217,8 @@ export default {
       'cancelOrder',
       'createOrder',
       'repeatOrder'
-    ])
+    ]),
+    ...createNamespacedHelpers('auth').mapActions(['refreshToken'])
   },
   data: () => ({
     orderHistory: null

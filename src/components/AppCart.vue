@@ -132,7 +132,7 @@ export default {
       if (!this.isAuthUser) return (this.isShowModal = true);
       try {
         // Refresh Token
-        // await this.refreshToken();
+        await this.refreshToken();
         // Create Order Action
         await this.createOrder({
           routeFrom: JSON.parse(localStorage.getItem('location')),
