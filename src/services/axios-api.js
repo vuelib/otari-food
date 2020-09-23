@@ -11,7 +11,8 @@ class Api {
       axios.create({
         baseURL: process.env.VUE_APP_API_CRM,
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Source: 'ios_client_app_1'
         }
       });
 

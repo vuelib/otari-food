@@ -38,6 +38,26 @@
               </div>
             </div>
             <div class="app-cart__divider"></div>
+            <div class="app-cart__without-delivery app-cart__delivery-fee">
+              <div class="app-cart__delivery-fee-wrapper">
+                <label
+                  for="without_delivery"
+                  class="app-cart__without-delivery-label app-cart__delivery-fee-name"
+                  >Заберу сам</label
+                >
+                <div class="app-cart__delivery-fee-value">
+                  <span class="app-cart__delivery-fee-cost">
+                    <input
+                      :value="isWithoutDelivery"
+                      @change="changeWithoutDelivery"
+                      id="without_delivery"
+                      class="toggle-button"
+                      type="checkbox"
+                    />
+                  </span>
+                </div>
+              </div>
+            </div>
             <div class="app-cart__delivery-fee">
               <div class="app-cart__delivery-fee-wrapper">
                 <div class="app-cart__delivery-fee-name">Доставка</div>
@@ -108,6 +128,7 @@ export default {
     },
     ...createNamespacedHelpers('cart').mapGetters([
       'isCartEmpty',
+      'isWithoutDelivery',
       'getCartProducts',
       'getTotalPrice',
       'getDeliveryPrice',
@@ -120,6 +141,10 @@ export default {
     }
   },
   methods: {
+    async changeWithoutDelivery() {
+      if (this.isWithoutDelivery) await this.fetchTariffToDelivery();
+      this.changeWithoutDeliveryState();
+    },
     async fetchTariffToDelivery() {
       await this.getTariffToDelivery({
         routeFrom: JSON.parse(localStorage.getItem('location')),
@@ -193,7 +218,8 @@ export default {
     ...createNamespacedHelpers('cart').mapActions([
       'clearCartOfProducts',
       'getTariffToDelivery',
-      'createOrder'
+      'createOrder',
+      'changeWithoutDeliveryState'
     ]),
     ...createNamespacedHelpers('auth').mapActions(['refreshToken'])
   },
@@ -336,6 +362,13 @@ export default {
   &__delivery-fee-cost {
     white-space: nowrap;
   }
+  &__without-delivery-label {
+    cursor: pointer;
+    user-select: none;
+  }
+  &__without-delivery {
+    padding-bottom: 10px;
+  }
 }
 .pencil-icon {
   width: 14px;
@@ -355,5 +388,46 @@ export default {
   background-image: url('~@/assets/svg/trash-icon.svg');
   background-repeat: no-repeat;
   background-position: center;
+}
+</style>
+<style lang="scss">
+$toggle-width: 40px;
+$toggle-height: $toggle-width / 2;
+$toggle-bg-color: #c6c6c6;
+$toggle-bg-color-active: $theme-mainColor;
+$toggle-color: #fff;
+
+.toggle-button {
+  position: relative;
+  width: $toggle-width;
+  height: $toggle-height;
+  -webkit-appearance: none;
+  background-color: $toggle-bg-color;
+  border-radius: $toggle-height;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.toggle-button:checked {
+  background-color: $toggle-bg-color-active;
+}
+
+.toggle-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: $toggle-height;
+  height: $toggle-height;
+  background-color: $toggle-color;
+  border-radius: $toggle-height / 2;
+  transform: scale(1.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.toggle-button:checked:before {
+  left: $toggle-height;
 }
 </style>

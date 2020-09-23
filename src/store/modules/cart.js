@@ -13,12 +13,16 @@ export default {
     cart_active_store_uuid: '',
     cart_products: {},
     delivery_price: 100,
-    delivery_service_uuid: ''
+    delivery_service_uuid: '',
+    without_delivery: false
   },
   mutations: {
     SET_DELIVERY_PRICE(state, { total_price, service_uuid }) {
       state.delivery_price = total_price;
       state.delivery_service_uuid = service_uuid;
+    },
+    SET_WITHOUT_DELIVERY(state, value) {
+      state.without_delivery = value;
     },
     SET_ACTIVE_STORE_UUID(state, select_uuid) {
       state.cart_active_store_uuid = select_uuid;
@@ -120,6 +124,14 @@ export default {
       });
       commit('SET_ACTIVE_STORE_UUID', '');
     },
+    async changeWithoutDeliveryState({ state, commit, dispatch }) {
+      if (!state.without_delivery)
+        commit('SET_DELIVERY_PRICE', {
+          total_price: 0,
+          service_uuid: state.delivery_service_uuid
+        });
+      commit('SET_WITHOUT_DELIVERY', !state.without_delivery);
+    },
     async getTariffToDelivery({ commit }, { routeFrom, routeTo, serviceUUID }) {
       const tariffs = await getTariffsService({
         routeFrom,
@@ -159,7 +171,8 @@ export default {
       return await createOrderService({
         routes: [routeFrom, routeTo],
         productsInput,
-        serviceUUID: state.delivery_service_uuid
+        serviceUUID: state.delivery_service_uuid,
+        withoutDelivery: state.without_delivery
       });
     },
     async repeatOrder(
@@ -169,7 +182,8 @@ export default {
       return await createOrderService({
         routes,
         productsInput,
-        serviceUUID: state.delivery_service_uuid
+        serviceUUID: state.delivery_service_uuid,
+        withoutDelivery: state.without_delivery
       });
     },
     async cancelOrder({ commit }, { order_uuid }) {
@@ -226,6 +240,9 @@ export default {
     },
     isCartEmpty(state) {
       return Object.values(state.cart_products).length === 0;
+    },
+    isWithoutDelivery(state) {
+      return state.without_delivery;
     },
     getStoreProducts(state, getters, rootState) {
       return rootState.stores.store_products;
