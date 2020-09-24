@@ -39,16 +39,27 @@
             </ul>
             <div v-if="isSelectAddressNotNull" class="enter-address__content">
               <div class="enter-address__content-address">
-                {{ selectedAddress.unrestricted_value }}
+                <span>{{ selectedAddress.unrestricted_value }}</span>
               </div>
               <div class="enter-address__content-remove"></div>
             </div>
-            <img
+            <svg
+              version="1.0"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 44"
               v-if="enterAddress.length || isSelectAddressNotNull"
               @click="clearEnterAddress"
-              src="../assets/svg/clear-icon.svg"
               class="enter-address__content-remove"
-            />
+              :class="{
+                'enter-address__content-remove-active': isSelectAddressNotNull
+              }"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M19.5 28.4L13.1 22l6.4-6.3-1.1-1.1-6.4 6.3-6.4-6.3-1.1 1.1 6.4 6.3-6.4 6.4 1.1 1.1 6.4-6.4 6.4 6.4z"
+              />
+            </svg>
           </div>
           <button
             @click="setAddress"
@@ -203,6 +214,9 @@ export default {
 .enter-address {
   min-width: 800px;
   padding: 20px 40px;
+  &__header {
+    padding-left: 0;
+  }
   &__bar {
     flex: 0 0 auto;
     width: 100%;
@@ -271,6 +285,7 @@ export default {
   &__content-address {
     flex: 1 1 auto;
     padding-left: 30px;
+    padding-right: 30px;
   }
   &__content-remove {
     top: 0;
@@ -279,6 +294,10 @@ export default {
     cursor: pointer;
     opacity: 1;
     position: absolute;
+    fill: #a9a9a9;
+  }
+  &__content-remove-active {
+    fill: #fff;
   }
 }
 .mapboxgl-ctrl-bottom-left,
