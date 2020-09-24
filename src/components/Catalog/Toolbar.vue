@@ -141,6 +141,7 @@ export default {
     text-align: center;
     &:hover {
       background: #f5f5f5;
+      color: inherit;
     }
     &::first-letter {
       text-transform: uppercase;
