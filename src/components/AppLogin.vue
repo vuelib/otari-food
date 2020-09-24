@@ -5,8 +5,14 @@
     </div>
     <form @submit.prevent="sendVerificationCode" class="auth-form">
       <div class="auth-form__header">
-        Пожалуйста, укажите <br />
-        свой телефон
+        <span v-if="!timer">
+          Пожалуйста, укажите <br />
+          свой телефон
+        </span>
+        <span v-else>
+          Пожалуйста, введите <br />
+          код из СМС
+        </span>
         <p class="auth-form__error">{{ error }}</p>
       </div>
       <!-- Phone group -->
