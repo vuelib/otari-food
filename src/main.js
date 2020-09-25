@@ -4,6 +4,7 @@ import router from './router';
 import store from './store';
 // package
 import VueScrollactive from 'vue-scrollactive';
+import DeviceDetector from 'device-detector-js';
 // components
 import ScrollLink from './components/ScrollLink';
 import AppPopup from './components/AppPopup';
@@ -13,6 +14,9 @@ Vue.component('scroll-link', ScrollLink);
 Vue.component('app-popup', AppPopup);
 
 Vue.config.productionTip = false;
+
+const deviceParse = new DeviceDetector().parse(window.navigator.userAgent);
+window.appDevice = deviceParse.device.type;
 
 new Vue({
   router,
