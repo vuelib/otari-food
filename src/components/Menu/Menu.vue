@@ -27,9 +27,11 @@
 </template>
 
 <script>
-import MenuItem from '@/components/Restaurant/MenuItem.vue';
+import MenuItem from '@/components/MenuItem/MenuItem.vue';
 
+import menu from './menu.js';
 export default {
+  mixins: [menu],
   props: {
     categoryName: {
       type: String,
@@ -40,15 +42,6 @@ export default {
       type: Array,
       default: () => [],
       required: true
-    }
-  },
-  methods: {
-    // tmp solution
-    getAnchorLink(string) {
-      return string
-        .replace(/.*(>|\|)\.*/g, '')
-        .trim()
-        .replace(/\s+/g, '-');
     }
   },
   name: 'CategoryMenu',

@@ -32,7 +32,7 @@
 import SidebarMap from '@/components/Restaurant/SidebarMap.vue';
 import InfoHeader from '@/components/Restaurant/InfoHeader.vue';
 import CategoriesNavbar from '@/components/Restaurant/CategoriesNavbar.vue';
-import MenuList from '@/components/Restaurant/MenuList.vue';
+import MenuList from '@/components/MenuList/MenuList.vue';
 import AppCart from '@/components/AppCart.vue';
 
 import auth from '@/mixins/auth.js';
@@ -60,7 +60,8 @@ export default {
   },
   methods: {
     async initStore() {
-      const STORE_UUID = this.$route.params.id;
+      const STORE_UUID = this.$route.params.id || this.$route.query.si;
+      if (!STORE_UUID) return this.$router.go(-1);
       let { store } = this.$route.params;
       if (!store) store = await this.getStoresByUUID({ uuid: STORE_UUID });
       this.store = store;

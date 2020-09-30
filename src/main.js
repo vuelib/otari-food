@@ -8,10 +8,12 @@ import DeviceDetector from 'device-detector-js';
 // components
 import ScrollLink from './components/ScrollLink';
 import AppPopup from './components/AppPopup';
+import AppDeviceComponent from './components/AppDeviceComponent';
 
 Vue.use(VueScrollactive);
 Vue.component('scroll-link', ScrollLink);
 Vue.component('app-popup', AppPopup);
+Vue.component('app-device-component', AppDeviceComponent);
 
 Vue.config.productionTip = false;
 
@@ -23,6 +25,7 @@ new Vue({
   store,
   render: h => h(App),
   async created() {
+    if (!JSON.parse(localStorage.getItem('userData'))) return;
     try {
       await this.$store.dispatch('auth/refreshToken');
     } catch {

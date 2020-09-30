@@ -4,7 +4,11 @@
       <div class="header-container container">
         <div class="header-logo">
           <router-link to="/" aria-label="На главную">
-            <img class="header-logo__img" src="../assets/logo.png" alt="logo" />
+            <img
+              class="header-logo__img"
+              src="../../assets/logo.png"
+              alt="logo"
+            />
           </router-link>
         </div>
         <div class="header-menu">
@@ -90,63 +94,14 @@
 </template>
 
 <script>
-import AppPopup from './AppPopup';
-import AppLogin from './AppLogin';
-import AppOrderHistory from './AppOrderHistory';
+import AppPopup from '../AppPopup';
+import AppLogin from '../AppLogin';
+import AppOrderHistory from '../AppOrderHistory';
 import auth from '@/mixins/auth.js';
-
-import { createNamespacedHelpers } from 'vuex';
+import header from './header';
 
 export default {
-  methods: {
-    goToCart() {
-      if (
-        this.$route.name === 'RestaurantPage' &&
-        this.$route.params.id === this.getActiveStoreUUID
-      )
-        return;
-      this.$router.push({
-        name: 'RestaurantPage',
-        params: {
-          id: this.getActiveStoreUUID
-        }
-      });
-    },
-    enterAddress() {
-      this.$emit('showEnterAddressModal');
-    },
-    openLoginModal() {
-      if (this.isAuthUser) this.logout();
-      else this.isModalVisible = true;
-    },
-    showMyOrders() {
-      this.$refs['my-orders'].loadMyOrders();
-      this.isShowMyOrders = true;
-    },
-    closeMyOrdersModal() {
-      this.isShowMyOrders = false;
-    },
-    closeLoginModal() {
-      this.isModalVisible = false;
-    }
-  },
-  computed: {
-    ...createNamespacedHelpers('location').mapGetters([
-      'isCurrentLocationNull',
-      'getCurrentLocation'
-    ]),
-    ...createNamespacedHelpers('cart').mapGetters([
-      'getTotalPrice',
-      'isCartEmpty',
-      'getActiveStoreUUID'
-    ])
-  },
-  data: () => ({
-    isModalVisible: false,
-    isShowMyOrders: false,
-    city: 'Владикавказ'
-  }),
-  mixins: [auth],
+  mixins: [auth, header],
   name: 'AppHeader',
   components: {
     AppPopup,

@@ -4,7 +4,8 @@ import { getTariffsService } from '@/services/tariff.js';
 import {
   createOrderService,
   cancelOrderService,
-  getMyOrdersService
+  getMyOrdersService,
+  confirmOrderToMessengerService
 } from '@/services/stores.js';
 /* eslint no-unused-vars: */
 export default {
@@ -12,9 +13,10 @@ export default {
   state: {
     cart_active_store_uuid: '',
     cart_products: {},
-    delivery_price: 100,
+    delivery_price: 0,
     delivery_service_uuid: '',
-    without_delivery: false
+    without_delivery: false,
+    user_from_messenger: null
   },
   mutations: {
     SET_DELIVERY_PRICE(state, { total_price, service_uuid }) {
@@ -95,6 +97,9 @@ export default {
         }
         product.menuItem.quantity += product.quantity;
       }
+    },
+    SET_USER_DATA_FROM_MESSENGER(state, { userId, storeId }) {
+      state.user_from_messenger = { userId, storeId };
     }
   },
   actions: {
@@ -191,6 +196,12 @@ export default {
     },
     async getMyOrders() {
       return await getMyOrdersService();
+    },
+    async confirmOrderToMessenger({ commit }, { userId, orderId }) {
+      return await confirmOrderToMessengerService({ userId, orderId });
+    },
+    setUserDataFromMessenger({ commit }, { userId, storeId }) {
+      commit('SET_USER_DATA_FROM_MESSENGER', { userId, storeId });
     }
   },
   getters: {
@@ -246,6 +257,12 @@ export default {
     },
     getStoreProducts(state, getters, rootState) {
       return rootState.stores.store_products;
+    },
+    isUserFromMessenger(state) {
+      return state.user_from_messenger !== null;
+    },
+    getUserDataFromMessenger(state) {
+      return state.user_from_messenger;
     }
   }
 };

@@ -8,7 +8,6 @@
   outline: none;
 }
 body{
-  min-width: 1024px;
   background: #fff;
   font-family: YSText, helvetica, arial, sans-serif;
 }
@@ -113,4 +112,27 @@ input[type=checkbox]:checked ~ .checkmark.checkbox:after {
 .swal2-styled:focus {
   outline: 0;
   box-shadow: none !important;
+}
+.mobile-button {
+  color: $theme-textColor;
+  border: none;
+  height: 40px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  font-size: 14px;
+  text-align: center;
+  background: $theme-mainColor;
+  box-shadow: 0 4px 12px 0 rgba(245, 81, 108, 0.3), 0 2px 4px 0 rgba(245, 81, 108, 0.3);
+  transition: background 200ms;
+  padding-top: 0;
+  align-items: center;
+  line-height: 40px;
+  font-weight: 500;
+  user-select: none;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 100px;
+  padding-bottom: 0;
+  justify-content: center;
 }

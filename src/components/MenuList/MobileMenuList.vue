@@ -1,0 +1,189 @@
+<template>
+  <ul
+    @click="handlerPushToCart"
+    ref="menu-list"
+    class="mobile-restaurant-components-category-list"
+  >
+    <li
+      v-for="([name, category], key) of Object.entries(categories)"
+      :key="key"
+      class="mobile-restaurant-components-category-list__category"
+    >
+      <MobileMenu :category-name="name" :category="category" />
+    </li>
+    <!-- MobileMenuItemOptions -->
+    <MobileMenuItemOptions
+      :option-product="optionProduct"
+      v-show="isShowOptions"
+      @pushProductToCart="checkEqualStore"
+      @closePopup="closeMenuItemOption"
+      ref="menu-item-options"
+    />
+    <!-- MobileEnterAddress -->
+    <MobileEnterAddress
+      @closePopup="isShowEnterAddress = false"
+      v-if="isShowEnterAddress"
+    />
+
+    <app-bottom-sheet
+      @closePopup="isConfirmSetAddress = false"
+      v-if="isConfirmSetAddress"
+      :header="true"
+    >
+      <div slot="header">Укажите ваш адрес</div>
+      <div slot="body" class="mobile-confirm-set-address-body">
+        <p class="mobile-confirm-set-address__description">
+          Укажите адрес доставки, чтобы мы могли показать вам список доступных
+          мест
+        </p>
+        <button
+          @click="(isShowEnterAddress = true), (isConfirmSetAddress = false)"
+          class="mobile-confirm-set-address__button"
+        >
+          <span class="mobile-confirm-set-address__button-content">
+            Указать адрес
+          </span>
+        </button>
+      </div>
+    </app-bottom-sheet>
+  </ul>
+</template>
+
+<script>
+import Swal from 'sweetalert2';
+import MobileMenu from '../Menu/MobileMenu';
+import menuList from './menuList.js';
+export default {
+  mixins: [menuList],
+  methods: {
+    checkEqualStore(product) {
+      const cartItem = !product.extra
+        ? {
+            menuItem: product,
+            extra: [],
+            quantity: 1
+          }
+        : product;
+      const { menuItem } = cartItem;
+      if (
+        !this.checkOnEqualActiveStoreUUID(menuItem.store_uuid) &&
+        !this.isCartEmpty
+      ) {
+        Swal.fire({
+          title: 'Оформить заказ из другого ресторана',
+          text: 'Все ранее добавленные блюда будут удалены из корзины',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#fc5b58',
+          confirmButtonText: 'Подтвердить',
+          cancelButtonText: 'Отмена'
+        }).then(result => {
+          if (result.value) {
+            this.clearCartOfProducts();
+            this.pushToCart(cartItem);
+          }
+        });
+      } else this.pushToCart(cartItem);
+    },
+    handlerPushToCart({ target }) {
+      // Delegating events
+      const productContainer = target.closest('article');
+      if (
+        !productContainer &&
+        !this.$refs['menu-list'].contains(productContainer)
+      ) {
+        return;
+      }
+      const product = this.findStoreProductByUUID(
+        productContainer.dataset.product
+      );
+      // Check current location
+      if (this.isCurrentLocationNull) {
+        // this.$parent.$emit('showEnterAddressModal');
+        // this.isShowEnterAddress = true;
+        this.isConfirmSetAddress = true;
+        return;
+      }
+      // Product have variants or toppings
+
+      this.$refs['menu-item-options'].resetOptions();
+      this.optionProduct = product;
+      this.isShowOptions = true;
+    },
+    closeMenuItemOption() {
+      this.isShowOptions = false;
+    }
+  },
+  data: () => ({
+    optionProduct: {},
+    isShowOptions: false,
+    isConfirmSetAddress: false,
+    isShowEnterAddress: false
+  }),
+  props: {
+    categories: {
+      type: Object,
+      default: () => {},
+      reuired: true
+    }
+  },
+  components: {
+    MobileMenu,
+    MobileMenuItemOptions: () =>
+      import('../MenuItemOptions/MobileMenuItemOptions.vue'),
+    MobileEnterAddress: () => import('../EnterAddress/MobileEnterAddress.vue'),
+    AppBottomSheet: () => import('../BottomSheet/AppBottomSheet.vue')
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.mobile-restaurant-components-category-list {
+  background-color: #ffffff;
+}
+
+.mobile-confirm-set-address {
+  &__description {
+    color: #b0b0b0;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.57;
+  }
+  &__button {
+    height: 56px;
+    border: 0;
+    display: inline-block;
+    padding: 0 20px;
+    position: relative;
+    overflow: hidden;
+    transition: background 200ms;
+    font-weight: 400;
+    user-select: none;
+    border-radius: 16px;
+    color: $theme-textColor;
+    background-color: $theme-mainColor;
+    width: 100%;
+    font-size: 14px;
+    margin-top: 24px;
+  }
+  &__button-content {
+    width: 100%;
+    overflow: hidden;
+    transition: all 150ms;
+    text-align: center;
+    line-height: 56px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+.mobile-confirm-set-address-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+</style>

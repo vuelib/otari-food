@@ -75,3 +75,12 @@ export function getMyOrdersService() {
     })
     .then(({ data }) => data);
 }
+
+export function confirmOrderToMessengerService({ userId, orderId }) {
+  return api.client
+    .post('https://msgbot.apis.stage.faem.pro/api/v2/new_order', {
+      user_uuid: userId,
+      order_uuid: orderId
+    })
+    .then(({ data }) => data);
+}

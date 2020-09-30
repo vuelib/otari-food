@@ -90,6 +90,7 @@ export default {
     // Debounce enter address
     debounceInput: debounce(async function({ target }) {
       const data = await this.getAutocompleteAddresses(target.value);
+      console.log(data);
       this.suggestionsAddresses = data;
     }, 350),
     goToRestourants() {
@@ -242,6 +243,50 @@ export default {
     &:hover {
       opacity: 1;
     }
+  }
+}
+
+.enter-address {
+  &__content-remove {
+    top: 0;
+    right: 6px;
+    height: 100%;
+    cursor: pointer;
+    opacity: 1;
+    position: absolute;
+  }
+}
+.suggestions-list {
+  display: flex;
+  background: white;
+  box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.15);
+  flex-direction: column;
+  cursor: pointer;
+  max-height: 358px;
+  overflow-y: auto;
+}
+.suggestion {
+  flex: 0 0 auto;
+  color: gray;
+  display: -webkit-box;
+  padding: 6px 12px;
+  overflow: hidden;
+  max-height: 106px;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  transition: background-color 0.15s;
+  &:hover {
+    background-color: #eeeeee;
+  }
+  &__item {
+    color: #000;
+    font-weight: 100;
+  }
+  &__item-label {
+    color: #aaa;
+    font-size: 14px;
   }
 }
 </style>

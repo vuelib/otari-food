@@ -1,4 +1,4 @@
-const mobileDevices = ['smartphone', 'tablet'];
+const mobileDevices = ['smartphone', 'tablet', ''];
 export default {
   computed: {
     isMobileDevice() {

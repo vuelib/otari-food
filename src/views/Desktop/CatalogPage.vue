@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import Promo from '@/components/Catalog/Promo.vue';
+import Promo from '@/components/Promo/Promo.vue';
 import Toolbar from '@/components/Catalog/Toolbar.vue';
-import PlacesList from '@/components/Catalog/PlacesList.vue';
+import PlacesList from '@/components/PlacesList/PlacesList.vue';
 // import CatalogSearch from '@/components/Catalog/CatalogSearch.vue';
 
 export default {
