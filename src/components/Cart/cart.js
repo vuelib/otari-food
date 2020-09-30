@@ -47,15 +47,16 @@ export default {
         // Refresh Token
         await this.refreshToken();
         // Create Order Action
-        const { order_uuid } = await this.createOrder({
+        const { uuid } = await this.createOrder({
           routeFrom: JSON.parse(localStorage.getItem('location')),
           routeTo: this.destinationPoints[0]
         });
+        // console.log(data);
         if (this.isUserFromMessenger) {
-          console.log('set to msg', order_uuid);
+          console.log('set to msg', uuid);
           await this.confirmOrderToMessenger({
             userId: this.getUserDataFromMessenger.userId,
-            orderId: order_uuid
+            orderId: uuid
           });
         }
         Swal.fire({

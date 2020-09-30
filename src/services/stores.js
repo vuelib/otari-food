@@ -78,7 +78,7 @@ export function getMyOrdersService() {
 
 export function confirmOrderToMessengerService({ userId, orderId }) {
   return api.client
-    .post('https://msgbot.apis.stage.faem.pro/api/v2/new_order', {
+    .post(`${process.env.VUE_APP_API_MSGBOT}/new_order`, {
       user_uuid: userId,
       order_uuid: orderId
     })
