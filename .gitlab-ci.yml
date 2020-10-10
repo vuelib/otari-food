@@ -60,7 +60,7 @@ deploy:stage:
 deploy:prod:
   extends: .deploy
   variables:
-    URL: delivery.faem.ru
+    URL: eda.faem.ru
     IMAGE_TAG: build.${CI_PIPELINE_ID}
     IMAGE_NAME: prod
   script:
