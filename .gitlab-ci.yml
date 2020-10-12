@@ -4,7 +4,7 @@ stages:
 
 .docker-build:
   stage: build
-  image: docker:stable-dind
+  image: docker:latest
   variables:
     DOCKER_TLS_CERTDIR: ""
     IMAGE_NAME: faem-market
@@ -32,7 +32,10 @@ docker-build:prod:
 .deploy:
   stage: deploy
   before_script:
-    - apk add openssh-client git
+    - apt-get update -qq
+    - apt-get install -qq git
+    # Setup SSH deploy keys
+    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
     - eval $(ssh-agent -s)
     - ssh-add <(echo "${SSH_PRIVATE_KEY}")
     - mkdir -p ~/.ssh
