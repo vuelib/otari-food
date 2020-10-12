@@ -69,7 +69,10 @@
             Ок
           </button>
         </div>
-        <div id="enter-address-map" class="enter-address__map"></div>
+        <div class="map-wrapper">
+          <div id="enter-address-map" class="enter-address__map"></div>
+          <img src="../assets/marker.png" class="map-point" />
+        </div>
         <!-- <div class="modal__body"></div> -->
         <!-- <div class="modal__footer"></div> -->
       </div>
@@ -91,12 +94,13 @@ export default {
       container: 'enter-address-map',
       style: 'mapbox://styles/faemtaxi/ck0fcruqn1p9o1cnzazi3pli9',
       center: [44.66778, 43.03667],
-      zoom: 11
+      zoom: 13
     });
-    this.marker = new mapboxgl.Marker()
-      .setLngLat([44.665976, 43.025234])
-      .addTo(this.map);
-    this.map.addControl(new mapboxgl.NavigationControl());
+    this.map.on('moveend', this.moveSetAddress);
+    // this.marker = new mapboxgl.Marker()
+    //   .setLngLat([44.66778, 43.03667])
+    //   .addTo(this.map);
+    // this.map.addControl(new mapboxgl.NavigationControl());
   },
   methods: {
     setAddress() {
@@ -110,8 +114,15 @@ export default {
         center: [address.lon, address.lat],
         zoom: 18
       });
-      this.marker.setLngLat([address.lon, address.lat]);
+      // this.marker.setLngLat([address.lon, address.lat]);
     },
+    // Debounce move set address
+    moveSetAddress: debounce(async function() {
+      this.findAddress({
+        lat: this.map.getCenter().lat,
+        long: this.map.getCenter().lng
+      }).then(data => (this.selectedAddress = data));
+    }, 100),
     // Debounce enter address
     debounceInput: debounce(async function({ target }) {
       const data = await this.getAutocompleteAddresses(target.value);
@@ -170,6 +181,16 @@ export default {
 </script>
 
 <style lang="scss">
+.map-wrapper {
+  position: relative;
+}
+.map-point {
+  position: absolute;
+  top: calc(50% - 25px);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 27px;
+}
 .modal {
   &__header {
     margin: 5px;
@@ -274,7 +295,7 @@ export default {
     position: relative;
     height: 44px;
     display: flex;
-    font-size: 19px;
+    font-size: 17px;
     background: $theme-mainColor;
     padding-top: 2px;
     align-items: center;
