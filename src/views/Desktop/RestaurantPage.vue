@@ -65,6 +65,7 @@ export default {
       let { store } = this.$route.params;
       if (!store) store = await this.getStoresByUUID({ uuid: STORE_UUID });
       this.store = store;
+      this.setActiveStore(store);
     },
     async fetchProductsThatStore() {
       const { uuid } = this.store;
@@ -72,7 +73,8 @@ export default {
     },
     ...createNamespacedHelpers('stores').mapActions([
       'getStoresByUUID',
-      'getStoreProductsByFilter'
+      'getStoreProductsByFilter',
+      'setActiveStore'
     ])
   },
   data: () => ({

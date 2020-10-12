@@ -59,6 +59,7 @@ export default {
   methods: {
     incrementQuantity() {
       this.incrementProductFromCart(this.keyIndex);
+      console.log('incinc', this.keyIndex);
     },
     decrementQuantity() {
       this.deleteProductFromCart(this.keyIndex);

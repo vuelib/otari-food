@@ -7,6 +7,11 @@ import {
   getMyOrdersService,
   confirmOrderToMessengerService
 } from '@/services/stores.js';
+import {
+  addProductAnalytics,
+  purchaseAnalytics,
+  removeProductAnalytics
+} from '../../mixins/analytics';
 /* eslint no-unused-vars: */
 export default {
   namespaced: true,
@@ -29,18 +34,30 @@ export default {
     SET_ACTIVE_STORE_UUID(state, select_uuid) {
       state.cart_active_store_uuid = select_uuid;
     },
-    INCREMENT_PRODUCT_FROM_CART(state, { keyIndex, getStoreProducts }) {
+    INCREMENT_PRODUCT_FROM_CART(
+      state,
+      { keyIndex, getStoreProducts, getActiveStore }
+    ) {
       state.cart_products[keyIndex].quantity++;
       state.cart_products[keyIndex].menuItem.quantity++;
       const product = getStoreProducts.find(
         ({ uuid }) => uuid === state.cart_products[keyIndex].menuItem.uuid
       );
       product.quantity++;
+      // Add Product Analytics
+      addProductAnalytics({
+        ...state.cart_products[keyIndex].menuItem,
+        brand: getActiveStore.name
+      });
     },
-    DELETE_PRODUCT_FROM_CART(state, { keyIndex, getStoreProducts }) {
+    DELETE_PRODUCT_FROM_CART(
+      state,
+      { keyIndex, getStoreProducts, getActiveStore }
+    ) {
       const product = getStoreProducts.find(
         ({ uuid }) => uuid === state.cart_products[keyIndex].menuItem.uuid
       );
+      console.log(product, state.cart_products[keyIndex]);
       if (product.quantity > 1) {
         product.quantity--;
       } else {
@@ -52,9 +69,22 @@ export default {
       } else {
         Vue.delete(state.cart_products, keyIndex);
       }
+      // Remove Product Analytics
+      removeProductAnalytics({
+        ...state.cart_products[keyIndex].menuItem,
+        quantity: 1,
+        brand: getActiveStore.name
+      });
     },
-    CLEAR_CART_OF_PRODUCTS(state, { getStoreProducts }) {
+    CLEAR_CART_OF_PRODUCTS(state, { getStoreProducts, getActiveStore }) {
       for (const [key, product] of Object.entries(state.cart_products)) {
+        // Remove Product Analytics
+        removeProductAnalytics({
+          ...product.menuItem,
+          quantity: product.quantity,
+          brand: getActiveStore.name
+        });
+
         Vue.delete(product.menuItem, 'quantity');
         Vue.delete(state.cart_products, key);
         getStoreProducts.map(product => Vue.delete(product, 'quantity'));
@@ -104,6 +134,11 @@ export default {
   },
   actions: {
     pushProductToCart({ commit, getters }, product) {
+      // Add Product Analytics
+      addProductAnalytics({
+        ...product.menuItem,
+        brand: getters.getActiveStore.name
+      });
       commit('SET_ACTIVE_STORE_UUID', product.menuItem.store_uuid);
       commit('ADD_PRODUCT_TO_CART', {
         product,
@@ -114,18 +149,21 @@ export default {
     incrementProductFromCart({ commit, getters }, keyIndex) {
       commit('INCREMENT_PRODUCT_FROM_CART', {
         keyIndex,
-        getStoreProducts: getters.getStoreProducts
+        getStoreProducts: getters.getStoreProducts,
+        getActiveStore: getters.getActiveStore
       });
     },
     deleteProductFromCart({ commit, getters }, keyIndex) {
       commit('DELETE_PRODUCT_FROM_CART', {
         keyIndex,
-        getStoreProducts: getters.getStoreProducts
+        getStoreProducts: getters.getStoreProducts,
+        getActiveStore: getters.getActiveStore
       });
     },
     clearCartOfProducts({ commit, getters }) {
       commit('CLEAR_CART_OF_PRODUCTS', {
-        getStoreProducts: getters.getStoreProducts
+        getStoreProducts: getters.getStoreProducts,
+        getActiveStore: getters.getActiveStore
       });
       commit('SET_ACTIVE_STORE_UUID', '');
     },
@@ -173,12 +211,34 @@ export default {
         productsInput.push(product);
       }
 
-      return await createOrderService({
+      const data = await createOrderService({
         routes: [routeFrom, routeTo],
         productsInput,
         serviceUUID: state.delivery_service_uuid,
         withoutDelivery: state.without_delivery
       });
+      console.log(data);
+      const productsData = data.products_data.products.reduce(
+        (acc, product) => {
+          acc.push({
+            name: product.name, //Название товара
+            id: product.uuid, //Id товар или артикул
+            price: product.price, //Стоимость единицы товара
+            brand: data.products_data.store.name, //Название ресторана
+            quantity: product.number //Количество
+          });
+          return acc;
+        },
+        []
+      );
+
+      purchaseAnalytics({
+        uuid: data.uuid,
+        productsPrice: data.tariff.products_price,
+        totalPrice: data.tariff.total_price,
+        productsData
+      });
+      return data;
     },
     async repeatOrder(
       { commit, state },
@@ -257,6 +317,9 @@ export default {
     },
     getStoreProducts(state, getters, rootState) {
       return rootState.stores.store_products;
+    },
+    getActiveStore(state, getters, rootState) {
+      return rootState.stores.active_store;
     },
     isUserFromMessenger(state) {
       return state.user_from_messenger !== null;

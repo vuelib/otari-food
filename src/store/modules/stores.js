@@ -8,7 +8,7 @@ import {
 export default {
   namespaced: true,
   state: {
-    active_store_uuid: '',
+    active_store: {},
     stores: [],
     store_products: [],
     stores_count: 0,
@@ -30,8 +30,8 @@ export default {
     SET_STORE_PRODUCTS_COUNT(state, records_count) {
       state.store_products_count = records_count;
     },
-    SET_ACTIVE_STORE(state, uuid) {
-      state.active_store_uuid = uuid;
+    SET_ACTIVE_STORE(state, store) {
+      state.active_store = store;
     }
   },
   actions: {
@@ -60,6 +60,9 @@ export default {
       });
       commit('SET_STORE_PRODUCTS', records);
       commit('SET_STORE_PRODUCTS_COUNT', records_count);
+    },
+    setActiveStore({ commit }, store) {
+      commit('SET_ACTIVE_STORE', store);
     }
   },
   getters: {
@@ -91,6 +94,9 @@ export default {
     },
     getStoreProductsCount(state) {
       return state.store_products_count;
+    },
+    getActiveStore(state) {
+      return state.active_store;
     }
   }
 };
