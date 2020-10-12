@@ -190,6 +190,11 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 27px;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 .modal {
   &__header {
