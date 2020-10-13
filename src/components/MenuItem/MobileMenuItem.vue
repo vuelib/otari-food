@@ -84,7 +84,9 @@ export default {
     height: 167px;
     > img {
       width: 100%;
-      height: auto;
+      // height: auto;
+      height: 100%;
+      object-fit: cover;
     }
   }
   &__name-wrap {

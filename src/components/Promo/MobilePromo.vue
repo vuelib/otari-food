@@ -1,7 +1,7 @@
 <template>
   <div class="mobile-catalog-page-welcome">
     <ul class="breadcrumbs mobile-catalog-page-welcome__breadcrumbs">
-      <li class="breadcrumbs__item">FaemDelivery</li>
+      <li class="breadcrumbs__item">FaemEda</li>
       <li class="breadcrumbs__item">Владикавказ</li>
     </ul>
     <h1 class="mobile-catalog-page-welcome__title">
