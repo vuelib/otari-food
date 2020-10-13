@@ -56,7 +56,7 @@ export default {
       // Push to store
       const store = this.findStoreByUUID(storeContainer.dataset.store);
       // check on closed
-      // if (!this.checkStoreOnOpened(store.work_schedule)) return;
+      if (!this.checkStoreOnOpened(store.work_schedule)) return;
       this.$router.push({
         name: 'RestaurantPage',
         params: {
