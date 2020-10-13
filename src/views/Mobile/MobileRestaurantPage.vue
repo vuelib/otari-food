@@ -88,8 +88,6 @@ export default {
     },
     checkFromMessanger() {
       const { ui, si } = this.$route.query;
-      console.log(ui, si);
-      console.log(this.$route);
       if (!ui || !si) return;
       this.setUserDataFromMessenger({ userId: ui, storeId: si });
     },

@@ -18,6 +18,8 @@
               autocomplete="off"
               placeholder="Или указать..."
               type="text"
+              autofocus
+              ref="enter-address-input"
             />
             <ul
               v-if="enterAddress.length && !isSelectAddressNotNull"
@@ -37,7 +39,11 @@
                 </span>
               </li>
             </ul>
-            <div v-if="isSelectAddressNotNull" class="enter-address__content">
+            <div
+              @click="clearEnterAddress"
+              v-if="isSelectAddressNotNull"
+              class="enter-address__content"
+            >
               <div class="enter-address__content-address">
                 <span>{{ selectedAddress.unrestricted_value }}</span>
               </div>
@@ -94,9 +100,9 @@ export default {
       container: 'enter-address-map',
       style: 'mapbox://styles/faemtaxi/ck0fcruqn1p9o1cnzazi3pli9',
       center: [44.66778, 43.03667],
-      zoom: 13
+      zoom: 14
     });
-    this.map.on('moveend', this.moveSetAddress);
+    this.map.on('move', this.moveSetAddress);
     // this.marker = new mapboxgl.Marker()
     //   .setLngLat([44.66778, 43.03667])
     //   .addTo(this.map);
@@ -112,12 +118,13 @@ export default {
       this.selectedAddress = address;
       this.map.flyTo({
         center: [address.lon, address.lat],
-        zoom: 18
+        zoom: 17
       });
       // this.marker.setLngLat([address.lon, address.lat]);
     },
     // Debounce move set address
     moveSetAddress: debounce(async function() {
+      if (this.isDetectLocation) return (this.isDetectLocation = false);
       this.findAddress({
         lat: this.map.getCenter().lat,
         long: this.map.getCenter().lng
@@ -132,14 +139,18 @@ export default {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           position => {
-            this.findAddress({
-              lat: position.coords.latitude,
-              long: position.coords.longitude
-            }).then(data => (this.selectedAddress = data));
             this.map.flyTo({
               center: [position.coords.longitude, position.coords.latitude]
             });
-            this.map.zoomTo(18);
+
+            // center: [Math.random() * 50, Math.random() * 50]
+            this.findAddress({
+              lat: position.coords.latitude,
+              long: position.coords.longitude
+            }).then(data => {
+              this.selectedAddress = data;
+              this.isDetectLocation = true;
+            });
           },
           function() {
             console.log('Not');
@@ -151,8 +162,13 @@ export default {
       }
     },
     clearEnterAddress() {
-      this.enterAddress = this.selectedAddress.unrestricted_value;
-      this.selectedAddress = null;
+      if (this.selectedAddress) {
+        this.enterAddress = this.selectedAddress.unrestricted_value;
+        this.selectedAddress = null;
+        setTimeout(() => this.$refs['enter-address-input'].focus(), 0);
+      } else {
+        this.enterAddress = '';
+      }
     },
     ...mapActions([
       'getAutocompleteAddresses',
@@ -174,7 +190,8 @@ export default {
     enterAddress: '',
     selectedAddress: null,
     suggestionsAddresses: [],
-    isShowSuggestions: false
+    isShowSuggestions: false,
+    isDetectLocation: false
   }),
   name: 'AppEnterAddress'
 };
@@ -186,10 +203,10 @@ export default {
 }
 .map-point {
   position: absolute;
-  top: calc(50% - 25px);
+  top: calc(50% - 15px);
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 27px;
+  width: 40px;
   user-select: none;
   -moz-user-select: none;
   -webkit-user-drag: none;
