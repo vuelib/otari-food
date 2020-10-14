@@ -36,6 +36,10 @@ import MenuList from '@/components/MenuList/MenuList.vue';
 import AppCart from '@/components/AppCart.vue';
 
 import auth from '@/mixins/auth.js';
+import {
+  setRestaurantPageTitle,
+  setRestaurantPageDescription
+} from '@/mixins/seo.js';
 
 import { createNamespacedHelpers } from 'vuex';
 
@@ -43,6 +47,12 @@ export default {
   async created() {
     await this.initStore();
     await this.fetchProductsThatStore();
+    setRestaurantPageTitle(this.getStore.name);
+    setRestaurantPageDescription(
+      this.getStore.name,
+      this.getStore.product_category
+    );
+    console.log(this.getStore);
   },
   computed: {
     getStore() {

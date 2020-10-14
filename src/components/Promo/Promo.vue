@@ -4,7 +4,7 @@
       <ul class="promo-list">
         <li class="promo-list__item">
           <a href="#" class="promo-list__link">
-            <span>Faem.Delivery</span>
+            <span>Faem.Eda</span>
           </a>
         </li>
         <li class="promo-list__item">

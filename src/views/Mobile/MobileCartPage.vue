@@ -16,7 +16,6 @@ export default {
   created() {
     let { store } = this.$route.params;
     if (!store) return this.$router.go(-1);
-    console.log('store', store);
     this.store = store;
   },
   computed: {

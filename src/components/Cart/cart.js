@@ -25,7 +25,6 @@ export default {
   watch: {
     destinationPoints() {
       this.fetchTariffToDelivery();
-      console.log('fetchTariffToDelivery');
     }
   },
   methods: {

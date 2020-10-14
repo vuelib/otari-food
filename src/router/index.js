@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import { setMainPageDescription, setMainPageTitle } from '../mixins/seo';
 
 Vue.use(VueRouter);
 
@@ -41,5 +42,11 @@ const router = new VueRouter({
     return savedPosition ? savedPosition : { x: 0, y: 0 };
   }
 });
-
+router.beforeEach((to, from, next) => {
+  if (to.name === 'CatalogPage') {
+    setMainPageTitle();
+    setMainPageDescription();
+  }
+  next();
+});
 export default router;

@@ -48,6 +48,10 @@ import MobileMenuList from '@/components/MenuList/MobileMenuList';
 // import MenuList from '@/components/Restaurant/MenuList.vue';
 // import AppCart from '@/components/AppCart.vue';
 import auth from '@/mixins/auth.js';
+import {
+  setRestaurantPageTitle,
+  setRestaurantPageDescription
+} from '@/mixins/seo.js';
 
 import { createNamespacedHelpers } from 'vuex';
 
@@ -81,6 +85,11 @@ export default {
       let { store } = this.$route.params;
       if (!store) store = await this.getStoresByUUID({ uuid: STORE_UUID });
       this.store = store;
+      setRestaurantPageTitle(this.store.name);
+      setRestaurantPageDescription(
+        this.store.name,
+        this.store.product_category
+      );
     },
     async fetchProductsThatStore() {
       const { uuid } = this.store;

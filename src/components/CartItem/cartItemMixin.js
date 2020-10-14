@@ -12,7 +12,6 @@ export default {
       );
     },
     getStoreBG() {
-      console.log(this.cartItem);
       try {
         const parseImg = JSON.parse(this.cartItem.image);
         return parseImg.full || parseImg.full_format;
