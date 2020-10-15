@@ -3,6 +3,57 @@
     <Promo />
     <Toolbar @filteredCategory="filteredStories" />
     <div class="catalog-content">
+      <!-- Promo -->
+      <div class=" stock-list">
+        <h2 class="places-list__title">Акции</h2>
+        <ul class="places-list__container">
+          <li class="places-list__place  stock-list__place">
+            <a
+              href="https://faem.page.link/eda"
+              class="places-list__item place-item"
+              target="_blank"
+            >
+              <div
+                class="place-item__image-container stock-list__image-container"
+                role="img"
+                :style="{
+                  backgroundImage: `url('${require('../../assets/promo1.jpg')}')`
+                }"
+              ></div>
+            </a>
+          </li>
+          <li class="places-list__place stock-list__place">
+            <a
+              href="https://faem.page.link/eda"
+              class="places-list__item place-item"
+              target="_blank"
+            >
+              <div
+                class="place-item__image-container stock-list__image-container"
+                role="img"
+                :style="{
+                  backgroundImage: `url('${require('../../assets/promo2.jpg')}')`
+                }"
+              ></div>
+            </a>
+          </li>
+          <li class="places-list__place stock-list__place">
+            <a
+              href="https://faem.page.link/eda"
+              class="places-list__item place-item"
+              target="_blank"
+            >
+              <div
+                class="place-item__image-container stock-list__image-container"
+                role="img"
+                :style="{
+                  backgroundImage: `url('${require('../../assets/promo3.jpg')}')`
+                }"
+              ></div>
+            </a>
+          </li>
+        </ul>
+      </div>
       <!-- <CatalogSearch /> -->
       <PlacesList :filtered-category="filteredCategory" />
     </div>
@@ -38,5 +89,16 @@ export default {
 .catalog-page {
   border: solid 1px #eeeeee;
   border-radius: 4px 4px 0 0;
+}
+.stock-list {
+  padding: 20px 80px;
+  padding-bottom: 0;
+  &__place {
+    margin-bottom: 0;
+  }
+  &__image-container {
+    padding-top: 97.5%;
+    border-radius: 8px;
+  }
 }
 </style>
