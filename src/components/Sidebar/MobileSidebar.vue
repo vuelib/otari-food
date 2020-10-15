@@ -57,6 +57,26 @@
                     <div class="mobile-sidebar-menu__item-title">Выйти</div>
                   </div>
                 </template>
+                <div class="mobile-sidebar-menu__item">
+                  <!-- <div
+                    class="mobile-sidebar-menu__item-icon mobile-sidebar-menu__dish-icon"
+                  ></div> -->
+                  <a
+                    href="https://faem.ru/eda/partners"
+                    class="mobile-sidebar-menu__item-title"
+                    >Партнерам</a
+                  >
+                </div>
+                <div class="mobile-sidebar-menu__item">
+                  <!-- <div
+                    class="mobile-sidebar-menu__item-icon mobile-sidebar-menu__dish-icon"
+                  ></div> -->
+                  <a
+                    href="https://faem.ru/eda/contacts"
+                    class="mobile-sidebar-menu__item-title"
+                    >Контакты</a
+                  >
+                </div>
               </div>
             </div>
           </div>

@@ -12,30 +12,32 @@
           </router-link>
         </div>
         <div class="header-menu">
-          <!-- <a
-            aria-label="Ресторанам"
+          <a
+            aria-label="Партнерам"
             rel="nofollow"
-            href="#"
+            href="https://faem.ru/eda/partners"
             class="header-menu__link"
+            target="_blank"
           >
-            Ресторанам
+            Партнерам
           </a>
           <a
-            aria-label="Курьерам"
+            aria-label="Контакты"
             rel="nofollow"
-            href="#"
+            href="https://faem.ru/eda/contacts"
             class="header-menu__link"
+            target="_blank"
           >
-            Курьерам
+            Контакты
           </a>
           <a
-            aria-label="Компаниям"
+            aria-label="Тел."
             rel="nofollow"
             href="#"
             class="header-menu__link"
           >
-            Компаниям
-          </a> -->
+            +7 (928) 488-98-28
+          </a>
         </div>
         <button
           v-if="!isCurrentLocationNull"
