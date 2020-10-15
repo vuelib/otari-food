@@ -27,9 +27,6 @@ RUN if [ "$NODE_ENV" == "production" ]; \
 FROM nginx:stable-alpine as production-stage
 ARG NODE_ENV
 
-# Install dependencies.
-RUN apk update && apk add certbot tzdata openssl
-
 # Set the timezone.
 ENV TZ=Europe/Moscow
 
@@ -39,19 +36,17 @@ VOLUME       /etc/nginx/ssl
 
 COPY nginx_config/nginx.conf /etc/nginx/nginx.conf
 COPY nginx_config/default-${NODE_ENV}.conf /etc/nginx/conf.d/default.conf
-COPY nginx_config/docker-entrypoint.sh /usr/local/bin/
-COPY nginx_config/le.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
-&& chmod +x /usr/local/bin/le.sh
 
 # Mount log dir.
 VOLUME /var/log/nginx
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
 RUN mkdir -p /usr/share/nginx/html/.well-known/acme-challenge
+RUN mkdir -p /usr/share/nginx/html/.well-known/pki-validation
+COPY nginx_config/08B1741F3F07DD3044A7468AD33D09AC.txt /usr/share/nginx/html/.well-known/pki-validation/08B1741F3F07DD3044A7468AD33D09AC.txt
+COPY nginx_config/0ED7B7092FA29F4D3C5864D80E948E2E.txt /usr/share/nginx/html/.well-known/pki-validation/0ED7B7092FA29F4D3C5864D80E948E2E.txt
+
 EXPOSE 80
 EXPOSE 443
 
-ENTRYPOINT ["docker-entrypoint.sh"]
-
-
+CMD ["nginx", "-g", "daemon off;"]
