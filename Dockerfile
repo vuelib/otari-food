@@ -44,6 +44,7 @@ COPY --from=build-stage /app/dist /usr/share/nginx/html
 RUN mkdir -p /usr/share/nginx/html/.well-known/acme-challenge
 RUN mkdir -p /usr/share/nginx/html/.well-known/pki-validation
 COPY nginx_config/08B1741F3F07DD3044A7468AD33D09AC.txt /usr/share/nginx/html/.well-known/pki-validation/08B1741F3F07DD3044A7468AD33D09AC.txt
+COPY nginx_config/0ED7B7092FA29F4D3C5864D80E948E2E.txt /usr/share/nginx/html/.well-known/pki-validation/0ED7B7092FA29F4D3C5864D80E948E2E.txt
 
 EXPOSE 80
 EXPOSE 443
