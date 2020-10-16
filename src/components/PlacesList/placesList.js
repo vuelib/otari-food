@@ -3,7 +3,12 @@ const { mapGetters, mapActions } = createNamespacedHelpers('stores');
 
 export default {
   created() {
-    if (!this.getStores.length) this.showMore();
+    if (!this.isSpecialStores) {
+      if (!this.getStores.length) this.showMore();
+    } else {
+      if (!this.getStores.length)
+        this.getSpecialStores(this.getSpecialStoresData.urls);
+    }
   },
   computed: {
     filteredStories() {
@@ -40,7 +45,13 @@ export default {
         };
       };
     },
-    ...mapGetters(['getStores', 'getStoresCount', 'findStoreByUUID']),
+    ...mapGetters([
+      'getStores',
+      'getStoresCount',
+      'findStoreByUUID',
+      'isSpecialStores',
+      'getSpecialStoresData'
+    ]),
     ...mapGetters(['isAuthUser'])
   },
   methods: {
@@ -87,7 +98,7 @@ export default {
     closeLoginModal() {
       this.isModalVisible = false;
     },
-    ...mapActions(['getStoresByFilter'])
+    ...mapActions(['getStoresByFilter', 'getSpecialStores'])
   },
   data: () => ({
     isModalVisible: false,

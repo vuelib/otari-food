@@ -20,7 +20,7 @@
           <div class="mobile-fullscreen-modal__content-container">
             <div class="mobile-fullscreen-modal__content">
               <img
-                src="../../assets/logo.png"
+                :src="getLogo"
                 class="mobile-fullscreen-modal__logo"
                 alt="FaemDelivery"
               />
@@ -117,8 +117,9 @@
 <script>
 import { TheMask } from 'vue-the-mask';
 import login from './login.js';
+import special from '@/mixins/special.js';
 export default {
-  mixins: [login],
+  mixins: [login, special],
   methods: {
     async getCode(e) {
       e.preventDefault();

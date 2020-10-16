@@ -1,7 +1,7 @@
 <template>
   <div class="auth">
     <div class="auth__logo">
-      <img class="auth__logo-img" src="@/assets/logo.png" alt="logo" />
+      <img class="auth__logo-img" :src="getLogo" alt="logo" />
     </div>
     <form @submit.prevent="sendVerificationCode" class="auth-form">
       <div class="auth-form__header">
@@ -75,11 +75,13 @@
 </template>
 
 <script>
+import special from '@/mixins/special.js';
 import { TheMask } from 'vue-the-mask';
 import { createNamespacedHelpers } from 'vuex';
 const { mapActions } = createNamespacedHelpers('auth');
 
 export default {
+  mixins: [special],
   created() {
     this.user.device_id = this.tmpDeviceId();
   },

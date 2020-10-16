@@ -1,6 +1,4 @@
-# otari-food
-
-## Demo: https://otari-food.netlify.app/
+# FaemEda
 
 ## Project setup
 ```

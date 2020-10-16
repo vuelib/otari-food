@@ -3,7 +3,8 @@ import {
   getStoresByUUIDService,
   getProductsService
 } from '@/services/stores.js';
-
+// places config
+import placesConfig from '../../../placesConfig.json';
 /* eslint no-unused-vars: */
 export default {
   namespaced: true,
@@ -12,7 +13,9 @@ export default {
     stores: [],
     store_products: [],
     stores_count: 0,
-    store_products_count: 0
+    store_products_count: 0,
+    is_special_stores: false,
+    special_stores: {}
   },
   mutations: {
     ADD_STORES(state, stores) {
@@ -32,6 +35,15 @@ export default {
     },
     SET_ACTIVE_STORE(state, store) {
       state.active_store = store;
+    },
+    SET_IS_DETECT_SPECIAL_STORES(state) {
+      const specialStores = placesConfig[window.appHostname];
+      if (!specialStores) {
+        state.is_special_stores = false;
+      } else {
+        state.is_special_stores = true;
+        state.special_stores = specialStores;
+      }
     }
   },
   actions: {
@@ -48,6 +60,15 @@ export default {
       const record = await getStoresByUUIDService({ uuid });
       return record;
     },
+    async getSpecialStores({ commit, dispatch }, urls) {
+      let promises = urls.reduce((promises, url) => {
+        promises.push(dispatch('getStoresByUUID', { uuid: url }));
+        return promises;
+      }, []);
+      Promise.all(promises).then(result => {
+        commit('ADD_STORES', result);
+      });
+    },
     // Products
     async getStoreProductsByFilter(
       { commit, state },
@@ -63,6 +84,9 @@ export default {
     },
     setActiveStore({ commit }, store) {
       commit('SET_ACTIVE_STORE', store);
+    },
+    detectSpecialStores({ commit }) {
+      commit('detectSpecialStores');
     }
   },
   getters: {
@@ -97,6 +121,12 @@ export default {
     },
     getActiveStore(state) {
       return state.active_store;
+    },
+    isSpecialStores(state) {
+      return state.is_special_stores;
+    },
+    getSpecialStoresData(state) {
+      return state.special_stores;
     }
   }
 };

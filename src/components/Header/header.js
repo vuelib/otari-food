@@ -1,5 +1,4 @@
 import { createNamespacedHelpers } from 'vuex';
-
 export default {
   methods: {
     goToCart() {

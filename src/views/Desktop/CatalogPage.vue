@@ -4,7 +4,7 @@
     <Toolbar @filteredCategory="filteredStories" />
     <div class="catalog-content">
       <!-- Promo -->
-      <div class=" stock-list">
+      <div v-if="!isSpecialStores" class=" stock-list">
         <h2 class="places-list__title">Акции</h2>
         <ul class="places-list__container">
           <li class="places-list__place  stock-list__place">
@@ -23,10 +23,12 @@
             </a>
           </li>
           <li class="places-list__place stock-list__place">
-            <a
-              href="https://faem.page.link/eda"
+            <router-link
+              :to="{
+                name: 'RestaurantPage',
+                params: { id: '7a59f790-e5f4-42e2-b60e-a13bf2091097' }
+              }"
               class="places-list__item place-item"
-              target="_blank"
             >
               <div
                 class="place-item__image-container stock-list__image-container"
@@ -35,13 +37,15 @@
                   backgroundImage: `url('${require('../../assets/promo2.jpg')}')`
                 }"
               ></div>
-            </a>
+            </router-link>
           </li>
           <li class="places-list__place stock-list__place">
-            <a
-              href="https://faem.page.link/eda"
+            <router-link
+              :to="{
+                name: 'RestaurantPage',
+                params: { id: 'ee00f90e-f901-4f49-8a2f-83b119d5cec0' }
+              }"
               class="places-list__item place-item"
-              target="_blank"
             >
               <div
                 class="place-item__image-container stock-list__image-container"
@@ -50,7 +54,7 @@
                   backgroundImage: `url('${require('../../assets/promo3.jpg')}')`
                 }"
               ></div>
-            </a>
+            </router-link>
           </li>
         </ul>
       </div>
@@ -64,6 +68,9 @@
 import Promo from '@/components/Promo/Promo.vue';
 import Toolbar from '@/components/Catalog/Toolbar.vue';
 import PlacesList from '@/components/PlacesList/PlacesList.vue';
+
+import { createNamespacedHelpers } from 'vuex';
+const { mapGetters } = createNamespacedHelpers('stores');
 // import CatalogSearch from '@/components/Catalog/CatalogSearch.vue';
 
 export default {
@@ -71,6 +78,9 @@ export default {
     filteredStories(category) {
       this.filteredCategory = category;
     }
+  },
+  computed: {
+    ...mapGetters(['isSpecialStores'])
   },
   data: () => ({
     filteredCategory: ''

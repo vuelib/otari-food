@@ -6,11 +6,7 @@
         class="MobileCatalogPageNavigationBar__icon MobileCatalogPageNavigationBar__burger"
       ></div>
       <router-link to="/" aria-label="На главную">
-        <img
-          class="MobileLogo"
-          src="../../assets/logo.png"
-          alt="FaemDelivery"
-        />
+        <img class="MobileLogo" :src="getLogo" alt="FaemDelivery" />
       </router-link>
       <div class="MobileCatalogPageNavigationBar__icon">
         <!-- <div @click="openLoginModal" v-if="!isAuthUser" class="header__button">
@@ -53,9 +49,10 @@
 import AppPopup from '../AppPopup';
 import AppLogin from '../AppLogin';
 import auth from '@/mixins/auth.js';
+import special from '@/mixins/special.js';
 import header from './header.js';
 export default {
-  mixins: [auth, header],
+  mixins: [auth, header, special],
   methods: {
     showSidebar() {
       this.$emit('showSidebar');

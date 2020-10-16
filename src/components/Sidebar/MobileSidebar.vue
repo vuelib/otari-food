@@ -12,11 +12,7 @@
           <div class="mobile-sidebar-menu__header">
             <div @click="closeSidebar" class="mobile-sidebar-menu__close"></div>
             <div class="mobile-sidebar-menu__logo-container">
-              <img
-                class="MobileLogo"
-                src="../../assets/logo.png"
-                alt="FaemDelivery"
-              />
+              <img class="MobileLogo" :src="getLogo" alt="FaemDelivery" />
             </div>
           </div>
           <div class="mobile-sidebar-menu__body">
@@ -64,8 +60,9 @@
                   <a
                     href="https://faem.ru/eda/partners"
                     class="mobile-sidebar-menu__item-title"
-                    >Партнерам</a
                   >
+                    Партнерам
+                  </a>
                 </div>
                 <div class="mobile-sidebar-menu__item">
                   <!-- <div
@@ -74,8 +71,20 @@
                   <a
                     href="https://faem.ru/eda/contacts"
                     class="mobile-sidebar-menu__item-title"
-                    >Контакты</a
                   >
+                    Контакты
+                  </a>
+                </div>
+                <div class="mobile-sidebar-menu__item">
+                  <!-- <div
+                    class="mobile-sidebar-menu__item-icon mobile-sidebar-menu__dish-icon"
+                  ></div> -->
+                  <a
+                    href="tel:+79284889828"
+                    class="mobile-sidebar-menu__item-title"
+                  >
+                    +7 (928) 488-98-28
+                  </a>
                 </div>
               </div>
             </div>
@@ -88,8 +97,9 @@
 
 <script>
 import auth from '@/mixins/auth.js';
+import special from '@/mixins/special.js';
 export default {
-  mixins: [auth],
+  mixins: [auth, special],
   props: {
     show: {
       type: Boolean,

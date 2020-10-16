@@ -4,7 +4,8 @@
       <ul class="promo-list">
         <li class="promo-list__item">
           <a href="#" class="promo-list__link">
-            <span>Faem.Eda</span>
+            <span v-if="isSpecialStores">{{ getSpecialStoresData.name }}</span>
+            <span v-else>Faem.Eda</span>
           </a>
         </li>
         <li class="promo-list__item">
@@ -124,7 +125,11 @@ export default {
     isSelectAddressNotNull() {
       return this.selectedAddress !== null;
     },
-    ...createNamespacedHelpers('location').mapGetters(['getCurrentLocation'])
+    ...createNamespacedHelpers('location').mapGetters(['getCurrentLocation']),
+    ...createNamespacedHelpers('stores').mapGetters([
+      'isSpecialStores',
+      'getSpecialStoresData'
+    ])
   },
   data: () => ({
     enterAddress: '',

@@ -4,11 +4,7 @@
       <div class="header-container container">
         <div class="header-logo">
           <router-link to="/" aria-label="На главную">
-            <img
-              class="header-logo__img"
-              src="../../assets/logo.png"
-              alt="logo"
-            />
+            <img class="header-logo__img" :src="getLogo" alt="logo" />
           </router-link>
         </div>
         <div class="header-menu">
@@ -33,7 +29,7 @@
           <a
             aria-label="Тел."
             rel="nofollow"
-            href="#"
+            href="tel:+79284889828"
             class="header-menu__link"
           >
             +7 (928) 488-98-28
@@ -100,10 +96,11 @@ import AppPopup from '../AppPopup';
 import AppLogin from '../AppLogin';
 import AppOrderHistory from '../AppOrderHistory';
 import auth from '@/mixins/auth.js';
+import special from '@/mixins/special.js';
 import header from './header';
 
 export default {
-  mixins: [auth, header],
+  mixins: [auth, header, special],
   name: 'AppHeader',
   components: {
     AppPopup,

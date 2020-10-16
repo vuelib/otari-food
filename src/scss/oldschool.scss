@@ -1,0 +1,21 @@
+$special-mainColor: #df0000;
+.button--yellow {
+  background: $special-mainColor;
+}
+.categories-navbar__category--active {
+  box-shadow: inset 0 -4px 0 $special-mainColor !important;
+}
+.header__cart-button {
+  background-color: $special-mainColor !important;
+  border-color: darken($special-mainColor, 0.8) !important;
+}
+.mobile-button,
+.mobile-cart-button,
+.mobile-cart-page-footer__button,
+.menu-item-count-edit__confirm,
+.category-menu-item-in-cart:before,
+.info-header-rating,
+.catalog-page-filters--active,
+.rating-badge {
+  background-color: $special-mainColor !important;
+}
