@@ -9,6 +9,9 @@ $special-mainColor: #df0000;
   background-color: $special-mainColor !important;
   border-color: darken($special-mainColor, 0.8) !important;
 }
+.enter-address__detect {
+  border: 1px solid $special-mainColor !important;
+}
 .mobile-button,
 .mobile-cart-button,
 .mobile-cart-page-footer__button,
@@ -17,6 +20,7 @@ $special-mainColor: #df0000;
 .info-header-rating,
 .catalog-page-filters--active,
 .rating-badge,
-.mobile-confirm-set-address__button {
+.mobile-confirm-set-address__button,
+.enter-address__content {
   background-color: $special-mainColor !important;
 }
