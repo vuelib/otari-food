@@ -86,7 +86,7 @@ export default {
       commit('SET_ACTIVE_STORE', store);
     },
     detectSpecialStores({ commit }) {
-      commit('detectSpecialStores');
+      commit('SET_IS_DETECT_SPECIAL_STORES');
     }
   },
   getters: {
