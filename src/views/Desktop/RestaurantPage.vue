@@ -5,7 +5,8 @@
       <InfoHeader :store="store" />
       <div class="restaurant-page-content">
         <!-- Categories Navbar Component -->
-        <CategoriesNavbar :categories="Object.keys(getStoreProductsCategory)" />
+        <!-- <CategoriesNavbar :categories="Object.keys(getStoreProductsCategory)" /> -->
+        <CategoriesNavbar :categories="getStore.product_category" />
         <div class="restaurant-page__menu-wrapper">
           <!-- Menu List Component -->
           <MenuList :categories="getStoreProductsCategory" />

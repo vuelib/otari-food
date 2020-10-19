@@ -96,11 +96,22 @@ export default {
     getStoreProducts(state) {
       return state.store_products;
     },
-    getStoreProductsCategory(state) {
-      if (!state.store_products) return {};
-      return state.store_products.reduce((acc, product) => {
-        acc[product.category] = [...(acc[product.category] || []), product];
-        return acc;
+    getStoreProductsCategory(state, getters) {
+      if (!state.active_store || !getters.getActiveStore.product_category)
+        return {};
+      // console.log(getters.getActiveStore);
+      // return state.store_products.reduce((acc, product) => {
+      //   acc[product.category] = [...(acc[product.category] || []), product];
+      //   return acc;
+      // }, {});
+      return getters.getActiveStore.product_category.reduce((map, category) => {
+        map[category] = [
+          ...(map[category] || []),
+          ...state.store_products.filter(
+            product => product.category === category
+          )
+        ];
+        return map;
       }, {});
     },
     findStoreByUUID(state) {

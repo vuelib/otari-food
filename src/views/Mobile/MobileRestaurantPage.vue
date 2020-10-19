@@ -59,6 +59,7 @@ export default {
   async created() {
     await this.initStore();
     await this.fetchProductsThatStore();
+    this.setActiveStore(this.store);
     this.checkFromMessanger();
   },
   computed: {
@@ -102,7 +103,8 @@ export default {
     },
     ...createNamespacedHelpers('stores').mapActions([
       'getStoresByUUID',
-      'getStoreProductsByFilter'
+      'getStoreProductsByFilter',
+      'setActiveStore'
     ]),
     ...createNamespacedHelpers('cart').mapActions(['setUserDataFromMessenger'])
   },

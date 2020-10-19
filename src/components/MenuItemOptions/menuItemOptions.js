@@ -2,7 +2,6 @@ import { createNamespacedHelpers } from 'vuex';
 const { mapActions } = createNamespacedHelpers('cart');
 export default {
   mounted() {
-    console.log(this.optionProduct);
     if (this.isDisabled) {
       this.scopedVariant = this.optionProduct.variants.find(
         ({ standard }) => standard
