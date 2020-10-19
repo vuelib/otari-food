@@ -1,5 +1,7 @@
 <template>
   <div id="app" :class="{ mobile: isMobileDevice, desktop: !isMobileDevice }">
+    <!-- App Banner -->
+    <AppMobileBanner v-if="isMobileDevice" />
     <!-- App Header -->
     <app-device-component
       v-if="!isMobileDevice"
@@ -46,7 +48,8 @@ export default {
   }),
   name: 'App',
   components: {
-    AppEnterAddress: () => import('./components/AppEnterAddress')
+    AppEnterAddress: () => import('./components/AppEnterAddress'),
+    AppMobileBanner: () => import('./components/Banner/MobileBanner')
   }
 };
 </script>
