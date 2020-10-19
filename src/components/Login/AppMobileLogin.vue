@@ -11,8 +11,8 @@
                 class="mobile-fullscreen-modal__control-close"
               ></div>
               <div
-                @click="enterPhone = false"
                 v-else
+                @click="handleBackLogin"
                 class="mobile-fullscreen-modal__control-back"
               ></div>
             </div>
@@ -137,6 +137,9 @@ export default {
     },
     handleCloseLogin() {
       this.$emit('closeLoginModal');
+    },
+    handleBackLogin() {
+      this.enterPhone = true;
     }
   },
   data: () => ({
