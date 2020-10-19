@@ -4,10 +4,10 @@
     <img src="../../assets/app-banner.webp" class="mobile-banner__logo" />
     <div class="mobile-banner__info">
       <div class="mobile-banner__title">Приложение</div>
-      <div class="mobile-banner__app-name">Faem.Eda</div>
+      <div class="mobile-banner__app-name">Faem</div>
     </div>
     <a
-      href="https://faem.page.link/eda"
+      href="https://faem.page.link/s2qh"
       class="mobile-button mobile-banner__install"
       target="_blank"
     >
