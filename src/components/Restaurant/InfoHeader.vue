@@ -79,10 +79,10 @@
                       </span>
                     </p>
                     <p class="info-popup__legal">
-                      <span class="info-popup__phone">
+                      <!-- <span class="info-popup__phone">
                         Тел. {{ store.phone }}
                       </span>
-                      <br />
+                      <br /> -->
                       <span>
                         Режим работы: с
                         {{ getHoursWork(store.work_schedule).work_beginning }}
