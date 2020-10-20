@@ -3,11 +3,14 @@
     <div class="mobile-catalog-page-places__flex-by-height">
       <div class="mobile-catalog-page-places-content">
         <!-- Promo Banners -->
-        <h2 class="mobile-catalog-page-places__title">Акции</h2>
+        <h2 v-if="!isSpecialStores" class="mobile-catalog-page-places__title">
+          Акции
+        </h2>
         <div
           class="mobile-catalog-page-places__inner-content mobile-catalog-page-places__flex-by-height"
         >
           <ul
+            v-if="!isSpecialStores"
             class="mobile-catalog-page-places__places-list mobile-catalog-page-places__flex-by-height"
           >
             <swiper class="swiper" :options="swiperOption">
@@ -84,6 +87,9 @@ import 'swiper/swiper-bundle.css';
 
 import MobilePlaceItem from '../PlaceItem/MobilePlaceItem.vue';
 import placesList from './placesList.js';
+
+import { createNamespacedHelpers } from 'vuex';
+const { mapGetters } = createNamespacedHelpers('stores');
 export default {
   mixins: [placesList],
   data: () => ({
@@ -99,6 +105,9 @@ export default {
       default: '',
       require: false
     }
+  },
+  computed: {
+    ...mapGetters(['isSpecialStores'])
   },
   name: 'MobilePlacesList',
   components: {
