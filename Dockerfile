@@ -41,8 +41,6 @@ COPY nginx_config/default-${NODE_ENV}.conf /etc/nginx/conf.d/default.conf
 VOLUME /var/log/nginx
 
 COPY --from=build-stage /app/dist /usr/share/nginx/html
-RUN mkdir -p /usr/share/nginx/html/.well-known/pki-validation
-COPY nginx_config/AF71AE9D2AAA2BA1C601FFB583B3D89C.txt /usr/share/nginx/html/.well-known/pki-validation/AF71AE9D2AAA2BA1C601FFB583B3D89C.txt
 
 EXPOSE 80
 EXPOSE 443
