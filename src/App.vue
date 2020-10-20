@@ -1,7 +1,7 @@
 <template>
   <div id="app" :class="{ mobile: isMobileDevice, desktop: !isMobileDevice }">
     <!-- App Banner -->
-    <AppMobileBanner v-if="isMobileDevice" />
+    <AppMobileBanner v-if="isMobileDevice && !isSpecialStores" />
     <!-- App Header -->
     <app-device-component
       v-if="!isMobileDevice"
@@ -31,9 +31,13 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex';
 import deviceType from '@/mixins/deviceType';
 export default {
   mixins: [deviceType],
+  computed: {
+    ...createNamespacedHelpers('stores').mapGetters(['isSpecialStores'])
+  },
   methods: {
     showEnterAddressModal() {
       this.isShowEnterAddress = true;

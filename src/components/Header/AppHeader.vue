@@ -3,7 +3,11 @@
     <header class="header">
       <div class="header-container container">
         <div class="header-logo">
-          <router-link to="/" aria-label="На главную">
+          <router-link
+            to="/"
+            :class="{ disabled: isSpecialStores }"
+            aria-label="На главную"
+          >
             <img class="header-logo__img" :src="getLogo" alt="logo" />
           </router-link>
         </div>
@@ -236,6 +240,10 @@ $header-bg: #fff;
 .header-logo {
   flex: 0 0 auto;
   padding: 0 20px 0 0;
+  > a.disabled {
+    pointer-events: none;
+    cursor: default;
+  }
   &__img {
     width: 160px;
   }

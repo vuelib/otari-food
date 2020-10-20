@@ -41,6 +41,10 @@ export default {
       'getTotalPrice',
       'isCartEmpty',
       'getActiveStoreUUID'
+    ]),
+    ...createNamespacedHelpers('stores').mapGetters([
+      'isSpecialStores',
+      'getSpecialStoresData'
     ])
   },
   data: () => ({
