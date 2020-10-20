@@ -5,6 +5,9 @@ export function setMainPageTitle() {
   document.title =
     'Быстрая доставка еды из ресторанов Во Владикавказе — FaemEda';
 }
+export function setSpecialPageTitle(title) {
+  document.title = title;
+}
 export function setRestaurantPageDescription(name, category) {
   document.querySelector(
     'meta[name="description"]'

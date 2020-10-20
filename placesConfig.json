@@ -7,7 +7,8 @@
     "logo": "oldschool.png",
     "style": "oldschool",
     "name": "OLDSCHOOL",
-    "pushToMenu": false
+    "pushToMenu": false,
+    "pageTitle": ""
   },
   "cafebeirut.ru": {
     "urls": [
@@ -16,6 +17,7 @@
     "logo": "cafebeirut.png",
     "style": "cafebeirut",
     "name": "КАФЕ Beirut",
-    "pushToMenu": true
+    "pushToMenu": true,
+    "pageTitle": "Кафе Бейрут (Владикавказ) - 25 лет мы с вами ❤️"
   }
 }

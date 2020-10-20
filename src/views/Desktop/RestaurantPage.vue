@@ -39,7 +39,8 @@ import AppCart from '@/components/AppCart.vue';
 import auth from '@/mixins/auth.js';
 import {
   setRestaurantPageTitle,
-  setRestaurantPageDescription
+  setRestaurantPageDescription,
+  setSpecialPageTitle
 } from '@/mixins/seo.js';
 
 import { createNamespacedHelpers } from 'vuex';
@@ -48,11 +49,7 @@ export default {
   async created() {
     await this.initStore();
     await this.fetchProductsThatStore();
-    setRestaurantPageTitle(this.getStore.name);
-    setRestaurantPageDescription(
-      this.getStore.name,
-      this.getStore.product_category
-    );
+    this.setPageTitle();
     console.log(this.getStore);
   },
   computed: {
@@ -61,7 +58,9 @@ export default {
     },
     ...createNamespacedHelpers('stores').mapGetters([
       'getStoreProductsCategory',
-      'findStoreProductByUUID'
+      'findStoreProductByUUID',
+      'isSpecialStores',
+      'getSpecialStoresData'
     ]),
     ...createNamespacedHelpers('cart').mapGetters([
       'isCartEmpty',
@@ -81,6 +80,17 @@ export default {
     async fetchProductsThatStore() {
       const { uuid } = this.store;
       await this.getStoreProductsByFilter({ storeuuid: uuid });
+    },
+    setPageTitle() {
+      if (!this.isSpecialStores) {
+        setRestaurantPageTitle(this.getStore.name);
+        setRestaurantPageDescription(
+          this.getStore.name,
+          this.getStore.product_category
+        );
+      } else {
+        setSpecialPageTitle(this.getSpecialStoresData.pageTitle);
+      }
     },
     ...createNamespacedHelpers('stores').mapActions([
       'getStoresByUUID',

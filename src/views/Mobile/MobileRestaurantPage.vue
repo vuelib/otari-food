@@ -4,7 +4,7 @@
     <div class="restaurant-page-header__head">
       <div class="restaurant-page-header__top-bar">
         <div
-          v-if="!isUserFromMessenger"
+          v-if="!isUserFromMessenger && !isSpecialStores"
           @click="$router.go(-1)"
           class="restaurant-page-header__back"
         ></div>
@@ -50,7 +50,8 @@ import MobileMenuList from '@/components/MenuList/MobileMenuList';
 import auth from '@/mixins/auth.js';
 import {
   setRestaurantPageTitle,
-  setRestaurantPageDescription
+  setRestaurantPageDescription,
+  setSpecialPageTitle
 } from '@/mixins/seo.js';
 
 import { createNamespacedHelpers } from 'vuex';
@@ -61,6 +62,7 @@ export default {
     await this.fetchProductsThatStore();
     this.setActiveStore(this.store);
     this.checkFromMessanger();
+    this.setPageTitle();
   },
   computed: {
     getStore() {
@@ -68,7 +70,9 @@ export default {
     },
     ...createNamespacedHelpers('stores').mapGetters([
       'getStoreProductsCategory',
-      'findStoreProductByUUID'
+      'findStoreProductByUUID',
+      'isSpecialStores',
+      'getSpecialStoresData'
     ]),
     ...createNamespacedHelpers('cart').mapGetters([
       'isCartEmpty',
@@ -86,11 +90,6 @@ export default {
       let { store } = this.$route.params;
       if (!store) store = await this.getStoresByUUID({ uuid: STORE_UUID });
       this.store = store;
-      setRestaurantPageTitle(this.store.name);
-      setRestaurantPageDescription(
-        this.store.name,
-        this.store.product_category
-      );
     },
     async fetchProductsThatStore() {
       const { uuid } = this.store;
@@ -100,6 +99,17 @@ export default {
       const { ui, si } = this.$route.query;
       if (!ui || !si) return;
       this.setUserDataFromMessenger({ userId: ui, storeId: si });
+    },
+    setPageTitle() {
+      if (!this.isSpecialStores) {
+        setRestaurantPageTitle(this.store.name);
+        setRestaurantPageDescription(
+          this.store.name,
+          this.store.product_category
+        );
+      } else {
+        setSpecialPageTitle(this.getSpecialStoresData.pageTitle);
+      }
     },
     ...createNamespacedHelpers('stores').mapActions([
       'getStoresByUUID',
