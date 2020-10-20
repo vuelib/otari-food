@@ -9,7 +9,7 @@
         <ul class="places-list__container">
           <li class="places-list__place  stock-list__place">
             <a
-              href="https://faem.page.link/eda"
+              href="https://faem.page.link/s2qh"
               class="places-list__item place-item"
               target="_blank"
             >
