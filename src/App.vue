@@ -56,6 +56,9 @@ export default {
 
 <style lang="scss">
 @import './scss/basic.scss';
+#app.mobile {
+  overflow-x: hidden;
+}
 #app.mobile ~ .swal2-container {
   z-index: 999999;
 }

@@ -6,6 +6,16 @@
     ],
     "logo": "oldschool.png",
     "style": "oldschool",
-    "name": "OLDSCHOOL"
+    "name": "OLDSCHOOL",
+    "pushToMenu": false
+  },
+  "cafebeirut.ru": {
+    "urls": [
+      "3f3a6e26-81cf-4846-bd4e-ac1a587c70da"
+    ],
+    "logo": "cafebeirut.png",
+    "style": "cafebeirut",
+    "name": "КАФЕ Beirut",
+    "pushToMenu": true
   }
 }

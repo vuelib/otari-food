@@ -35,6 +35,13 @@ new Vue({
   render: h => h(App),
   async created() {
     this.$store.dispatch('stores/detectSpecialStores');
+    if (specialStore.pushToMenu)
+      this.$router.push({
+        name: 'RestaurantPage',
+        params: {
+          id: specialStore.urls[0]
+        }
+      });
     if (!JSON.parse(localStorage.getItem('userData'))) return;
     try {
       await this.$store.dispatch('auth/refreshToken');
