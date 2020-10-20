@@ -1,6 +1,6 @@
 <template>
   <div class="catalog-page">
-    <AppMobileHeader @showSidebar="isShowSidebar = true" />
+    <AppMobileHeader v-if="false" @showSidebar="isShowSidebar = true" />
     <MobileSidebar
       :show="isShowSidebar"
       @showLogin="isShowLogin = true"

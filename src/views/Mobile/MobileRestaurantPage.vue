@@ -1,7 +1,7 @@
 <template>
   <div class="mobile-place-page-restaurant">
     <!-- Header -->
-    <div class="restaurant-page-header__head">
+    <!-- <div class="restaurant-page-header__head">
       <div class="restaurant-page-header__top-bar">
         <div
           v-if="!isUserFromMessenger && !isSpecialStores"
@@ -14,7 +14,7 @@
         </div>
         <div class="restaurant-page-header__search"></div>
       </div>
-    </div>
+    </div> -->
     <div class="restaurant-page-header__body">
       <h1 class="restaurant-page-header__name">
         {{ getStore.name }}
@@ -185,7 +185,7 @@ export default {
     vertical-align: middle;
   }
   &__body {
-    padding: 0 16px 16px 16px;
+    padding: 16px;
     background: #ffffff;
   }
   &__name {

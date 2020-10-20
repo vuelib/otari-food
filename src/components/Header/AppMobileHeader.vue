@@ -56,6 +56,7 @@ export default {
   methods: {
     showSidebar() {
       this.$emit('showSidebar');
+      this.$parent.$emit('showSidebar');
     }
   },
   name: 'AppMobileHeader',

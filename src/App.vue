@@ -4,8 +4,8 @@
     <AppMobileBanner v-if="isMobileDevice && !isSpecialStores" />
     <!-- App Header -->
     <app-device-component
-      v-if="!isMobileDevice"
       @showEnterAddressModal="showEnterAddressModal"
+      @showSidebar="isShowSidebar = true"
       desktop-component-path="components/Header/AppHeader"
       mobile-component-path="components/Header/AppMobileHeader"
     ></app-device-component>
@@ -19,14 +19,30 @@
       </div>
     </div>
     <!-- Enter Address Modal -->
-    <!-- <app-device-component
-      desktop-component-path="components/Header/AppHeader"
-      mobile-component-path="components/Header/AppMobileHeader"
-    >
-    </app-device-component> -->
     <app-popup @closePopup="closeEnterAddressModal" v-if="isShowEnterAddress">
       <AppEnterAddress @closePopup="closeEnterAddressModal" />
     </app-popup>
+
+    <!-- == mobile == -->
+
+    <!-- MobileSidebar -->
+    <MobileSidebar
+      :show="isShowSidebar"
+      @showLogin="isShowLogin = true"
+      @showOrderHistory="showOrderHistory"
+      @closeSidebar="isShowSidebar = false"
+    />
+    <!-- MobileOrderHistory -->
+    <MobileOrderHistory
+      ref="my-orders"
+      v-show="isShowOrderHistory"
+      @closeOrderHistory="isShowOrderHistory = false"
+    />
+    <!-- MobileLogin-->
+    <AppMobileLogin
+      @closeLoginModal="isShowLogin = false"
+      v-show="isShowLogin"
+    />
   </div>
 </template>
 
@@ -44,16 +60,31 @@ export default {
     },
     closeEnterAddressModal() {
       this.isShowEnterAddress = false;
+    },
+    // mobile
+    showOrderHistory() {
+      this.$refs['my-orders'].loadMyOrders();
+      this.isShowOrderHistory = true;
     }
   },
   data: () => ({
     isShowEnterAddress: false,
-    isShowAuth: false
+    isShowAuth: false,
+    // mobile
+    filteredCategory: '',
+    isShowSidebar: false,
+    isShowLogin: false,
+    isShowOrderHistory: false
   }),
   name: 'App',
   components: {
     AppEnterAddress: () => import('./components/AppEnterAddress'),
-    AppMobileBanner: () => import('./components/Banner/MobileBanner')
+    AppMobileBanner: () => import('./components/Banner/MobileBanner'),
+
+    MobileSidebar: () => import('@/components/Sidebar/MobileSidebar.vue'),
+    AppMobileLogin: () => import('@/components/Login/AppMobileLogin.vue'),
+    MobileOrderHistory: () =>
+      import('@/components/OrderHistory/MobileOrderHistory.vue')
   }
 };
 </script>
