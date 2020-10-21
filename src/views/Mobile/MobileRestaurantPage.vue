@@ -17,7 +17,17 @@
     </div> -->
     <div class="restaurant-page-header__body">
       <h1 class="restaurant-page-header__name">
-        {{ getStore.name }}
+        <span>
+          {{ getStore.name }}
+        </span>
+        <span @click="isShowInfoBadge = true">
+          <span
+            :class="{ active: isShowInfoBadge }"
+            class="restaurant-page-header__info-badge"
+          >
+            <div class="restaurant-page-header__info-badge-icon"></div>
+          </span>
+        </span>
       </h1>
       <ul class="restaurant-page-header__badges"></ul>
     </div>
@@ -38,6 +48,46 @@
       v-if="!isCartEmpty && checkOnEqualActiveStoreUUID(getStore.uuid)"
       :price="getTotalPrice"
     />
+    <!-- Bottom Sheet -->
+    <app-bottom-sheet
+      @closePopup="isShowInfoBadge = false"
+      v-if="isShowInfoBadge"
+      :header="true"
+    >
+      <div slot="header">{{ getStore.name }}</div>
+      <div slot="body" class="mobile-place-info-bottom-body">
+        <ul class="mobile-place-info-bottom-sheet">
+          <li class="mobile-place-info-bottom-sheet__address">
+            <div class="mobile-place-info-bottom-sheet__address-section">
+              <span>
+                {{ getStore.destination_points[0].unrestricted_value }}
+              </span>
+              <!-- <span class="mobile-place-info-bottom-sheet__time-lable">
+                Работаем до
+                {{ getHoursWork(getStore.work_schedule).work_ending }}
+              </span> -->
+              <!-- staff_phones  -->
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div slot="footer">
+        <ul class="mobile-place-info-bottom-sheet">
+          <li class="mobile-place-info-bottom-sheet__contact">
+            <span class="mobile-place-info-bottom-sheet__time-lable">
+              Тел. {{ getStorePhone }}
+            </span>
+          </li>
+          <li class="mobile-place-info-bottom-sheet__contact">
+            <span class="mobile-place-info-bottom-sheet__time-lable">
+              Режим работы: с
+              {{ getHoursWork(getStore.work_schedule).work_beginning }} до
+              {{ getHoursWork(getStore.work_schedule).work_ending }}
+            </span>
+          </li>
+        </ul>
+      </div>
+    </app-bottom-sheet>
   </div>
 </template>
 
@@ -67,6 +117,21 @@ export default {
   computed: {
     getStore() {
       return this.store;
+    },
+    getStorePhone() {
+      if (!this.getStore.staff_phones) return;
+      return this.getStore.phone || this.getStore.staff_phones[0];
+    },
+    getHoursWork() {
+      return workSchedule => {
+        const { work_beginning, work_ending } = this.detectWeekDay(
+          workSchedule
+        );
+        return {
+          work_beginning: this.constructTime(work_beginning),
+          work_ending: this.constructTime(work_ending)
+        };
+      };
     },
     ...createNamespacedHelpers('stores').mapGetters([
       'getStoreProductsCategory',
@@ -111,6 +176,18 @@ export default {
         setSpecialPageTitle(this.getSpecialStoresData.pageTitle);
       }
     },
+    detectWeekDay(workSchedule) {
+      const currentWeekDay = new Date().getDay();
+      for (const day of workSchedule) {
+        if (currentWeekDay === 0 && day.week_day === 7) return day;
+        if (day.week_day === currentWeekDay) return day;
+      }
+    },
+    constructTime(min) {
+      const h = Math.floor(min / 60);
+      const m = Math.floor(min % 60);
+      return `${h < 10 ? `0${h}` : h}:${m < 10 ? `0${m}` : m}`;
+    },
     ...createNamespacedHelpers('stores').mapActions([
       'getStoresByUUID',
       'getStoreProductsByFilter',
@@ -120,12 +197,14 @@ export default {
   },
   data: () => ({
     store: {},
-    categories: {}
+    categories: {},
+    isShowInfoBadge: false
   }),
   mixins: [auth],
   components: {
     MobileMenuList,
-    MobileBottomBar: () => import('@/components/BottomBar/MobileBottomBar.vue')
+    MobileBottomBar: () => import('@/components/BottomBar/MobileBottomBar.vue'),
+    AppBottomSheet: () => import('@/components/BottomSheet/AppBottomSheet.vue')
   }
 };
 </script>
@@ -195,9 +274,71 @@ export default {
     font-weight: bold;
     padding-bottom: 12px;
   }
+  &__info-badge {
+    top: 0;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    overflow: hidden;
+    position: relative;
+    font-size: 28px;
+    box-shadow: 0 2px 16px 0px rgba(0, 0, 0, 0.07);
+    align-items: center;
+    margin-left: 5px;
+    border-radius: 14px;
+    justify-content: center;
+    background-color: #ffffff;
+  }
+  &__info-badge.active {
+    background-color: $theme-mainColor;
+  }
+  &__info-badge-icon {
+    width: 16px;
+    height: 16px;
+    background-size: 16px 16px;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjEzIiB2aWV3Qm94PSIwIDAgNCAxMyI+CiAgICA8cGF0aCBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGQ9Ik0yIC45MTNhMS4zMDQgMS4zMDQgMCAxIDAgMCAyLjYwOUExLjMwNCAxLjMwNCAwIDAgMCAyIC45MTN6TS4yNiA1LjI2MXYuODdoLjg3djUuNjUySC4yNjF2Ljg3aDMuNDc4di0uODdIMi44N1Y1LjI2SC4yNnoiLz4KPC9zdmc+Cg==);
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  &__info-badge.active > &__info-badge-icon {
+    filter: invert(1);
+  }
 }
 // Restaurant Menu
 .mobile-restaurant-page-menu-list {
   margin-top: 8px;
+}
+.mobile-place-info-bottom-sheet {
+  display: flex;
+  flex-flow: column nowrap;
+  align-content: flex-start;
+  &__address {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px 0;
+    // border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  &__address-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  &__time-lable {
+    color: #b0b0b0;
+    font-size: 15px;
+    margin-top: 7px;
+  }
+}
+.mobile-place-info-bottom-body {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 </style>
