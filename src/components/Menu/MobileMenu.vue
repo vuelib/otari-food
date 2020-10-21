@@ -1,5 +1,10 @@
 <template>
   <div class="mobile-restaurant-components-category">
+    <a
+      :id="getAnchorLink(categoryName)"
+      :data-section-selector="getAnchorLink(categoryName)"
+      class="mobile-category-anchor-link scrollactive-item"
+    ></a>
     <div class="mobile-restaurant-components-category__header">
       <div class="mobile-restaurant-components-category__label">
         <div class="mobile-restaurant-components-category__title-and-count">
@@ -81,5 +86,11 @@ export default {
       text-transform: uppercase;
     }
   }
+}
+.mobile-category-anchor-link {
+  position: relative;
+  top: 20px;
+  opacity: 0;
+  visibility: hidden;
 }
 </style>

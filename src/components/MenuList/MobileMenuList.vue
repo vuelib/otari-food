@@ -4,6 +4,19 @@
     ref="menu-list"
     class="mobile-restaurant-components-category-list"
   >
+    <div>
+      <scrollactive active-class="active" class="mobile-categoru-menu">
+        <li
+          v-for="(category, key) of Object.keys(categories)"
+          :key="key"
+          class="mobile-categoru-menu__item"
+        >
+          <a :href="getAnchorLink(category)" class="scrollactive-item active">
+            {{ category }}
+          </a>
+        </li>
+      </scrollactive>
+    </div>
     <li
       v-for="([name, category], key) of Object.entries(categories)"
       :key="key"
@@ -112,6 +125,17 @@ export default {
     },
     closeMenuItemOption() {
       this.isShowOptions = false;
+    },
+    onItemChanged(event, currentItem, lastActiveItem) {
+      // here you have access to everything you need regarding that event
+      console.log(event, currentItem, lastActiveItem);
+    },
+    getAnchorLink(category) {
+      // tmp solution
+      return `#${category
+        .replace(/.*(>|\|)\.*/g, '')
+        .trim()
+        .replace(/\s+/g, '-')}`;
     }
   },
   data: () => ({
@@ -185,5 +209,39 @@ export default {
   padding: 16px;
   display: flex;
   flex-direction: column;
+}
+.scrollactive-item {
+  opacity: 0.4;
+  padding: 0 14px;
+  color: #21201f;
+  &::first-letter {
+    text-transform: uppercase;
+  }
+}
+.scrollactive-item.active {
+  color: $theme-textColor;
+  border-radius: 16px;
+  opacity: 1;
+  background-color: $theme-mainColor;
+}
+.mobile-categoru-menu {
+  display: flex;
+  overflow-x: auto;
+  &__item {
+    height: 36px;
+    display: flex;
+    font-size: 15px;
+    max-width: 80vw;
+    box-sizing: border-box;
+    line-height: 36px;
+    white-space: nowrap;
+    align-items: center;
+    // ====
+  }
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 </style>
