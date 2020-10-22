@@ -1,7 +1,7 @@
 <template>
   <div v-if="showBanner" class="mobile-banner">
     <div @click="showBanner = false" class="mobile-banner__close">×</div>
-    <img src="../../assets/app-banner.webp" class="mobile-banner__logo" />
+    <img src="../../assets/app-banner.png" class="mobile-banner__logo" />
     <div class="mobile-banner__info">
       <div class="mobile-banner__title">Приложение</div>
       <div class="mobile-banner__app-name">Faem</div>
