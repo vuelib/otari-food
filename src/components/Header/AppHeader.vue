@@ -12,32 +12,45 @@
           </router-link>
         </div>
         <div class="header-menu">
-          <a
-            aria-label="Партнерам"
-            rel="nofollow"
-            href="https://faem.ru/eda/partners"
-            class="header-menu__link"
-            target="_blank"
-          >
-            Партнерам
-          </a>
-          <a
-            aria-label="Контакты"
-            rel="nofollow"
-            href="https://faem.ru/eda/contacts"
-            class="header-menu__link"
-            target="_blank"
-          >
-            Контакты
-          </a>
-          <a
-            aria-label="Тел."
-            rel="nofollow"
-            href="tel:+79284889828"
-            class="header-menu__link"
-          >
-            +7 (928) 488-98-28
-          </a>
+          <template v-if="!isSpecialStores">
+            <a
+              aria-label="Партнерам"
+              rel="nofollow"
+              href="https://faem.ru/eda/partners"
+              class="header-menu__link"
+              target="_blank"
+            >
+              Партнерам
+            </a>
+            <a
+              aria-label="Контакты"
+              rel="nofollow"
+              href="https://faem.ru/eda/contacts"
+              class="header-menu__link"
+              target="_blank"
+            >
+              Контакты
+            </a>
+            <a
+              aria-label="Тел."
+              rel="nofollow"
+              href="tel:+79284889828"
+              class="header-menu__link"
+            >
+              +7 (928) 488-98-28
+            </a>
+          </template>
+          <template v-else>
+            <a
+              v-for="(phone, key) in getSpecialStoresData.phones"
+              :key="key"
+              aria-label="Тел."
+              rel="nofollow"
+              class="header-menu__link"
+            >
+              {{ phone }}
+            </a>
+          </template>
         </div>
         <button
           v-if="!isCurrentLocationNull"

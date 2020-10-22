@@ -22,6 +22,8 @@ $special-mainColor: #df0000;
 .rating-badge,
 .mobile-confirm-set-address__button,
 .enter-address__content,
-.mobile-phone-base-modal__button {
+.mobile-phone-base-modal__button,
+.scrollactive-item.active,
+.restaurant-page-header__info-badge.active {
   background-color: $special-mainColor !important;
 }

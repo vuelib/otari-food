@@ -295,7 +295,7 @@ export default {
   &__info-badge-icon {
     width: 16px;
     height: 16px;
-    background-size: 16px 16px;
+    background-size: contain;
     background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjEzIiB2aWV3Qm94PSIwIDAgNCAxMyI+CiAgICA8cGF0aCBmaWxsPSIjMDAwIiBmaWxsLXJ1bGU9Im5vbnplcm8iIGQ9Ik0yIC45MTNhMS4zMDQgMS4zMDQgMCAxIDAgMCAyLjYwOUExLjMwNCAxLjMwNCAwIDAgMCAyIC45MTN6TS4yNiA1LjI2MXYuODdoLjg3djUuNjUySC4yNjF2Ljg3aDMuNDc4di0uODdIMi44N1Y1LjI2SC4yNnoiLz4KPC9zdmc+Cg==);
     display: inline-block;
     background-repeat: no-repeat;

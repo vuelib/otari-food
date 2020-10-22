@@ -8,7 +8,8 @@
     "style": "oldschool",
     "name": "OLDSCHOOL",
     "pushToMenu": false,
-    "pageTitle": ""
+    "pageTitle": "",
+    "phones": []
   },
   "cafebeirut.ru": {
     "urls": [
@@ -18,6 +19,10 @@
     "style": "cafebeirut",
     "name": "КАФЕ Beirut",
     "pushToMenu": true,
-    "pageTitle": "Кафе Бейрут (Владикавказ) - 25 лет мы с вами ❤️"
+    "pageTitle": "Кафе Бейрут (Владикавказ) - 25 лет мы с вами ❤️",
+    "phones": [
+      "☎️ +7 (8672) 53-05-27",
+      "📞 +7 (918) 824-84-94"
+    ]
   }
 }

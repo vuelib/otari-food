@@ -53,39 +53,43 @@
                     <div class="mobile-sidebar-menu__item-title">Выйти</div>
                   </div>
                 </template>
-                <div class="mobile-sidebar-menu__item">
-                  <!-- <div
-                    class="mobile-sidebar-menu__item-icon mobile-sidebar-menu__dish-icon"
-                  ></div> -->
-                  <a
-                    href="https://faem.ru/eda/partners"
-                    class="mobile-sidebar-menu__item-title"
+                <template v-if="!isSpecialStores">
+                  <div class="mobile-sidebar-menu__item">
+                    <a
+                      href="https://faem.ru/eda/partners"
+                      class="mobile-sidebar-menu__item-title"
+                    >
+                      Партнерам
+                    </a>
+                  </div>
+                  <div class="mobile-sidebar-menu__item">
+                    <a
+                      href="https://faem.ru/eda/contacts"
+                      class="mobile-sidebar-menu__item-title"
+                    >
+                      Контакты
+                    </a>
+                  </div>
+                  <div class="mobile-sidebar-menu__item">
+                    <a
+                      href="tel:+79284889828"
+                      class="mobile-sidebar-menu__item-title"
+                    >
+                      +7 (928) 488-98-28
+                    </a>
+                  </div>
+                </template>
+                <template v-else>
+                  <div
+                    v-for="(phone, key) in getSpecialStoresData.phones"
+                    :key="key"
+                    class="mobile-sidebar-menu__item"
                   >
-                    Партнерам
-                  </a>
-                </div>
-                <div class="mobile-sidebar-menu__item">
-                  <!-- <div
-                    class="mobile-sidebar-menu__item-icon mobile-sidebar-menu__dish-icon"
-                  ></div> -->
-                  <a
-                    href="https://faem.ru/eda/contacts"
-                    class="mobile-sidebar-menu__item-title"
-                  >
-                    Контакты
-                  </a>
-                </div>
-                <div class="mobile-sidebar-menu__item">
-                  <!-- <div
-                    class="mobile-sidebar-menu__item-icon mobile-sidebar-menu__dish-icon"
-                  ></div> -->
-                  <a
-                    href="tel:+79284889828"
-                    class="mobile-sidebar-menu__item-title"
-                  >
-                    +7 (928) 488-98-28
-                  </a>
-                </div>
+                    <a class="mobile-sidebar-menu__item-title">
+                      {{ phone }}
+                    </a>
+                  </div>
+                </template>
               </div>
             </div>
           </div>
