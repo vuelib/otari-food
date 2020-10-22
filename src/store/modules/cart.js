@@ -337,7 +337,8 @@ export default {
             id: product.uuid, //Id товар или артикул
             price: product.price, //Стоимость единицы товара
             brand: data.products_data.store.name, //Название ресторана
-            quantity: product.number //Количество
+            quantity: product.number, //Количество
+            variant: window.location.hostname //Имя хоста
           });
           return acc;
         },

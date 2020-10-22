@@ -63,10 +63,10 @@ export function purchaseAnalytics({
         actionField: {
           id: uuid, //Id заказа
           revenue: productsPrice, //Cумма транзакции
-          shipping: totalPrice //Cумма доставки
+          shipping: totalPrice, //Cумма доставки
+          affiliation: hostname //Имя хоста
         },
-        products: [...productsData],
-        variant: hostname //Имя хоста
+        products: [...productsData]
       }
     }
   });
