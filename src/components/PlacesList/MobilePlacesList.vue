@@ -9,10 +9,7 @@
         <div
           class="mobile-catalog-page-places__inner-content mobile-catalog-page-places__flex-by-height"
         >
-          <ul
-            v-if="!isSpecialStores"
-            class="mobile-catalog-page-places__places-list mobile-catalog-page-places__flex-by-height"
-          >
+          <template v-if="!isSpecialStores">
             <swiper class="swiper" :options="swiperOption">
               <swiper-slide>
                 <a href="https://faem.page.link/s2qh">
@@ -49,7 +46,7 @@
                 </router-link>
               </swiper-slide>
             </swiper>
-          </ul>
+          </template>
           <!-- Places -->
           <div class="mobile-catalog-page-places__flex-by-height">
             <h2 class="mobile-catalog-page-places__title">Рестораны</h2>
@@ -181,12 +178,14 @@ export default {
 .swiper-container {
   width: 100%;
   margin-top: 20px;
+  padding: 0 16px;
 }
 .swiper-slide {
   width: 100%;
   // height: auto;
   height: auto;
-  max-width: 250px;
+  // max-width: 250px;
+  max-width: 300px;
   img {
     max-width: 100%;
     border-radius: 16px;
