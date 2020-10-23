@@ -177,6 +177,9 @@ $header-bg: #fff;
     padding-right: 10px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    max-width: 225px;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   &__profile {
     position: relative;
