@@ -32,7 +32,7 @@
                   />
                 </router-link>
               </swiper-slide>
-              <swiper-slide>
+              <!-- <swiper-slide>
                 <router-link
                   :to="{
                     name: 'RestaurantPage',
@@ -44,7 +44,7 @@
                     class="mobile-place-item__magical-image"
                   />
                 </router-link>
-              </swiper-slide>
+              </swiper-slide> -->
             </swiper>
           </template>
           <!-- Places -->

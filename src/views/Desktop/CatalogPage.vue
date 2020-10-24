@@ -39,7 +39,7 @@
               ></div>
             </router-link>
           </li>
-          <li class="places-list__place stock-list__place">
+          <!-- <li class="places-list__place stock-list__place">
             <router-link
               :to="{
                 name: 'RestaurantPage',
@@ -55,7 +55,7 @@
                 }"
               ></div>
             </router-link>
-          </li>
+          </li> -->
         </ul>
       </div>
       <!-- <CatalogSearch /> -->
