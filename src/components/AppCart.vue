@@ -180,19 +180,29 @@ export default {
       }
     },
     confirmCreateOrder() {
-      Swal.fire({
-        title: 'Подтверждение заказа',
-        text: 'Вы уверены, что хотите подтвердить заказ?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonColor: '#fc5b58',
-        confirmButtonText: 'Подтвердить',
-        cancelButtonText: 'Отмена'
-      }).then(result => {
-        if (result.value) {
-          this.sendOrder();
+      if (this.isSendOrderDisabled || !this.destinationPoints.length) return;
+      if (!this.isAuthUser) return (this.isShowModal = true);
+      this.$router.push({
+        name: 'Checkout',
+        params: {
+          destinationPoints: this.destinationPoints,
+          preparationTime: this.preparationTime,
+          uuidStore: this.uuidStore
         }
       });
+      // Swal.fire({
+      //   title: 'Подтверждение заказа',
+      //   text: 'Вы уверены, что хотите подтвердить заказ?',
+      //   icon: 'question',
+      //   showCancelButton: true,
+      //   confirmButtonColor: '#fc5b58',
+      //   confirmButtonText: 'Подтвердить',
+      //   cancelButtonText: 'Отмена'
+      // }).then(result => {
+      //   if (result.value) {
+      //     this.sendOrder();
+      //   }
+      // });
     },
     confirmClearCart() {
       Swal.fire({

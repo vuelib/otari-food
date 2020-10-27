@@ -29,6 +29,15 @@ const routes = [
     component: () => import('../views/Mobile/MobileCartPage.vue')
   },
   {
+    path: '/checkout',
+    name: 'Checkout',
+    component: () => {
+      if (window.appDevice === 'desktop')
+        return import('../views/Desktop/СheckoutPage.vue');
+      else return import('../views/Mobile/MobileCheckoutPage.vue');
+    }
+  },
+  {
     path: '/*',
     redirect: '/'
   }
