@@ -1,73 +1,99 @@
 <template>
-  <ul
-    @click="handlerPushToCart"
-    ref="menu-list"
-    class="mobile-restaurant-components-category-list"
-  >
+  <div>
     <div>
-      <scrollactive active-class="active" class="mobile-categoru-menu">
-        <li
-          v-for="(category, key) of Object.keys(categories)"
-          :key="key"
-          class="mobile-categoru-menu__item"
+      <div
+        ref="mobile-restaurant-page-menu-panel"
+        class="mobile-restaurant-page-menu-panel"
+      >
+        <scrollactive
+          active-class="active"
+          class="mobile-categoru-menu"
+          ref="mobile-categoru-menu"
         >
-          <a :href="getAnchorLink(category)" class="scrollactive-item active">
-            {{ category }}
-          </a>
-        </li>
-      </scrollactive>
-    </div>
-    <li
-      v-for="([name, category], key) of Object.entries(categories)"
-      :key="key"
-      class="mobile-restaurant-components-category-list__category"
-    >
-      <MobileMenu :category-name="name" :category="category" />
-    </li>
-    <!-- MobileMenuItemOptions -->
-    <MobileMenuItemOptions
-      :option-product="optionProduct"
-      v-show="isShowOptions"
-      @pushProductToCart="checkEqualStore"
-      @closePopup="closeMenuItemOption"
-      ref="menu-item-options"
-    />
-    <!-- MobileEnterAddress -->
-    <MobileEnterAddress
-      @closePopup="isShowEnterAddress = false"
-      v-if="isShowEnterAddress"
-    />
-
-    <app-bottom-sheet
-      @closePopup="isConfirmSetAddress = false"
-      v-if="isConfirmSetAddress"
-      :header="true"
-    >
-      <div slot="header">Укажите ваш адрес</div>
-      <div slot="body" class="mobile-confirm-set-address-body">
-        <p class="mobile-confirm-set-address__description">
-          Укажите адрес доставки, чтобы мы могли показать вам список доступных
-          мест
-        </p>
-        <button
-          @click="(isShowEnterAddress = true), (isConfirmSetAddress = false)"
-          class="mobile-confirm-set-address__button"
-        >
-          <span class="mobile-confirm-set-address__button-content">
-            Указать адрес
-          </span>
-        </button>
+          <li
+            v-for="(category, key) of Object.keys(categories)"
+            :key="key"
+            class="mobile-categoru-menu__item"
+          >
+            <a :href="getAnchorLink(category)" class="scrollactive-item active">
+              {{ category.replace(/.*(>|\|)\.*/g, '').trim() }}
+            </a>
+          </li>
+        </scrollactive>
       </div>
-    </app-bottom-sheet>
-  </ul>
+    </div>
+    <ul
+      @click="handlerPushToCart"
+      ref="menu-list"
+      class="mobile-restaurant-components-category-list"
+    >
+      <li
+        v-for="([name, category], key) of Object.entries(categories)"
+        :key="key"
+        class="mobile-restaurant-components-category-list__category"
+      >
+        <MobileMenu :category-name="name" :category="category" />
+      </li>
+      <!-- MobileMenuItemOptions -->
+      <MobileMenuItemOptions
+        :option-product="optionProduct"
+        v-show="isShowOptions"
+        @pushProductToCart="checkEqualStore"
+        @closePopup="closeMenuItemOption"
+        ref="menu-item-options"
+      />
+      <!-- MobileEnterAddress -->
+      <MobileEnterAddress
+        @closePopup="isShowEnterAddress = toggleViewAndScrollBody(false)"
+        v-if="isShowEnterAddress"
+      />
+
+      <app-bottom-sheet
+        @closePopup="isConfirmSetAddress = toggleViewAndScrollBody(false)"
+        v-if="isConfirmSetAddress"
+        :header="true"
+      >
+        <div slot="header">Укажите ваш адрес</div>
+        <div slot="body" class="mobile-confirm-set-address-body">
+          <p class="mobile-confirm-set-address__description">
+            Укажите адрес доставки, чтобы мы могли показать вам список доступных
+            мест
+          </p>
+          <button
+            @click="
+              (isShowEnterAddress = toggleViewAndScrollBody(true)),
+                (isConfirmSetAddress = toggleViewAndScrollBody(false))
+            "
+            class="mobile-confirm-set-address__button"
+          >
+            <span class="mobile-confirm-set-address__button-content">
+              Указать адрес
+            </span>
+          </button>
+        </div>
+      </app-bottom-sheet>
+    </ul>
+  </div>
 </template>
 
 <script>
 import Swal from 'sweetalert2';
 import MobileMenu from '../Menu/MobileMenu';
 import menuList from './menuList.js';
+import { toggleViewAndScrollBody } from '@/mixins/common.js';
 export default {
   mixins: [menuList],
+  updated() {
+    // window.scrollTo(0, 1);
+  },
+  mounted() {
+    // document.addEventListener('scroll', () => {
+    //   const panel = this.$refs['mobile-restaurant-page-menu-panel'];
+    //   const { top } = panel.getBoundingClientRect();
+    //   if (top <= 0) panel.classList.add('fixed');
+    //   else panel.classList.remove('fixed');
+    // });
+  },
   methods: {
     checkEqualStore(product) {
       const cartItem = !product.extra
@@ -114,21 +140,57 @@ export default {
       if (this.isCurrentLocationNull) {
         // this.$parent.$emit('showEnterAddressModal');
         // this.isShowEnterAddress = true;
-        this.isConfirmSetAddress = true;
+        this.isConfirmSetAddress = this.toggleViewAndScrollBody(true);
         return;
       }
       // Product have variants or toppings
 
       this.$refs['menu-item-options'].resetOptions();
       this.optionProduct = product;
-      this.isShowOptions = true;
+      this.isShowOptions = this.toggleViewAndScrollBody(true);
     },
     closeMenuItemOption() {
-      this.isShowOptions = false;
+      this.isShowOptions = this.toggleViewAndScrollBody(false);
     },
-    onItemChanged(event, currentItem, lastActiveItem) {
-      // here you have access to everything you need regarding that event
-      console.log(event, currentItem, lastActiveItem);
+    onItemChanged(event, currentItem) {
+      if (!currentItem) return;
+      // let prev = 0;
+      // let offset = 0;
+      this.$refs['mobile-categoru-menu'].$el.scrollBy({
+        top: 0,
+        left: -this.offset,
+        behavior: 'smooth'
+      });
+      for (const item of this.$refs['mobile-categoru-menu'].$el.children) {
+        if (currentItem.isEqualNode(item.childNodes[0])) break;
+        // console.log(item);
+        this.offset += item.offsetWidth;
+      }
+      // const offset = [
+      //   ...this.$refs['mobile-categoru-menu'].$el.children
+      // ].reduce((acc, item) => {
+      //   if (!currentItem) return;
+
+      //   if (currentItem.isEqualNode(item.childNodes[0])) return acc;
+      //   acc += item.offsetWidth;
+      //   return acc;
+      // }, 0);
+      this.$refs['mobile-categoru-menu'].$el.scrollBy({
+        top: 0,
+        left: this.offset - this.prev,
+        behavior: 'smooth'
+      });
+      this.prev = this.offset;
+      console.log(
+        'offset',
+        this.offset,
+        'prev',
+        this.prev,
+        'LEFT',
+        this.offset - this.prev
+      );
+      // console.log(event, currentItem);
+      // }, 0);
     },
     getAnchorLink(category) {
       // tmp solution
@@ -136,13 +198,16 @@ export default {
         .replace(/.*(>|\|)\.*/g, '')
         .trim()
         .replace(/\s+/g, '-')}`;
-    }
+    },
+    toggleViewAndScrollBody
   },
   data: () => ({
     optionProduct: {},
     isShowOptions: false,
     isConfirmSetAddress: false,
-    isShowEnterAddress: false
+    isShowEnterAddress: false,
+    prev: 0,
+    offset: 0
   }),
   props: {
     categories: {
@@ -243,5 +308,21 @@ export default {
   }
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+.mobile-restaurant-page-menu-panel {
+  width: 100%;
+  display: flex;
+  z-index: 1;
+  align-items: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  justify-content: center;
+  background-color: #ffffff;
+  &.fixed {
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+  }
 }
 </style>

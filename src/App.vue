@@ -5,7 +5,7 @@
     <!-- App Header -->
     <app-device-component
       @showEnterAddressModal="showEnterAddressModal"
-      @showSidebar="isShowSidebar = true"
+      @showSidebar="isShowSidebar = toggleViewAndScrollBody(true)"
       desktop-component-path="components/Header/AppHeader"
       mobile-component-path="components/Header/AppMobileHeader"
     ></app-device-component>
@@ -28,19 +28,19 @@
     <!-- MobileSidebar -->
     <MobileSidebar
       :show="isShowSidebar"
-      @showLogin="isShowLogin = true"
+      @showLogin="isShowLogin = toggleViewAndScrollBody(true)"
       @showOrderHistory="showOrderHistory"
-      @closeSidebar="isShowSidebar = false"
+      @closeSidebar="isShowSidebar = toggleViewAndScrollBody(false)"
     />
     <!-- MobileOrderHistory -->
     <MobileOrderHistory
       ref="my-orders"
       v-show="isShowOrderHistory"
-      @closeOrderHistory="isShowOrderHistory = false"
+      @closeOrderHistory="isShowOrderHistory = toggleViewAndScrollBody(false)"
     />
     <!-- MobileLogin-->
     <AppMobileLogin
-      @closeLoginModal="isShowLogin = false"
+      @closeLoginModal="isShowLogin = toggleViewAndScrollBody(false)"
       v-show="isShowLogin"
     />
   </div>
@@ -49,6 +49,7 @@
 <script>
 import { createNamespacedHelpers } from 'vuex';
 import deviceType from '@/mixins/deviceType';
+import { toggleViewAndScrollBody } from '@/mixins/common.js';
 export default {
   mixins: [deviceType],
   computed: {
@@ -56,16 +57,17 @@ export default {
   },
   methods: {
     showEnterAddressModal() {
-      this.isShowEnterAddress = true;
+      this.isShowEnterAddress = this.toggleViewAndScrollBody(true);
     },
     closeEnterAddressModal() {
-      this.isShowEnterAddress = false;
+      this.isShowEnterAddress = this.toggleViewAndScrollBody(false);
     },
     // mobile
     showOrderHistory() {
       this.$refs['my-orders'].loadMyOrders();
-      this.isShowOrderHistory = true;
-    }
+      this.isShowOrderHistory = this.toggleViewAndScrollBody(true);
+    },
+    toggleViewAndScrollBody
   },
   data: () => ({
     isShowEnterAddress: false,
@@ -91,6 +93,10 @@ export default {
 
 <style lang="scss">
 @import './scss/basic.scss';
+body.noscroll {
+  overflow-y: hidden;
+}
+
 #app.mobile {
   overflow-x: hidden;
 }

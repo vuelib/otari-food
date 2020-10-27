@@ -35,7 +35,7 @@ new Vue({
   render: h => h(App),
   async created() {
     this.$store.dispatch('stores/detectSpecialStores');
-    if (specialStore.pushToMenu)
+    if (specialStore && specialStore.pushToMenu)
       this.$router.push({
         name: 'RestaurantPage',
         params: {

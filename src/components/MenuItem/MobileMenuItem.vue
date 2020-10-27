@@ -28,22 +28,24 @@
           class="mobile-menu-item-content__plus mobile-menu-item-content__icon-btn mobile-menu-item-content__btn"
         ></div>
       </template> -->
-      <div
-        v-if="isInCart"
-        class="mobile-menu-item-content__add-btn mobile-menu-item-content__btn"
-      >
-        <div class="mobile-menu-item-content__price">
-          В корзине
+      <button style="display: contents;">
+        <div
+          v-if="isInCart"
+          class="mobile-menu-item-content__add-btn mobile-menu-item-content__btn"
+        >
+          <div class="mobile-menu-item-content__price">
+            В корзине
+          </div>
         </div>
-      </div>
-      <div
-        v-else
-        class="mobile-menu-item-content__add-btn mobile-menu-item-content__btn"
-      >
-        <div class="mobile-menu-item-content__price">
-          {{ menuItem.price }} ₽
+        <div
+          v-else
+          class="mobile-menu-item-content__add-btn mobile-menu-item-content__btn"
+        >
+          <div class="mobile-menu-item-content__price">
+            {{ menuItem.price }} ₽
+          </div>
         </div>
-      </div>
+      </button>
     </div>
   </article>
 </template>

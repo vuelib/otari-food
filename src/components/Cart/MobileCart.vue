@@ -49,7 +49,7 @@
             for="without_delivery"
             class="app-cart__without-delivery-label app-cart__delivery-fee-name"
           >
-            Самовывоз
+            Заберу сам
           </label>
           <div class="app-cart__delivery-fee-value">
             <span class="app-cart__delivery-fee-cost">
