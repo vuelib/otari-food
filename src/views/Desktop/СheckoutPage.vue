@@ -15,7 +15,7 @@
                     <div class="checkout-page-form-address__inputs">
                       <div class="checkout-page-form-address__input">
                         <div
-                          class="checkout-page-form-address__input-container"
+                          class="checkout-page-form-address__input-container disabled"
                         >
                           <input
                             :value="getCurrentLocation.unrestricted_value"
@@ -36,7 +36,7 @@
                         <div
                           class="checkout-page-form-address__input-container"
                         >
-                          <input type="text" />
+                          <input v-model="meta.front_door" type="text" />
                         </div>
                       </div>
                       <!--  -->
@@ -47,7 +47,7 @@
                         <div
                           class="checkout-page-form-address__input-container"
                         >
-                          <input type="text" />
+                          <input v-model="meta.intercom" type="text" />
                         </div>
                       </div>
                       <!--  -->
@@ -58,7 +58,7 @@
                         <div
                           class="checkout-page-form-address__input-container"
                         >
-                          <input type="text" />
+                          <input v-model="meta.entrance" type="text" />
                         </div>
                       </div>
                       <!--  -->
@@ -69,7 +69,7 @@
                         <div
                           class="checkout-page-form-address__input-container"
                         >
-                          <input type="text" />
+                          <input v-model="meta.floor" type="text" />
                         </div>
                       </div>
                     </div>
@@ -81,7 +81,7 @@
                         <div
                           class="checkout-page-form-address__input-container"
                         >
-                          <textarea type="text" />
+                          <textarea v-model="meta.comment" type="text" />
                         </div>
                       </div>
                     </div>
@@ -91,10 +91,59 @@
                   <div class="checkout-page-form-pay">
                     <div class="checkout-page-form-pay__title">Оплата</div>
                     <div class="checkout-page-form-pay__inputs">
-                      <div class="checkout-page-form-pay__input-container">
-                        <input type="text" placeholder="Промокод (если есть)" />
-                        <button class="button button--yellow">Применить</button>
-                      </div>
+                      <label class="checkout-page-form-pay__input">
+                        <div class="checkout-page-form-pay__radio-control">
+                          <div class="options-item__control">
+                            <input
+                              v-model="payType"
+                              value="card"
+                              type="radio"
+                            />
+                            <span class="checkmark checkradio"></span>
+                          </div>
+                        </div>
+                        <div class="checkout-page-form-pay__radio-content">
+                          <div
+                            class="checkout-page-form-pay__radio-content-title"
+                          >
+                            Оплата банковской картой
+                          </div>
+                          <div
+                            class="checkout-page-form-pay__radio-content-description"
+                          >
+                            Мы заморозим сумму заказа на вашей карте и спишем
+                            после доставки
+                          </div>
+                          <div class="checkout-page-form-pay__input-container">
+                            <input
+                              type="text"
+                              placeholder="Промокод (если есть)"
+                            />
+                            <button class="button button--yellow">
+                              Применить
+                            </button>
+                          </div>
+                        </div>
+                      </label>
+                      <label class="checkout-page-form-pay__input">
+                        <div class="checkout-page-form-pay__radio-control">
+                          <div class="options-item__control">
+                            <input
+                              v-model="payType"
+                              value="cash"
+                              type="radio"
+                            />
+                            <span class="checkmark checkradio"></span>
+                          </div>
+                        </div>
+                        <div class="checkout-page-form-pay__radio-content">
+                          <div
+                            class="checkout-page-form-pay__radio-content-title"
+                          >
+                            Оплата наличными
+                          </div>
+                        </div>
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -120,7 +169,7 @@
               </div>
               <div class="checkout-page-meta__divider"></div>
               <div class="checkout-page-meta__cutlery">
-                <button @click="sendOrder" class="button button--yellow">
+                <button @click="cloudPay" class="button button--yellow">
                   Подтвердить заказ
                 </button>
                 <!-- <div class="checkout-page-meta__cutlery-title">
@@ -254,6 +303,9 @@ export default {
     box-shadow: inset 0 1px 3px 0 rgba(0, 0, 0, 0.2);
     line-height: 1.15;
     border-radius: 4px;
+    &.disabled {
+      background-color: #e6e6e6;
+    }
     > input {
       flex: 1 1 auto;
       height: auto;
@@ -291,6 +343,26 @@ export default {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 18px;
+  }
+  &__input {
+    display: flex;
+    margin: 0 5px;
+    margin-bottom: 10px;
+  }
+  &__radio-control {
+    margin-right: 5px;
+  }
+  &__radio-content {
+  }
+  &__radio-content-title {
+    line-height: 22px;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  &__radio-content-description {
+    color: #b0b0b0;
+    font-size: 14px;
+    margin-bottom: 10px;
   }
 }
 .checkout-page-form-pay {

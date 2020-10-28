@@ -297,7 +297,7 @@ export default {
       );
       commit('SET_DELIVERY_PRICE', { total_price, service_uuid });
     },
-    async createOrder({ commit, state }, { routeFrom, routeTo }) {
+    async createOrder({ commit, state }, { routeFrom, routeTo, comment }) {
       state.is_can_clear_cart = false;
       let productsInput = [];
       for (const [key, { extra, menuItem, quantity }] of Object.entries(
@@ -327,7 +327,8 @@ export default {
         routes: [routeFrom, routeTo],
         productsInput,
         serviceUUID: state.delivery_service_uuid,
-        withoutDelivery: state.without_delivery
+        withoutDelivery: state.without_delivery,
+        comment
       });
       console.log(data);
       const productsData = data.products_data.products.reduce(
