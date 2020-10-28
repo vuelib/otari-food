@@ -21,7 +21,7 @@
           <div class="mobile-checkout-page-delivery-address__left">
             <div class="mobile-checkout-page-delivery-address__container">
               <div class="group">
-                <input type="text" required />
+                <input v-model="meta.front_door" type="text" required />
                 <span class="bar"></span>
                 <label>Кв./офис</label>
               </div>
@@ -30,7 +30,7 @@
           <div class="mobile-checkout-page-delivery-address__right">
             <div class="mobile-checkout-page-delivery-address__container">
               <div class="group">
-                <input type="text" required />
+                <input v-model="meta.intercom" type="text" required />
                 <span class="bar"></span>
                 <label>Домофон</label>
               </div>
@@ -39,7 +39,7 @@
           <div class="mobile-checkout-page-delivery-address__left">
             <div class="mobile-checkout-page-delivery-address__container">
               <div class="group">
-                <input type="text" required />
+                <input v-model="meta.entrance" type="text" required />
                 <span class="bar"></span>
                 <label>Подъезд</label>
               </div>
@@ -48,7 +48,7 @@
           <div class="mobile-checkout-page-delivery-address__right">
             <div class="mobile-checkout-page-delivery-address__container">
               <div class="group">
-                <input type="text" required />
+                <input v-model="meta.floor" type="text" required />
                 <span class="bar"></span>
                 <label>Этаж</label>
               </div>
@@ -63,23 +63,34 @@
           </div>
         </div>
       </div>
-      <!-- <div class="mobile-checkout-page-content__group">
+      <div class="mobile-checkout-page-content__group">
         <div class="mobile-checkout-page-content__title">Способ оплаты</div>
-        <div class="mobile-checkout-page-payment-method">
+        <label class="mobile-checkout-page-payment-method">
           <div class="mobile-checkout-page-payment-method__content">
             <div class="mobile-checkout-page-payment-method__text">
               Картой онлайн
             </div>
-            <div class="options-item__control">
-              <input type="radio" />
+            <div class="mobile-checkout-page-payment-method__control">
+              <input v-model="payType" value="card" type="radio" />
               <span class="checkmark checkradio"></span>
             </div>
           </div>
-        </div>
-      </div> -->
+        </label>
+        <label class="mobile-checkout-page-payment-method">
+          <div class="mobile-checkout-page-payment-method__content">
+            <div class="mobile-checkout-page-payment-method__text">
+              Оплата наличными
+            </div>
+            <div class="mobile-checkout-page-payment-method__control">
+              <input v-model="payType" value="cash" type="radio" />
+              <span class="checkmark checkradio"></span>
+            </div>
+          </div>
+        </label>
+      </div>
     </div>
     <MobileBottomBar
-      @BottomBarClick="some"
+      @BottomBarClick="cloudPay"
       restaurant-name="Подтвердить"
       :price="getTotalPrice"
     />
@@ -104,11 +115,6 @@ export default {
     this.preparationTime = preparationTime;
     this.uuidStore = uuidStore;
     console.log(this.$route.params);
-  },
-  methods: {
-    some() {
-      this.sendOrder();
-    }
   },
   data: () => ({
     destinationPoints: [],
@@ -259,6 +265,9 @@ export default {
     padding-top: 2px;
     line-height: 1.43;
   }
+  &__control {
+    position: relative;
+  }
 }
 
 /* form starting stylings ------------------------------- */
@@ -286,7 +295,8 @@ textarea:focus {
 }
 
 /* LABEL ======================================= */
-label {
+input ~ label,
+textarea ~ label {
   color: #999;
   font-size: 14px;
   font-weight: 100;

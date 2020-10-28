@@ -317,7 +317,8 @@ export default {
   align-items: center;
   padding-top: 10px;
   padding-bottom: 10px;
-  justify-content: center;
+  // justify-content: center;
+  justify-content: flex-start;
   background-color: #ffffff;
   &.fixed {
     position: fixed;

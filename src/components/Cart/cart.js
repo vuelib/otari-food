@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2';
 import { createNamespacedHelpers } from 'vuex';
+const widget = new window.cp.CloudPayments();
 export default {
   created() {
     if (!this.destinationPoints || !this.destinationPoints.length) return;
@@ -42,13 +43,17 @@ export default {
     async sendOrder() {
       if (this.isSendOrderDisabled || !this.destinationPoints.length) return;
       if (!this.isAuthUser) return (this.isShowModal = true);
+
+      const { front_door, intercom, entrance, floor, comment } = this.meta;
+      const orderComment = `Кв./офис: ${front_door}, Домофон: ${intercom}, Подъезд: ${entrance}, Этаж: ${floor}, Комментарий: ${comment}`;
       try {
         // Refresh Token
         await this.refreshToken();
         // Create Order Action
         const { uuid } = await this.createOrder({
           routeFrom: JSON.parse(localStorage.getItem('location')),
-          routeTo: this.destinationPoints[0]
+          routeTo: this.destinationPoints[0],
+          comment: orderComment
         });
         // console.log(data);
         if (this.isUserFromMessenger) {
@@ -124,6 +129,45 @@ export default {
     closePopup() {
       this.isShowModal = false;
     },
+    cloudPay() {
+      if (this.isSendOrderDisabled || !this.destinationPoints.length) return;
+      if (!this.isAuthUser) return (this.isShowModal = true);
+      //
+      if (this.payType !== 'card') return this.sendOrder();
+
+      widget.pay(
+        'auth', // или 'charge'
+        {
+          //options
+          publicId: 'pk_da2989a1a7b849e2aa35cde4d1f32', //id из личного кабинета
+          description: 'Оплата заказа', //назначение
+          amount: this.getTotalPrice, //сумма
+          currency: 'RUB', //валюта
+          // invoiceId: '1234567', //номер заказа  (необязательно)
+          // accountId: 'user@example.com', //идентификатор плательщика (необязательно)
+          skin: 'classic' //дизайн виджета (необязательно)
+        },
+        {
+          onSuccess: options => {
+            console.log('onSuccess', options);
+            this.sendOrder();
+            // success
+            //действие при успешной оплате
+          },
+          onFail: (reason, options) => {
+            console.log(reason, options);
+            return;
+            // fail
+            //действие при неуспешной оплате
+          },
+          onComplete: (paymentResult, options) => {
+            console.log('onComplete', paymentResult, options);
+            //Вызывается как только виджет получает от api.cloudpayments ответ с результатом транзакции.
+            //например вызов вашей аналитики Facebook Pixel
+          }
+        }
+      );
+    },
     ...createNamespacedHelpers('cart').mapActions([
       'clearCartOfProducts',
       'getTariffToDelivery',
@@ -134,6 +178,14 @@ export default {
     ...createNamespacedHelpers('auth').mapActions(['refreshToken'])
   },
   data: () => ({
-    isShowModal: false
+    isShowModal: false,
+    meta: {
+      front_door: '',
+      intercom: '',
+      entrance: '',
+      floor: '',
+      comment: ''
+    },
+    payType: 'cash'
   })
 };
