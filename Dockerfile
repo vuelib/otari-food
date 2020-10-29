@@ -37,6 +37,15 @@ VOLUME       /etc/nginx/ssl
 COPY nginx_config/nginx.conf /etc/nginx/nginx.conf
 COPY nginx_config/default-${NODE_ENV}.conf /etc/nginx/conf.d/default.conf
 
+COPY nginx_config/docker-entrypoint.sh /usr/local/bin/
+COPY nginx_config/le.sh /usr/local/bin/
+COPY nginx_config/le-gen.sh /usr/local/bin/
+COPY nginx_config/start-nginx.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh \
+&& chmod +x /usr/local/bin/le.sh \
+&& chmod +x /usr/local/bin/le-gen.sh \
+&& chmod +x /usr/local/bin/start-nginx.sh
+
 # Mount log dir.
 VOLUME /var/log/nginx
 
@@ -45,4 +54,5 @@ COPY --from=build-stage /app/dist /usr/share/nginx/html
 EXPOSE 80
 EXPOSE 443
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["docker-entrypoint.sh"]
+# CMD ["nginx", "-g", "daemon off;"]
