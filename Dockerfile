@@ -27,6 +27,8 @@ RUN if [ "$NODE_ENV" == "production" ]; \
 FROM nginx:stable-alpine as production-stage
 ARG NODE_ENV
 
+RUN apk update && apk add certbot tzdata openssl
+
 # Set the timezone.
 ENV TZ=Europe/Moscow
 
