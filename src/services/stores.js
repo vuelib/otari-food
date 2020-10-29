@@ -69,7 +69,6 @@ export function getMyOrdersService() {
   return api
     .client(`${process.env.VUE_APP_API_CLIENT}/myorders`, {
       headers: {
-        Source: 'ios_client_app_1',
         Authorization: `Bearer ${
           JSON.parse(localStorage.getItem('userData')).token
         }`

@@ -27,6 +27,7 @@ const specialStore = placesConfig[window.appHostname];
 if (specialStore) {
   const pathStyle = `scss/${specialStore.style}.scss`;
   import(`./${pathStyle}`);
+  window.appSpecialStore = true;
 }
 
 new Vue({

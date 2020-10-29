@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+let SOURSE = 'eda.faem.ru';
+if (window.appSpecialStore) SOURSE = 'partner_web_site';
+
 class Api {
   constructor(options = {}) {
     // Singleton Pattern
@@ -12,7 +15,7 @@ class Api {
         baseURL: process.env.VUE_APP_API_CRM,
         headers: {
           'Content-Type': 'application/json',
-          Source: 'ios_client_app_1'
+          Source: SOURSE
         }
       });
 
