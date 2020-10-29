@@ -1,3 +1,4 @@
+import { authUserAnalytics } from '../mixins/analytics';
 import api from './axios-api';
 
 export function getCodeFromPhoneNumberService({ phone, device_id }) {
@@ -18,6 +19,7 @@ export function checkToEqualVerificationCodeService({ code, device_id }) {
       code
     })
     .then(({ data }) => {
+      authUserAnalytics({ uuid: data.client_uuid });
       return data;
     });
 }

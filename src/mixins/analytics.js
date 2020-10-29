@@ -1,5 +1,11 @@
 const hostname = window.location.hostname;
 
+export function authUserAnalytics({ uuid }) {
+  window.dataLayer.push({
+    UID: uuid
+  });
+}
+
 export function addProductAnalytics({ name, uuid, price, category, brand }) {
   window.dataLayer.push({
     event: 'add',
