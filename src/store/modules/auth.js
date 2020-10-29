@@ -4,6 +4,7 @@ import {
   refreshTokenService,
   logoutService
 } from '@/services/auth.js';
+import { authUserAnalytics } from '../../mixins/analytics';
 
 /* eslint no-unused-vars: */
 const user_data = JSON.parse(localStorage.getItem('userData'));
@@ -36,6 +37,7 @@ export default {
         code,
         device_id
       });
+      authUserAnalytics({ uuid: data.client_uuid });
       localStorage.setItem('userData', await JSON.stringify(data));
       commit('SET_USER_UUID', data.client_uuid);
       commit('SET_REFRESH_TOKEN', data.refresh_token);
