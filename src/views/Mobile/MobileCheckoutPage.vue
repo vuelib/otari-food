@@ -65,7 +65,7 @@
       </div>
       <div class="mobile-checkout-page-content__group">
         <div class="mobile-checkout-page-content__title">Способ оплаты</div>
-        <label class="mobile-checkout-page-payment-method">
+        <!-- <label class="mobile-checkout-page-payment-method">
           <div class="mobile-checkout-page-payment-method__content">
             <div class="mobile-checkout-page-payment-method__text">
               Картой онлайн
@@ -75,7 +75,7 @@
               <span class="checkmark checkradio"></span>
             </div>
           </div>
-        </label>
+        </label> -->
         <label class="mobile-checkout-page-payment-method">
           <div class="mobile-checkout-page-payment-method__content">
             <div class="mobile-checkout-page-payment-method__text">
@@ -90,7 +90,7 @@
       </div>
     </div>
     <MobileBottomBar
-      @BottomBarClick="cloudPay"
+      @BottomBarClick="sendOrder"
       restaurant-name="Подтвердить"
       :price="getTotalPrice"
     />

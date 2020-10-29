@@ -91,7 +91,7 @@
                   <div class="checkout-page-form-pay">
                     <div class="checkout-page-form-pay__title">Оплата</div>
                     <div class="checkout-page-form-pay__inputs">
-                      <label class="checkout-page-form-pay__input">
+                      <!-- <label class="checkout-page-form-pay__input">
                         <div class="checkout-page-form-pay__radio-control">
                           <div class="options-item__control">
                             <input
@@ -124,7 +124,7 @@
                             </button>
                           </div>
                         </div>
-                      </label>
+                      </label> -->
                       <label class="checkout-page-form-pay__input">
                         <div class="checkout-page-form-pay__radio-control">
                           <div class="options-item__control">
@@ -169,7 +169,7 @@
               </div>
               <div class="checkout-page-meta__divider"></div>
               <div class="checkout-page-meta__cutlery">
-                <button @click="cloudPay" class="button button--yellow">
+                <button @click="sendOrder" class="button button--yellow">
                   Подтвердить заказ
                 </button>
                 <!-- <div class="checkout-page-meta__cutlery-title">
