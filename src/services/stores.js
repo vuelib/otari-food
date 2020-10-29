@@ -23,7 +23,8 @@ export function createOrderService({
   routes,
   productsInput,
   serviceUUID,
-  withoutDelivery
+  withoutDelivery,
+  comment
 }) {
   return api.client
     .post(
@@ -32,7 +33,8 @@ export function createOrderService({
         routes,
         products_input: productsInput,
         service_uuid: serviceUUID,
-        without_delivery: withoutDelivery
+        without_delivery: withoutDelivery,
+        comment
       },
       {
         headers: {

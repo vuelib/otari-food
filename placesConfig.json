@@ -1,0 +1,28 @@
+{
+  "oldschool.group": {
+    "urls": [
+      "204acbe3-b5eb-4d67-ba29-e914b8f64bfd",
+      "1ae9acb2-b79c-4032-b239-f423514292a6"
+    ],
+    "logo": "oldschool.png",
+    "style": "oldschool",
+    "name": "OLDSCHOOL",
+    "pushToMenu": false,
+    "pageTitle": "",
+    "phones": []
+  },
+  "cafebeirut.ru": {
+    "urls": [
+      "3f3a6e26-81cf-4846-bd4e-ac1a587c70da"
+    ],
+    "logo": "cafebeirut.png",
+    "style": "cafebeirut",
+    "name": "КАФЕ Beirut",
+    "pushToMenu": true,
+    "pageTitle": "Кафе Бейрут (Владикавказ) - 25 лет мы с вами ❤️",
+    "phones": [
+      "☎️ +7 (8672) 53-05-27",
+      "📞 +7 (918) 824-84-94"
+    ]
+  }
+}

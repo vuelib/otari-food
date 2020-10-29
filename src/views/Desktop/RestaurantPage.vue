@@ -5,7 +5,8 @@
       <InfoHeader :store="store" />
       <div class="restaurant-page-content">
         <!-- Categories Navbar Component -->
-        <CategoriesNavbar :categories="Object.keys(getStoreProductsCategory)" />
+        <!-- <CategoriesNavbar :categories="Object.keys(getStoreProductsCategory)" /> -->
+        <CategoriesNavbar :categories="getStore.product_category" />
         <div class="restaurant-page__menu-wrapper">
           <!-- Menu List Component -->
           <MenuList :categories="getStoreProductsCategory" />
@@ -36,6 +37,11 @@ import MenuList from '@/components/MenuList/MenuList.vue';
 import AppCart from '@/components/AppCart.vue';
 
 import auth from '@/mixins/auth.js';
+import {
+  setRestaurantPageTitle,
+  setRestaurantPageDescription,
+  setSpecialPageTitle
+} from '@/mixins/seo.js';
 
 import { createNamespacedHelpers } from 'vuex';
 
@@ -43,6 +49,8 @@ export default {
   async created() {
     await this.initStore();
     await this.fetchProductsThatStore();
+    this.setPageTitle();
+    console.log(this.getStore);
   },
   computed: {
     getStore() {
@@ -50,7 +58,9 @@ export default {
     },
     ...createNamespacedHelpers('stores').mapGetters([
       'getStoreProductsCategory',
-      'findStoreProductByUUID'
+      'findStoreProductByUUID',
+      'isSpecialStores',
+      'getSpecialStoresData'
     ]),
     ...createNamespacedHelpers('cart').mapGetters([
       'isCartEmpty',
@@ -70,6 +80,17 @@ export default {
     async fetchProductsThatStore() {
       const { uuid } = this.store;
       await this.getStoreProductsByFilter({ storeuuid: uuid });
+    },
+    setPageTitle() {
+      if (!this.isSpecialStores) {
+        setRestaurantPageTitle(this.getStore.name);
+        setRestaurantPageDescription(
+          this.getStore.name,
+          this.getStore.product_category
+        );
+      } else {
+        setSpecialPageTitle(this.getSpecialStoresData.pageTitle);
+      }
     },
     ...createNamespacedHelpers('stores').mapActions([
       'getStoresByUUID',

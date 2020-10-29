@@ -3,39 +3,54 @@
     <header class="header">
       <div class="header-container container">
         <div class="header-logo">
-          <router-link to="/" aria-label="На главную">
-            <img
-              class="header-logo__img"
-              src="../../assets/logo.png"
-              alt="logo"
-            />
+          <router-link
+            to="/"
+            :class="{ disabled: isSpecialStores }"
+            aria-label="На главную"
+          >
+            <img class="header-logo__img" :src="getLogo" alt="logo" />
           </router-link>
         </div>
         <div class="header-menu">
-          <!-- <a
-            aria-label="Ресторанам"
-            rel="nofollow"
-            href="#"
-            class="header-menu__link"
-          >
-            Ресторанам
-          </a>
-          <a
-            aria-label="Курьерам"
-            rel="nofollow"
-            href="#"
-            class="header-menu__link"
-          >
-            Курьерам
-          </a>
-          <a
-            aria-label="Компаниям"
-            rel="nofollow"
-            href="#"
-            class="header-menu__link"
-          >
-            Компаниям
-          </a> -->
+          <template v-if="!isSpecialStores">
+            <a
+              aria-label="Партнерам"
+              rel="nofollow"
+              href="https://faem.ru/eda/partners"
+              class="header-menu__link"
+              target="_blank"
+            >
+              Партнерам
+            </a>
+            <a
+              aria-label="Контакты"
+              rel="nofollow"
+              href="https://faem.ru/eda/contacts"
+              class="header-menu__link"
+              target="_blank"
+            >
+              Контакты
+            </a>
+            <a
+              aria-label="Тел."
+              rel="nofollow"
+              href="tel:+79284889828"
+              class="header-menu__link"
+            >
+              +7 (928) 488-98-28
+            </a>
+          </template>
+          <template v-else>
+            <a
+              v-for="(phone, key) in getSpecialStoresData.phones"
+              :key="key"
+              aria-label="Тел."
+              rel="nofollow"
+              class="header-menu__link"
+            >
+              {{ phone }}
+            </a>
+          </template>
         </div>
         <button
           v-if="!isCurrentLocationNull"
@@ -98,10 +113,11 @@ import AppPopup from '../AppPopup';
 import AppLogin from '../AppLogin';
 import AppOrderHistory from '../AppOrderHistory';
 import auth from '@/mixins/auth.js';
+import special from '@/mixins/special.js';
 import header from './header';
 
 export default {
-  mixins: [auth, header],
+  mixins: [auth, header, special],
   name: 'AppHeader',
   components: {
     AppPopup,
@@ -161,6 +177,9 @@ $header-bg: #fff;
     padding-right: 10px;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    max-width: 225px;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
   &__profile {
     position: relative;
@@ -237,6 +256,10 @@ $header-bg: #fff;
 .header-logo {
   flex: 0 0 auto;
   padding: 0 20px 0 0;
+  > a.disabled {
+    pointer-events: none;
+    cursor: default;
+  }
   &__img {
     width: 160px;
   }

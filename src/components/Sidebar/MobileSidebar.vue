@@ -12,11 +12,7 @@
           <div class="mobile-sidebar-menu__header">
             <div @click="closeSidebar" class="mobile-sidebar-menu__close"></div>
             <div class="mobile-sidebar-menu__logo-container">
-              <img
-                class="MobileLogo"
-                src="../../assets/logo.png"
-                alt="FaemDelivery"
-              />
+              <img class="MobileLogo" :src="getLogo" alt="FaemDelivery" />
             </div>
           </div>
           <div class="mobile-sidebar-menu__body">
@@ -57,6 +53,43 @@
                     <div class="mobile-sidebar-menu__item-title">Выйти</div>
                   </div>
                 </template>
+                <template v-if="!isSpecialStores">
+                  <div class="mobile-sidebar-menu__item">
+                    <a
+                      href="https://faem.ru/eda/partners"
+                      class="mobile-sidebar-menu__item-title"
+                    >
+                      Партнерам
+                    </a>
+                  </div>
+                  <div class="mobile-sidebar-menu__item">
+                    <a
+                      href="https://faem.ru/eda/contacts"
+                      class="mobile-sidebar-menu__item-title"
+                    >
+                      Контакты
+                    </a>
+                  </div>
+                  <div class="mobile-sidebar-menu__item">
+                    <a
+                      href="tel:+79284889828"
+                      class="mobile-sidebar-menu__item-title"
+                    >
+                      +7 (928) 488-98-28
+                    </a>
+                  </div>
+                </template>
+                <template v-else>
+                  <div
+                    v-for="(phone, key) in getSpecialStoresData.phones"
+                    :key="key"
+                    class="mobile-sidebar-menu__item"
+                  >
+                    <a class="mobile-sidebar-menu__item-title">
+                      {{ phone }}
+                    </a>
+                  </div>
+                </template>
               </div>
             </div>
           </div>
@@ -68,8 +101,9 @@
 
 <script>
 import auth from '@/mixins/auth.js';
+import special from '@/mixins/special.js';
 export default {
-  mixins: [auth],
+  mixins: [auth, special],
   props: {
     show: {
       type: Boolean,

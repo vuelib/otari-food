@@ -10,11 +10,15 @@
         v-for="store in filteredStories"
         :key="store.uuid"
         class="places-list__place"
-        :class="{
-          'places-list__closed': !checkStoreOnOpened(store.work_schedule)
-        }"
+        :class="getSpecialStoresClass"
       >
-        <PlaceItem :store="store" :data-store="store.uuid" />
+        <PlaceItem
+          :store="store"
+          :data-store="store.uuid"
+          :class="{
+            'places-list__closed': !checkStoreOnOpened(store.work_schedule)
+          }"
+        />
       </li>
     </ul>
     <div v-if="isShowMore" class="places-list__more">
@@ -37,6 +41,12 @@ import AppLogin from '@/components/AppLogin';
 import placesList from './placesList.js';
 export default {
   mixins: [placesList],
+  computed: {
+    getSpecialStoresClass() {
+      if (!this.isSpecialStores) return;
+      return `special-stores-${12 / this.getSpecialStoresData.urls.length}`;
+    }
+  },
   props: {
     filteredCategory: {
       type: String,
@@ -85,5 +95,8 @@ export default {
   &__closed {
     filter: grayscale(100%);
   }
+}
+.special-stores-6 {
+  max-width: 50%;
 }
 </style>

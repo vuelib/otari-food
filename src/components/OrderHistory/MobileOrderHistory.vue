@@ -13,7 +13,7 @@
         <div class="mobile-fullscreen-modal__content-container">
           <div class="mobile-fullscreen-modal__content">
             <img
-              src="../../assets/logo.png"
+              :src="getLogo"
               class="mobile-fullscreen-modal__logo"
               alt="FaemDelivery"
             />
@@ -98,8 +98,9 @@
 
 <script>
 import orderHistory from './orderHistory.js';
+import special from '@/mixins/special.js';
 export default {
-  mixins: [orderHistory],
+  mixins: [orderHistory, special],
   methods: {
     closeOrderHistory() {
       this.$emit('closeOrderHistory');

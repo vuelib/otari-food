@@ -1,5 +1,4 @@
 import { createNamespacedHelpers } from 'vuex';
-
 export default {
   methods: {
     goToCart() {
@@ -42,6 +41,10 @@ export default {
       'getTotalPrice',
       'isCartEmpty',
       'getActiveStoreUUID'
+    ]),
+    ...createNamespacedHelpers('stores').mapGetters([
+      'isSpecialStores',
+      'getSpecialStoresData'
     ])
   },
   data: () => ({

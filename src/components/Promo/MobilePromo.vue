@@ -1,7 +1,10 @@
 <template>
   <div class="mobile-catalog-page-welcome">
     <ul class="breadcrumbs mobile-catalog-page-welcome__breadcrumbs">
-      <li class="breadcrumbs__item">FaemEda</li>
+      <li v-if="isSpecialStores" class="breadcrumbs__item">
+        {{ getSpecialStoresData.name }}
+      </li>
+      <li v-else class="breadcrumbs__item">FaemEda</li>
       <li class="breadcrumbs__item">Владикавказ</li>
     </ul>
     <h1 class="mobile-catalog-page-welcome__title">
@@ -23,11 +26,19 @@
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex';
+
 export default {
   methods: {
     setAddress() {
       this.$emit('setAddress');
     }
+  },
+  computed: {
+    ...createNamespacedHelpers('stores').mapGetters([
+      'isSpecialStores',
+      'getSpecialStoresData'
+    ])
   }
 };
 </script>

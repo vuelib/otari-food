@@ -1,9 +1,11 @@
 <template>
   <div id="app" :class="{ mobile: isMobileDevice, desktop: !isMobileDevice }">
+    <!-- App Banner -->
+    <AppMobileBanner v-if="isMobileDevice && !isSpecialStores" />
     <!-- App Header -->
     <app-device-component
-      v-if="!isMobileDevice"
       @showEnterAddressModal="showEnterAddressModal"
+      @showSidebar="isShowSidebar = toggleViewAndScrollBody(true)"
       desktop-component-path="components/Header/AppHeader"
       mobile-component-path="components/Header/AppMobileHeader"
     ></app-device-component>
@@ -17,42 +19,87 @@
       </div>
     </div>
     <!-- Enter Address Modal -->
-    <!-- <app-device-component
-      desktop-component-path="components/Header/AppHeader"
-      mobile-component-path="components/Header/AppMobileHeader"
-    >
-    </app-device-component> -->
     <app-popup @closePopup="closeEnterAddressModal" v-if="isShowEnterAddress">
       <AppEnterAddress @closePopup="closeEnterAddressModal" />
     </app-popup>
+
+    <!-- == mobile == -->
+
+    <!-- MobileSidebar -->
+    <MobileSidebar
+      :show="isShowSidebar"
+      @showLogin="isShowLogin = toggleViewAndScrollBody(true)"
+      @showOrderHistory="showOrderHistory"
+      @closeSidebar="isShowSidebar = toggleViewAndScrollBody(false)"
+    />
+    <!-- MobileOrderHistory -->
+    <MobileOrderHistory
+      ref="my-orders"
+      v-show="isShowOrderHistory"
+      @closeOrderHistory="isShowOrderHistory = toggleViewAndScrollBody(false)"
+    />
+    <!-- MobileLogin-->
+    <AppMobileLogin
+      @closeLoginModal="isShowLogin = toggleViewAndScrollBody(false)"
+      v-show="isShowLogin"
+    />
   </div>
 </template>
 
 <script>
+import { createNamespacedHelpers } from 'vuex';
 import deviceType from '@/mixins/deviceType';
+import { toggleViewAndScrollBody } from '@/mixins/common.js';
 export default {
   mixins: [deviceType],
+  computed: {
+    ...createNamespacedHelpers('stores').mapGetters(['isSpecialStores'])
+  },
   methods: {
     showEnterAddressModal() {
-      this.isShowEnterAddress = true;
+      this.isShowEnterAddress = this.toggleViewAndScrollBody(true);
     },
     closeEnterAddressModal() {
-      this.isShowEnterAddress = false;
-    }
+      this.isShowEnterAddress = this.toggleViewAndScrollBody(false);
+    },
+    // mobile
+    showOrderHistory() {
+      this.$refs['my-orders'].loadMyOrders();
+      this.isShowOrderHistory = this.toggleViewAndScrollBody(true);
+    },
+    toggleViewAndScrollBody
   },
   data: () => ({
     isShowEnterAddress: false,
-    isShowAuth: false
+    isShowAuth: false,
+    // mobile
+    filteredCategory: '',
+    isShowSidebar: false,
+    isShowLogin: false,
+    isShowOrderHistory: false
   }),
   name: 'App',
   components: {
-    AppEnterAddress: () => import('./components/AppEnterAddress')
+    AppEnterAddress: () => import('./components/AppEnterAddress'),
+    AppMobileBanner: () => import('./components/Banner/MobileBanner'),
+
+    MobileSidebar: () => import('@/components/Sidebar/MobileSidebar.vue'),
+    AppMobileLogin: () => import('@/components/Login/AppMobileLogin.vue'),
+    MobileOrderHistory: () =>
+      import('@/components/OrderHistory/MobileOrderHistory.vue')
   }
 };
 </script>
 
 <style lang="scss">
 @import './scss/basic.scss';
+body.noscroll {
+  overflow-y: hidden;
+}
+
+#app.mobile {
+  overflow-x: hidden;
+}
 #app.mobile ~ .swal2-container {
   z-index: 999999;
 }

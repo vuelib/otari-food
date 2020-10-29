@@ -1,3 +1,5 @@
+const hostname = window.location.hostname;
+
 export function addProductAnalytics({ name, uuid, price, category, brand }) {
   window.dataLayer.push({
     event: 'add',
@@ -11,7 +13,8 @@ export function addProductAnalytics({ name, uuid, price, category, brand }) {
             price: price, //Стоимость единицы товара
             category: category, //Раздел меню
             brand: brand, //Название ресторана
-            quantity: 1 //Количество (всегда 1)
+            quantity: 1, //Количество (всегда 1)
+            variant: hostname //Имя хоста
           }
         ]
       }
@@ -38,7 +41,8 @@ export function removeProductAnalytics({
             price: price, //Стоимость единицы товара
             category: category, //Раздел меню
             brand: brand, //Название ресторана
-            quantity: quantity //Количество
+            quantity: quantity, //Количество
+            variant: hostname //Имя хоста
           }
         ]
       }
@@ -59,7 +63,8 @@ export function purchaseAnalytics({
         actionField: {
           id: uuid, //Id заказа
           revenue: productsPrice, //Cумма транзакции
-          shipping: totalPrice //Cумма доставки
+          shipping: totalPrice, //Cумма доставки
+          affiliation: hostname //Имя хоста
         },
         products: [...productsData]
       }

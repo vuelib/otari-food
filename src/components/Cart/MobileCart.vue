@@ -7,13 +7,22 @@
           class="mobile-cart-page-header__back"
         ></div>
         <div
+          v-if="!isCartEmpty"
           @click="confirmClearCart"
           class="mobile-cart-page-header__clear"
         ></div>
       </div>
     </div>
+    <!-- Cart Empty-->
+    <div v-if="isCartEmpty" class="mobile-cart-page-empty">
+      <div class="mobile-cart-page-empty__pocket"></div>
+      <div class="mobile-cart-page-empty__title">Корзина пуста</div>
+      <div class="mobile-cart-page-empty__message">
+        Перейдите к списку мест, чтобы оформить заказ заново
+      </div>
+    </div>
     <!-- Cart Items -->
-    <div class="mobile-cart-page-items">
+    <div v-if="!isCartEmpty" class="mobile-cart-page-items">
       <h1 class="mobile-cart-page-items__cart-title">Заказ</h1>
       <div class="mobile-cart-page-items__list-items">
         <div
@@ -40,7 +49,7 @@
             for="without_delivery"
             class="app-cart__without-delivery-label app-cart__delivery-fee-name"
           >
-            Самовывоз
+            Заберу сам
           </label>
           <div class="app-cart__delivery-fee-value">
             <span class="app-cart__delivery-fee-cost">
@@ -64,7 +73,17 @@
     </div>
     <!-- Cart Footer -->
     <div class="mobile-cart-page-footer">
-      <div class="mobile-cart-page-footer__cart-bar">
+      <div v-if="isCartEmpty" class="mobile-cart-page-footer__button-wrap">
+        <router-link
+          :to="{ name: 'CatalogPage' }"
+          class="mobile-cart-page-footer__button"
+        >
+          <span class="mobile-cart-page-footer__button-content">
+            Вернуться на главную
+          </span>
+        </router-link>
+      </div>
+      <div v-else class="mobile-cart-page-footer__cart-bar">
         <div class="mobile-cart-page-footer__button-wrap">
           <div class="mobile-cart-page-footer__cart-button-content">
             <div class="mobile-cart-page-footer__cart-button-price">
@@ -278,6 +297,37 @@ export default {
   }
   &__delivery-fee-cost {
     white-space: nowrap;
+  }
+}
+// mobile-cart-page-empty
+.mobile-cart-page-empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  &__pocket {
+    flex: 0 0 143px;
+    height: 153px;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNDMiIGhlaWdodD0iMTU0IiB2aWV3Qm94PSIwIDAgMTQzIDE1NCI+PGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBmaWxsPSIjRUVFIiBkPSJNMTEuNzY0IDI5aDEwOC45NTRhMiAyIDAgMCAxIDEuOTkgMS44MDFMMTM1IDE1NEgyLjYyNGEyIDIgMCAwIDEtMS45MjgtMi41M2wzLjc5Ni0xMy44MDdhMiAyIDAgMCAwIC4wNjktLjQzMkw5Ljc2NyAzMC45MDJBMiAyIDAgMCAxIDExLjc2NCAyOXoiLz48cGF0aCBmaWxsPSIjRkZGIiBkPSJNMTYuMjk0IDI2aDEwOS4wNGEyIDIgMCAwIDEgMS45ODggMS43NzlsMTIuMDU0IDEwOC4yNzZhMiAyIDAgMCAwIC4wMjguMTc1bDMuMTEgMTUuMzczYTIgMiAwIDAgMS0xLjk2IDIuMzk3SDE4LjMzNGEyIDIgMCAwIDEtMS45OC0xLjcxMmwtMi4zMzItMTUuOTk4YTIgMiAwIDAgMS0uMDItLjI5NGwuMjkzLTEwOC4wMDFhMiAyIDAgMCAxIDItMS45OTV6Ii8+PGcgZmlsbD0iIzAwMCIgdHJhbnNmb3JtPSJyb3RhdGUoLTQ1IDE0Ny4wNjkgLTcyLjAxOCkiPjxyZWN0IHdpZHRoPSIyIiBoZWlnaHQ9IjEzIiB4PSI2IiByeD0iMSIvPjxyZWN0IHdpZHRoPSIyIiBoZWlnaHQ9IjEzIiB4PSI2IiByeD0iMSIgdHJhbnNmb3JtPSJyb3RhdGUoOTAgNyA2LjUpIi8+PC9nPjxnIGZpbGw9IiMwMDAiIHRyYW5zZm9ybT0icm90YXRlKC00NSAxMjAuNTY5IC04LjA0MikiPjxyZWN0IHdpZHRoPSIyIiBoZWlnaHQ9IjEzIiB4PSI2IiByeD0iMSIvPjxyZWN0IHdpZHRoPSIyIiBoZWlnaHQ9IjEzIiB4PSI2IiByeD0iMSIgdHJhbnNmb3JtPSJyb3RhdGUoOTAgNyA2LjUpIi8+PC9nPjxwYXRoIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIiBkPSJNNjUuNDQ0IDEwOGgyMy4xMTIiLz48cGF0aCBzdHJva2U9IiNCMEIwQjAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyIiBkPSJNNDggMjV2LTIuODcxYzAtOS43NTYgNy4wNjktMTcuODkgMTYuNDUxLTE5LjczNkEyMC45NjQgMjAuOTY0IDAgMCAxIDY4LjUgMmM4LjE3NCAwIDE1LjIzMSA0LjY5OCAxOC41MjMgMTEuNDk0QTE5Ljc1IDE5Ljc1IDAgMCAxIDg5IDIyLjEzVjI1Ii8+PHBhdGggc3Ryb2tlPSIjMDAwIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTU1IDQyVjIxLjVDNTUgMTAuMTc4IDY0LjE3OCAxIDc1LjUgMVM5NiAxMC4xNzggOTYgMjEuNVY0MiIvPjwvZz48L3N2Zz4=);
+  }
+  &__title {
+    flex: 0 0 100%;
+    font-size: 20px;
+    text-align: center;
+    margin-top: 36px;
+    font-weight: bold;
+  }
+  &__message {
+    flex: 0 0 100%;
+    color: #b0b0b0;
+    font-size: 12px;
+    text-align: center;
+    margin-top: 12px;
+    line-height: 1.67;
   }
 }
 </style>

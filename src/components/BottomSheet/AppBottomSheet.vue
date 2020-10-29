@@ -1,42 +1,40 @@
 <template>
-  <transition name="sheet-fade">
-    <div
-      style="position: fixed;
+  <div
+    style="position: fixed;
     z-index: 100013;"
-    >
-      <div class="mobile-bottom-sheet">
+  >
+    <div class="mobile-bottom-sheet">
+      <div
+        @click="handleBottomSheetClose"
+        class="mobile-bottom-sheet__backdrop mobile-bottom-sheet__child-container"
+      ></div>
+      <div
+        class="mobile-bottom-sheet__base-container mobile-bottom-sheet__child-container"
+      >
         <div
           @click="handleBottomSheetClose"
-          class="mobile-bottom-sheet__backdrop mobile-bottom-sheet__child-container"
+          class="mobile-bottom-sheet__cross"
         ></div>
         <div
-          class="mobile-bottom-sheet__base-container mobile-bottom-sheet__child-container"
+          class="mobile-bottom-sheet-layout"
+          :style="{ maxHeight: `${deviceHeight}px` }"
         >
-          <div
-            @click="handleBottomSheetClose"
-            class="mobile-bottom-sheet__cross"
-          ></div>
-          <div
-            class="mobile-bottom-sheet-layout"
-            :style="{ maxHeight: `${deviceHeight}px` }"
-          >
-            <div v-if="header" class="mobile-bottom-sheet-header">
-              <slot name="header"></slot>
-            </div>
-            <div class="mobile-bottom-sheet-body">
-              <slot name="body"></slot>
-            </div>
-            <div @click="handleBottomSheetClose">
-              <slot name="close"></slot>
-            </div>
-            <div class="mobile-bottom-sheet-footer">
-              <slot name="footer"></slot>
-            </div>
+          <div v-if="header" class="mobile-bottom-sheet-header">
+            <slot name="header"></slot>
+          </div>
+          <div class="mobile-bottom-sheet-body">
+            <slot name="body"></slot>
+          </div>
+          <div @click="handleBottomSheetClose">
+            <slot name="close"></slot>
+          </div>
+          <div class="mobile-bottom-sheet-footer">
+            <slot name="footer"></slot>
           </div>
         </div>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
@@ -62,7 +60,7 @@ export default {
         html.clientHeight,
         html.scrollHeight,
         html.offsetHeight
-      ) - 20
+      ) - 40
   })
 };
 </script>
@@ -72,8 +70,8 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  position: fixed;
-  overflow: hidden;
+  // position: fixed;
+  // overflow: hidden;
   &__child-container {
     top: 0;
     left: 0;
@@ -156,13 +154,13 @@ export default {
   z-index: 5;
   background: white;
 }
-.sheet-fade-enter,
-.sheet-fade-leave-active {
-  opacity: 0;
-  transform: translate3d(0, 100%, 0);
-}
+// .sheet-fade-enter,
+// .sheet-fade-leave-active {
+//   opacity: 0;
+//   transform: translate3d(0, 100%, 0);
+// }
 
-.sheet-fade-enter-active,
-.sheet-fade-leave-active {
-}
+// .sheet-fade-enter-active,
+// .sheet-fade-leave-active {
+// }
 </style>

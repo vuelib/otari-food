@@ -21,7 +21,8 @@ export default {
     delivery_price: 0,
     delivery_service_uuid: '',
     without_delivery: false,
-    user_from_messenger: null
+    user_from_messenger: null,
+    is_can_clear_cart: true
   },
   mutations: {
     SET_DELIVERY_PRICE(state, { total_price, service_uuid }) {
@@ -44,9 +45,36 @@ export default {
         ({ uuid }) => uuid === state.cart_products[keyIndex].menuItem.uuid
       );
       product.quantity++;
+      console.log('product', product);
+      console.log('state', state.cart_products[keyIndex]);
+
+      if (!state.cart_products[keyIndex].extra.length) {
+        // Add Product Analytics
+        addProductAnalytics({
+          ...state.cart_products[keyIndex].menuItem,
+          brand: getActiveStore.name
+        });
+        return;
+      }
+      const extraSum = state.cart_products[keyIndex].extra.reduce(
+        (sum, option) => {
+          if ('standard' in option) sum += option.price;
+          else {
+            // Add Product Analytics
+            addProductAnalytics({
+              ...option,
+              category: state.cart_products[keyIndex].menuItem.category,
+              brand: getActiveStore.name
+            });
+          }
+          return sum;
+        },
+        0
+      );
       // Add Product Analytics
       addProductAnalytics({
         ...state.cart_products[keyIndex].menuItem,
+        price: extraSum + state.cart_products[keyIndex].menuItem.price,
         brand: getActiveStore.name
       });
     },
@@ -57,6 +85,41 @@ export default {
       const product = getStoreProducts.find(
         ({ uuid }) => uuid === state.cart_products[keyIndex].menuItem.uuid
       );
+
+      // Remove Product Analytics
+      if (!state.cart_products[keyIndex].extra.length) {
+        // Add Product Analytics
+        removeProductAnalytics({
+          ...state.cart_products[keyIndex].menuItem,
+          quantity: 1,
+          brand: getActiveStore.name
+        });
+      } else {
+        const extraSum = state.cart_products[keyIndex].extra.reduce(
+          (sum, option) => {
+            if ('standard' in option) sum += option.price;
+            else {
+              // Add Product Analytics
+              removeProductAnalytics({
+                ...option,
+                quantity: 1,
+                category: state.cart_products[keyIndex].menuItem.category,
+                brand: getActiveStore.name
+              });
+            }
+            return sum;
+          },
+          0
+        );
+        // Add Product Analytics
+        removeProductAnalytics({
+          ...state.cart_products[keyIndex].menuItem,
+          quantity: 1,
+          price: extraSum + state.cart_products[keyIndex].menuItem.price,
+          brand: getActiveStore.name
+        });
+      }
+
       console.log(product, state.cart_products[keyIndex]);
       if (product.quantity > 1) {
         product.quantity--;
@@ -69,21 +132,45 @@ export default {
       } else {
         Vue.delete(state.cart_products, keyIndex);
       }
-      // Remove Product Analytics
-      removeProductAnalytics({
-        ...state.cart_products[keyIndex].menuItem,
-        quantity: 1,
-        brand: getActiveStore.name
-      });
     },
-    CLEAR_CART_OF_PRODUCTS(state, { getStoreProducts, getActiveStore }) {
+    CLEAR_CART_OF_PRODUCTS(
+      state,
+      { getStoreProducts, getActiveStore, isCanClearCart }
+    ) {
       for (const [key, product] of Object.entries(state.cart_products)) {
-        // Remove Product Analytics
-        removeProductAnalytics({
-          ...product.menuItem,
-          quantity: product.quantity,
-          brand: getActiveStore.name
-        });
+        if (isCanClearCart) {
+          if (!product.extra.length) {
+            // Add Product Analytics
+            removeProductAnalytics({
+              ...product.menuItem,
+              quantity: product.quantity,
+              brand: getActiveStore.name
+            });
+          } else {
+            const extraSum = product.extra.reduce((sum, option) => {
+              if ('standard' in option) sum += option.price;
+              else {
+                // Add Product Analytics
+                removeProductAnalytics({
+                  ...option,
+                  quantity: product.quantity,
+                  category: product.menuItem.category,
+                  brand: getActiveStore.name
+                });
+              }
+              return sum;
+            }, 0);
+            // Add Product Analytics
+            removeProductAnalytics({
+              ...product.menuItem,
+              quantity: product.quantity,
+              price: extraSum + product.menuItem.price,
+              brand: getActiveStore.name
+            });
+          }
+        } else {
+          state.is_can_clear_cart = true;
+        }
 
         Vue.delete(product.menuItem, 'quantity');
         Vue.delete(state.cart_products, key);
@@ -134,16 +221,39 @@ export default {
   },
   actions: {
     pushProductToCart({ commit, getters }, product) {
-      // Add Product Analytics
-      addProductAnalytics({
-        ...product.menuItem,
-        brand: getters.getActiveStore.name
-      });
+      console.log(product);
       commit('SET_ACTIVE_STORE_UUID', product.menuItem.store_uuid);
       commit('ADD_PRODUCT_TO_CART', {
         product,
         findCartProduct: getters.findCartProductByUUID,
         filterCartProduct: getters.filterCartProductByUUID
+      });
+
+      if (!product.extra.length) {
+        // Add Product Analytics
+        addProductAnalytics({
+          ...product.menuItem,
+          brand: getters.getActiveStore.name
+        });
+        return;
+      }
+      const extraSum = product.extra.reduce((sum, option) => {
+        if ('standard' in option) sum += option.price;
+        else {
+          // Add Product Analytics
+          addProductAnalytics({
+            ...option,
+            category: product.menuItem.category,
+            brand: getters.getActiveStore.name
+          });
+        }
+        return sum;
+      }, 0);
+      // Add Product Analytics
+      addProductAnalytics({
+        ...product.menuItem,
+        price: extraSum + product.menuItem.price,
+        brand: getters.getActiveStore.name
       });
     },
     incrementProductFromCart({ commit, getters }, keyIndex) {
@@ -163,7 +273,8 @@ export default {
     clearCartOfProducts({ commit, getters }) {
       commit('CLEAR_CART_OF_PRODUCTS', {
         getStoreProducts: getters.getStoreProducts,
-        getActiveStore: getters.getActiveStore
+        getActiveStore: getters.getActiveStore,
+        isCanClearCart: getters.isCanClearCart
       });
       commit('SET_ACTIVE_STORE_UUID', '');
     },
@@ -186,7 +297,8 @@ export default {
       );
       commit('SET_DELIVERY_PRICE', { total_price, service_uuid });
     },
-    async createOrder({ commit, state }, { routeFrom, routeTo }) {
+    async createOrder({ commit, state }, { routeFrom, routeTo, comment }) {
+      state.is_can_clear_cart = false;
       let productsInput = [];
       for (const [key, { extra, menuItem, quantity }] of Object.entries(
         state.cart_products
@@ -215,7 +327,8 @@ export default {
         routes: [routeFrom, routeTo],
         productsInput,
         serviceUUID: state.delivery_service_uuid,
-        withoutDelivery: state.without_delivery
+        withoutDelivery: state.without_delivery,
+        comment
       });
       console.log(data);
       const productsData = data.products_data.products.reduce(
@@ -225,7 +338,8 @@ export default {
             id: product.uuid, //Id товар или артикул
             price: product.price, //Стоимость единицы товара
             brand: data.products_data.store.name, //Название ресторана
-            quantity: product.number //Количество
+            quantity: product.number, //Количество
+            variant: window.location.hostname //Имя хоста
           });
           return acc;
         },
@@ -326,6 +440,9 @@ export default {
     },
     getUserDataFromMessenger(state) {
       return state.user_from_messenger;
+    },
+    isCanClearCart(state) {
+      return state.is_can_clear_cart;
     }
   }
 };
