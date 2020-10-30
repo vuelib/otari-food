@@ -31,14 +31,14 @@
             >
               Контакты
             </a>
-            <a
+            <!-- <a
               aria-label="Тел."
               rel="nofollow"
               href="tel:+79284889828"
               class="header-menu__link"
             >
               +7 (928) 488-98-28
-            </a>
+            </a> -->
           </template>
           <template v-else>
             <a

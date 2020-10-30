@@ -71,12 +71,12 @@
                     </a>
                   </div>
                   <div class="mobile-sidebar-menu__item">
-                    <a
+                    <!-- <a
                       href="tel:+79284889828"
                       class="mobile-sidebar-menu__item-title"
                     >
                       +7 (928) 488-98-28
-                    </a>
+                    </a> -->
                   </div>
                 </template>
                 <template v-else>
