@@ -1,7 +1,8 @@
 import {
   getStoresByFilterService,
   getStoresByUUIDService,
-  getProductsService
+  getProductsService,
+  getAllCategoriesService
 } from '@/services/stores.js';
 // places config
 import placesConfig from '../../../placesConfig.json';
@@ -15,7 +16,8 @@ export default {
     stores_count: 0,
     store_products_count: 0,
     is_special_stores: false,
-    special_stores: {}
+    special_stores: {},
+    all_categories: []
   },
   mutations: {
     ADD_STORES(state, stores) {
@@ -36,6 +38,9 @@ export default {
     SET_ACTIVE_STORE(state, store) {
       state.active_store = store;
     },
+    SET_ALL_CATEGORIES(state, categories) {
+      state.all_categories = categories;
+    },
     SET_IS_DETECT_SPECIAL_STORES(state) {
       const specialStores = placesConfig[window.appHostname];
       if (!specialStores) {
@@ -48,10 +53,11 @@ export default {
   },
   actions: {
     // Stores
-    async getStoresByFilter({ commit }, { page, limit }) {
+    async getStoresByFilter({ commit }, { page, limit, category }) {
       const { records, records_count } = await getStoresByFilterService({
         page,
-        limit
+        limit,
+        category
       });
       commit('ADD_STORES', records);
       commit('SET_STORES_COUNT', records_count);
@@ -68,6 +74,11 @@ export default {
       Promise.all(promises).then(result => {
         commit('ADD_STORES', result);
       });
+    },
+    // All categories
+    async getAllCategories({ commit }, { page, limit }) {
+      const { records } = await getAllCategoriesService({ page, limit });
+      commit('SET_ALL_CATEGORIES', records);
     },
     // Products
     async getStoreProductsByFilter(
@@ -122,6 +133,11 @@ export default {
     findStoreProductByUUID(state) {
       return findUUID => {
         return state.store_products.find(({ uuid }) => uuid === findUUID);
+      };
+    },
+    findCategory(state) {
+      return category => {
+        return state.all_categories.find(({ url }) => url === category);
       };
     },
     getStoresCount(state) {

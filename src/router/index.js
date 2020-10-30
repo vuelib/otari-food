@@ -15,6 +15,15 @@ const routes = [
     }
   },
   {
+    path: '/category/:category',
+    name: 'CatalogPageCategory',
+    component: () => {
+      if (window.appDevice === 'desktop')
+        return import('../views/Desktop/CatalogPage.vue');
+      else return import('../views/Mobile/MobileCatalogPage.vue');
+    }
+  },
+  {
     path: '/restaurant/:id?',
     name: 'RestaurantPage',
     component: () => {

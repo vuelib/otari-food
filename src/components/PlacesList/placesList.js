@@ -50,7 +50,8 @@ export default {
       'getStoresCount',
       'findStoreByUUID',
       'isSpecialStores',
-      'getSpecialStoresData'
+      'getSpecialStoresData',
+      'findCategory'
     ]),
     ...mapGetters(['isAuthUser'])
   },
@@ -89,8 +90,19 @@ export default {
       return `${h < 10 ? `0${h}` : h}:${m < 10 ? `0${m}` : m}`;
     },
     async showMore() {
-      await this.getStoresByFilter({ page: this.page, limit: this.limit });
-      this.page++;
+      const { category } = this.$route.params;
+      if (!category) {
+        await this.getStoresByFilter({ page: this.page, limit: this.limit });
+        this.page++;
+      } else {
+        await this.getAllCategories({ page: 1, limit: 30 });
+        const caterogyId = this.findCategory(category).uuid;
+        await this.getStoresByFilter({
+          page: this.page,
+          limit: this.limit,
+          category: caterogyId
+        });
+      }
     },
     openLoginModal() {
       this.isModalVisible = true;
@@ -98,7 +110,7 @@ export default {
     closeLoginModal() {
       this.isModalVisible = false;
     },
-    ...mapActions(['getStoresByFilter', 'getSpecialStores'])
+    ...mapActions(['getStoresByFilter', 'getSpecialStores', 'getAllCategories'])
   },
   data: () => ({
     isModalVisible: false,

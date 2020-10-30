@@ -1,11 +1,18 @@
 import api from './axios-api';
 
-export function getStoresByFilterService({ page, limit }) {
+export function getStoresByFilterService({ page, limit, category }) {
   return api.client
-    .post('/stores?type=restaurant', {
+    .post('/stores', {
       page,
-      limit
+      limit,
+      type: 'restaurant',
+      category
     })
+    .then(({ data }) => data);
+}
+export function getAllCategoriesService({ page, limit }) {
+  return api.client
+    .post(`stores/categories?limit=${limit}&page=${page}`)
     .then(({ data }) => data);
 }
 
