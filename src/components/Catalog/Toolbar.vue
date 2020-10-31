@@ -102,7 +102,8 @@ export default {
       if (category.name === 'все') {
         await this.getStoresByFilter({
           page: 1,
-          limit: 30
+          limit: 30,
+          filter: true
         });
         return;
       }
