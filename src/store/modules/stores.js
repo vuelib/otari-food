@@ -23,6 +23,9 @@ export default {
     ADD_STORES(state, stores) {
       state.stores.push(...stores);
     },
+    SET_STORES(state, stores) {
+      state.stores = stores;
+    },
     ADD_STORE_PRODUCTS(state, products) {
       state.store_products.push(...products);
     },
@@ -53,13 +56,18 @@ export default {
   },
   actions: {
     // Stores
-    async getStoresByFilter({ commit }, { page, limit, category }) {
+    async getStoresByFilter(
+      { commit },
+      { page, limit, category, filter = false }
+    ) {
       const { records, records_count } = await getStoresByFilterService({
         page,
         limit,
         category
       });
-      commit('ADD_STORES', records);
+
+      if (filter) commit('SET_STORES', records);
+      else commit('ADD_STORES', records);
       commit('SET_STORES_COUNT', records_count);
     },
     async getStoresByUUID({ commit }, { uuid }) {

@@ -12,7 +12,7 @@
             :class="{ 'catalog-page-filters--active': isActive(category) }"
             class="catalog-page-filters__link"
           >
-            {{ category }}
+            {{ category.name }}
           </a>
         </li>
         <li ref="filters-more" class="filters-more catalog-page-filters__item">
@@ -24,7 +24,7 @@
               @click="handlerFilter(category)"
               class="list-option"
             >
-              {{ category }}
+              {{ category.name }}
             </div>
           </div>
         </li>
@@ -35,7 +35,7 @@
 
 <script>
 import { createNamespacedHelpers } from 'vuex';
-const { mapGetters } = createNamespacedHelpers('stores');
+const { mapGetters, mapActions } = createNamespacedHelpers('stores');
 
 export default {
   created() {
@@ -67,23 +67,54 @@ export default {
       }
     },
     // construct unique caterories
-    constructStoresCategory(stores) {
-      const category = new Set(['все']);
-      for (const { product_category } of stores) {
-        if (!product_category) continue;
-        product_category.map(el => {
-          category.add(el.replace(/.*(>|\|)\.*/g, '').trim());
-        });
-      }
-      this.storesCategory = [...category];
+    constructStoresCategory() {
+      // constructStoresCategory(stores)
+      // const category = new Set(['все']);
+      // for (const { product_category } of stores) {
+      //   if (!product_category) continue;
+      //   product_category.map(el => {
+      //     category.add(el.replace(/.*(>|\|)\.*/g, '').trim());
+      //   });
+      // }
+      // this.storesCategory = [...category];
+      this.storesCategory = [
+        { uuid: '', name: 'все' },
+        { uuid: 'c71bd3c7-6185-4f21-88ec-833a341adbcd', name: 'Шаурма' },
+        { uuid: '6023b5f3-8072-47c5-b794-1a24b88094d8', name: 'Бургеры' },
+        { uuid: '57744251-0c97-44ac-b38b-9d57264bdd3b', name: 'Пицца' },
+        { uuid: '65ae5393-4417-4175-84c4-c7ae1954f1d5', name: 'Роллы' },
+        { uuid: '5573da25-eb64-41d4-bb3b-c2353e4d2aa7', name: 'Пироги' },
+        { uuid: '03bd35e8-fad4-4883-a464-4dd68a86ac97', name: 'Хинкали' },
+        { uuid: 'd45c2c26-0140-4b39-9b68-6c44b2dd2ddd', name: 'Cэндвичи' },
+        { uuid: 'b6c737e2-df73-499e-809f-84c28a4958ad', name: 'Шашлык' },
+        { uuid: 'b208356b-48eb-42ee-88a9-a40889a8bfb7', name: 'Чебуреки' },
+        { uuid: '12261efb-e2b2-4005-ad92-ca1e4dfb8438', name: 'Таук' },
+        { uuid: 'fd2ad810-8753-4fac-b179-db109d39dfa0', name: 'Кутабы' },
+        { uuid: '2330850e-00fd-48a1-b140-0559a20943fb', name: 'Суши' }
+      ];
     },
+    // getStoresByCategory(category) {},
     isActive(category) {
-      return category === this.selected;
+      return category.name === this.selected;
     },
-    handlerFilter(category) {
-      this.selected = category;
-      this.$emit('filteredCategory', category);
-    }
+    async handlerFilter(category) {
+      this.selected = category.name;
+      if (category.name === 'все') {
+        await this.getStoresByFilter({
+          page: 1,
+          limit: 30
+        });
+        return;
+      }
+      await this.getStoresByFilter({
+        page: 1,
+        limit: 30,
+        category: category.uuid,
+        filter: true
+      });
+      // this.$emit('filteredCategory', category);
+    },
+    ...mapActions(['getStoresByFilter'])
   },
   computed: {
     getIntervalCategories() {
